@@ -16,7 +16,7 @@ An outcome with explicit acceptance criteria. Status is encoded only by class:
 
 Do not put status words into milestone labels.
 
-A Milestone definition, work performed toward it, evidence about it, and acceptance of it are distinct facts. Assignment means responsibility for delivery; it does not by itself grant acceptance authority.
+A Milestone definition, work performed toward it, evidence about it, acceptance of it, and the roadmap's status projection are distinct facts. Assignment means responsibility for delivery; it does not by itself grant acceptance authority.
 
 ### GATE
 An objective predicate. No Role decides a Gate.
@@ -119,18 +119,46 @@ A milestone contract must identify:
 ```text
 Acceptance criteria:
 Acceptance authority:
+Acceptance authority source:
 Evidence location:
-Acceptance record: none | <durable locator>
+Acceptance record index: none | <durable locator>
 ```
 
-The accepting authority may be the same Role as the primary assigned Role only when accepted authority explicitly permits that arrangement. Do not infer self-acceptance from assignment.
+`Acceptance authority` and `Acceptance authority source` are **references to authority, not grants of authority**. Merely naming a Role in the milestone contract cannot authorize that Role to accept the milestone. The cited authority source must be independently accepted and must actually grant that Role acceptance authority over the milestone/scope. If it does not, acceptance authority is absent.
+
+The accepting authority may be the same Role as the primary assigned Role only when an independently accepted authority source explicitly permits that arrangement. Do not infer self-acceptance from assignment.
+
+### Contract PlanRef versus projection PlanRef
+
+Acceptance always targets the exact accepted plan revision that contains the contract being judged.
+
+Use this sequence:
+
+```text
+contract_plan_ref
+    = exact accepted pre-acceptance PlanRef containing the milestone outcome,
+      criteria, and authority references being judged
+
+acceptance record
+    = binds that exact contract_plan_ref + accepted evidence + accepting authority
+
+later roadmap/status projection
+    = may create a new PlanRef that marks MILESTONE_DONE and/or populates
+      the Acceptance record index
+```
+
+The later projection PlanRef is **not** the contract revision that was accepted merely because it records `MILESTONE_DONE` or links the acceptance record. It is a later projection of the already-durable acceptance.
+
+`Acceptance record index` is projection/index metadata. It may remain `none` in the `contract_plan_ref` and be populated only after the acceptance record exists. Populating it later changes the repository PlanRef but does not change which earlier contract revision the acceptance judged.
+
+If the milestone outcome, acceptance criteria, or authority semantics change materially, the new contract revision requires its own acceptance; an old acceptance record cannot silently migrate to the new contract.
 
 A milestone acceptance record should bind at least:
 
 ```text
 milestone_id
 plan_id
-plan_ref
+contract_plan_ref
 accepted_by_role
 acceptance_authority_source
 accepted_evidence
@@ -201,7 +229,8 @@ Activity detail belongs in the milestone record or child plan.
 - `INPROGRESS` means substantive execution is active.
 - `PENDING` means not accepted and not currently active.
 - A diagram edit cannot make a milestone complete without the required acceptance evidence and accepting authority.
-- A status-only roadmap update must link the acceptance/work evidence that justifies the projection.
+- A status-only roadmap update must link the acceptance record that justifies the projection.
+- The PlanRef created by that status/index update does not replace the acceptance record's `contract_plan_ref`.
 
 ## Plan changes
 
