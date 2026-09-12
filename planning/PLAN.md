@@ -2,7 +2,7 @@
 
 ```text
 plan_id: <replace-with-stable-PlanID>
-grammar: plan-grammar-v1
+grammar: plan-grammar-v2
 ```
 
 This file is the canonical at-a-glance roadmap for the project. Replace all angle-bracket placeholders before treating it as operational.
@@ -12,7 +12,7 @@ Interpret this diagram only under `CONVENTIONS.md`. Current holder/authority bin
 ```mermaid
 flowchart TD
 
-  %% PLAN GRAMMAR v1
+  %% PLAN GRAMMAR v2
   %% A --> B                         hard prerequisite
   %% A -. "preferred before" .-> B  scheduling preference only
   %% ROLE -- "assigned to" --> MILESTONE
