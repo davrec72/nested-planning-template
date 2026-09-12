@@ -83,7 +83,11 @@ Assignment authority source:
 Acceptance authority:
 Acceptance authority source:
 Evidence location:
-Acceptance record: none | <durable locator>
+Acceptance record index: none | <durable locator>
 ```
 
-Assignment is responsibility for delivery, not implicit authority to accept the delivered outcome. A child milestone becomes `MILESTONE_DONE` only after a durable acceptance record is issued by the accepted authority for that milestone. Use `templates/MILESTONE_ACCEPTANCE.md`.
+Assignment is responsibility for delivery, not implicit authority to accept the delivered outcome. Naming an `Acceptance authority` Role does not grant that authority; the cited authority source must be independently accepted and cover the child milestone/scope.
+
+The pre-acceptance `contract_plan_ref` normally has `Acceptance record index: none`. After a durable acceptance record exists, a later child-plan status/index commit may populate the locator and project `MILESTONE_DONE`. That later PlanRef is not the contract revision judged by the acceptance record.
+
+Use `templates/MILESTONE_ACCEPTANCE.md` for durable child milestone acceptance.
