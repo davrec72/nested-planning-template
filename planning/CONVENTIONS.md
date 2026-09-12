@@ -228,7 +228,7 @@ P2 = that projection after it is accepted as the new PlanRef.
 Only now does M1 open downstream Milestone hard prerequisites.
 ```
 
-`PlannerRole` and `AcceptanceRole` are example labels, not required role names. The same underlying holder may occupy both if independently authorized. Foreman may coordinate/rout the projection, but Foreman gains neither milestone-acceptance authority nor plan-publication authority merely because the update is mechanical.
+`PlannerRole` and `AcceptanceRole` are example labels, not required role names. The same underlying holder may occupy both if independently authorized. Foreman may coordinate/route the projection, but Foreman gains neither milestone-acceptance authority nor plan-publication authority merely because the update is mechanical.
 
 ## Stable IDs
 
