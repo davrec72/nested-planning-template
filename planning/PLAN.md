@@ -69,9 +69,15 @@ MilestoneID:
 Outcome:
 Acceptance criteria:
 Primary assigned Role:
+Acceptance authority:
 Authority source:
 Evidence location:
+Acceptance record: none | <durable locator>
 Child plan: none | <internal path> | <external repository locator>
 ```
 
-The Mermaid overview should remain terse. Put detailed acceptance criteria in milestone records, issues, or child plans rather than inside nodes.
+The primary assigned Role is responsible for delivery; it is not automatically the accepting authority. The same Role may perform both functions only when the accepted authority record explicitly permits that arrangement.
+
+`MILESTONE_DONE` is a roadmap projection of a durable milestone acceptance record. The class does not itself create acceptance. Use `templates/MILESTONE_ACCEPTANCE.md` for the acceptance record.
+
+The Mermaid overview should remain terse. Put detailed acceptance criteria, evidence, and acceptance records in durable records rather than inside nodes.
