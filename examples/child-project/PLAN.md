@@ -2,7 +2,7 @@
 
 ```text
 plan_id: LEARNING
-grammar: plan-grammar-v1
+grammar: plan-grammar-v2
 parent_plan: ROBOT
 parent_plan_ref: <exact accepted parent PlanRef>
 parent_milestone: R2
