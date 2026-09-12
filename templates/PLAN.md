@@ -53,10 +53,14 @@ Assignment authority source:
 Acceptance authority:
 Acceptance authority source:
 Evidence location:
-Acceptance record: none | <durable locator>
+Acceptance record index: none | <durable locator>
 Child plan: none | <internal path> | <external repository locator>
 ```
 
-The primary assigned Role delivers the milestone; it is not automatically the authority that accepts it. `MILESTONE_DONE` is only a projection of a durable acceptance record issued under the stated acceptance authority. Use `templates/MILESTONE_ACCEPTANCE.md`.
+The primary assigned Role delivers the milestone; it is not automatically the authority that accepts it. Naming an `Acceptance authority` Role does not grant that authority; the cited source must be independently accepted and cover the milestone/scope.
+
+`Acceptance record index` is projection metadata. The pre-acceptance `contract_plan_ref` normally contains `none`; after acceptance, a later plan/status commit may populate the locator and mark the node `MILESTONE_DONE`. That later PlanRef does not replace the acceptance record's `contract_plan_ref`.
+
+`MILESTONE_DONE` is only a projection of a durable acceptance record. Use `templates/MILESTONE_ACCEPTANCE.md`.
 
 Do not add custom edge semantics without first updating `planning/CONVENTIONS.md`.
