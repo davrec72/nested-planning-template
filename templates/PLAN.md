@@ -42,4 +42,20 @@ flowchart TD
   linkStyle default stroke:slategray,stroke-width:3.5px,fill:none;
 ```
 
+For each milestone maintain a durable record containing at least:
+
+```text
+MilestoneID:
+Outcome:
+Acceptance criteria:
+Primary assigned Role:
+Acceptance authority:
+Authority source:
+Evidence location:
+Acceptance record: none | <durable locator>
+Child plan: none | <internal path> | <external repository locator>
+```
+
+The primary assigned Role delivers the milestone; it is not automatically the authority that accepts it. `MILESTONE_DONE` is only a projection of a durable acceptance record issued under the stated acceptance authority. Use `templates/MILESTONE_ACCEPTANCE.md`.
+
 Do not add custom edge semantics without first updating `planning/CONVENTIONS.md`.
