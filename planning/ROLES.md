@@ -2,17 +2,35 @@
 
 This file records accepted Role definitions and current holder bindings for the project using this template.
 
-A Role is an authority/responsibility slot. A holder is a person, chat, agent, or other execution context currently bound to that Role.
+A Role is a stable authority/responsibility slot. A holder is a person, chat, agent, or other execution context currently bound to that Role.
+
+**The template does not prescribe a universal substantive Role vocabulary.** Create a durable substantive Role only when the project needs a stable authority/responsibility slot whose scope should survive holder changes. Names such as `ProjectOwner`, `ArchitectureLead`, `SubsystemLead`, or `Reviewer` are project choices, not built-in ontology.
+
+A root project must still have an accepted authority chain sufficient to create/bind whatever substantive Roles it uses. A child project may instead receive its boundary authority from an accepted parent contract/delegation.
+
+`Foreman` is different: in this template it is the required **infrastructure coordination Role** for the autonomous execution/propagation workflow defined by `AGENTS.md`, `planning/CONVENTIONS.md`, work packages, and `prompts/FOREMAN.md`. Foreman is required by that workflow because it performs orchestration, targeted plan-change propagation, and scheduled follow-up. It acquires no substantive technical or decision authority merely by being Foreman.
+
+A project that intentionally removes or replaces Foreman must also define an alternative execution/propagation mechanism and update the template-wide operational contract coherently; omitting the row alone is not a valid no-Foreman mode.
 
 **Do not treat the placeholder rows below as active authority until the project has replaced the placeholders with accepted bindings and authority sources.**
 
-## Root roles
+## Root substantive roles
+
+Add only the root substantive Roles this project actually needs.
 
 | RoleID | Current holder | Scope | Final decision authority | Delegation capabilities | Authority source | State |
 |---|---|---|---|---|---|---|
-| `ProjectOwner` | `<bind>` | Project goals, major priorities, top-level scope, major resources and top-level delegation. | Decisions explicitly retained by the owner. | `<explicitly list or none>` | `<accepted source>` | Vacant until bound |
-| `ArchitectureLead` | `<bind>` | Project-wide architecture and plan topology within delegated owner scope. | Cross-scope architectural decisions explicitly delegated here. | `<explicitly list or none>` | `<accepted source>` | Vacant until bound |
-| `Foreman` | `<bind qualified orchestrator>` | Execution coordination for authorized work packages. | None merely by being Foreman. May make substantive decisions only when separately holding a Role that grants them. | Not used to create Lead authority; Foreman coordinates delegations already authorized by other Roles. | `<accepted source>` | Vacant until qualified holder bound |
+| `<RootRoleID>` | `<bind>` | `<bounded project/root scope>` | `<exact decisions or none>` | `<explicitly list or none>` | `<accepted source>` | `<Active/Vacant>` |
+
+Common role names can be useful, but do not create them merely because this template mentions them. For example, a project may have one broad root authority, several narrow peer authorities, or an externally inherited parent authority, depending on its actual governance needs.
+
+## Foreman infrastructure role
+
+| RoleID | Current holder | Scope | Final decision authority | Delegation capabilities | Authority source | State |
+|---|---|---|---|---|---|---|
+| `Foreman` | `<bind qualified orchestrator>` | Execution coordination for authorized work packages; plan-change propagation; scheduled follow-up. | None merely by being Foreman. May make substantive decisions only when separately holding a substantive Role that grants them. | Not used to create Lead authority; Foreman coordinates delegations already authorized by other Roles. | `<accepted source>` | `<Active/Vacant>` |
+
+A vacant Foreman cannot perform the autonomous orchestration duties that depend on it. Do not silently substitute a plain chat or another substantive Role without updating the accepted coordination contract.
 
 ## Delivery/subordinate roles
 
@@ -20,7 +38,7 @@ Add project-specific Roles here or in child-plan `ROLES.md` files.
 
 | RoleID | Current holder | Parent Role | Scope | Final decision authority | Delegation capabilities | Authority source | State |
 |---|---|---|---|---|---|---|---|
-| `<RoleID>` | `<holder or —>` | `<parent RoleID>` | `<bounded scope>` | `<exact decisions or none>` | `<capability IDs or none>` | `<accepted source>` | `<Active/Vacant/Retired>` |
+| `<RoleID>` | `<holder or —>` | `<parent RoleID or none>` | `<bounded scope>` | `<exact decisions or none>` | `<capability IDs or none>` | `<accepted source>` | `<Active/Vacant/Retired>` |
 
 ## Delegation capability IDs
 
@@ -48,6 +66,8 @@ Do not write `full authority`, `as needed`, `etc.`, `all normal powers`, or simi
 - Creating a Role node in Mermaid does not bind a holder.
 - Repository permissions do not bind a Role.
 - Two Roles held by one underlying agent/context do not satisfy independent-review requirements merely because their names differ.
+- Do not split one real substantive authority into several nominal Roles unless the scopes truly need to be granted, revoked, delegated, audited, or rebound independently.
+- Do not merge distinct substantive authorities merely to reduce Role count when independent scope/binding actually matters.
 - Foreman coordinates execution but does not acquire the substantive decision authority of the Roles whose work it coordinates.
 
 ## Foreman holder qualification
