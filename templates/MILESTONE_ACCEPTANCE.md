@@ -7,22 +7,28 @@ This is separate from work completion, review completion, evidence production, a
 ```text
 acceptance_id: <stable ID>
 plan_id: <PlanID>
-plan_ref: <exact accepted PlanRef whose milestone contract is being accepted>
+contract_plan_ref: <exact accepted pre-acceptance PlanRef containing the milestone contract being judged>
 milestone_id: <MilestoneID>
 accepted_by_role: <RoleID>
-acceptance_authority_source: <accepted source granting this Role acceptance authority>
+acceptance_authority_source: <independently accepted source granting this Role acceptance authority over this milestone/scope>
 accepted_at: <time or durable event reference>
 supersedes: <prior acceptance record or none>
 ```
+
+`contract_plan_ref` is deliberately **not** the later PlanRef that may record `MILESTONE_DONE`. It identifies the exact contract revision whose outcome, criteria, and authority references are being judged.
+
+The milestone contract may name `accepted_by_role` and an authority-source locator, but those fields do not grant authority. Before issuing this record, verify that the cited authority source is independently accepted and actually covers this milestone/scope. If not, do not issue acceptance.
 
 ## Milestone contract being accepted
 
 ```text
 Outcome:
 Acceptance criteria:
+Acceptance authority reference:
+Acceptance authority source:
 ```
 
-Quote or link the exact contract from the bound PlanRef. Do not silently accept a later or differently worded criterion.
+Quote or link the exact contract from `contract_plan_ref`. Do not silently accept a later or differently worded criterion.
 
 ## Accepted evidence
 
@@ -58,6 +64,15 @@ Unless separately required by the milestone contract, this record does not imply
 
 ## Roadmap projection
 
-After this acceptance is durable, the roadmap may project the milestone as `MILESTONE_DONE` and link this record as the reason for that status.
+After this acceptance is durable, a later plan/status update may:
 
-A roadmap class change without a valid acceptance record does not create acceptance.
+- mark the milestone `MILESTONE_DONE`; and/or
+- populate the milestone's `Acceptance record index` with a locator to this record.
+
+That update creates a **different PlanRef**. Call it the projection PlanRef when the distinction matters.
+
+The projection PlanRef does not become the contract revision accepted by this record. This record continues to bind `contract_plan_ref` exactly.
+
+Do not edit this acceptance record merely to point it at the later projection revision. If a later revision materially changes the milestone outcome, acceptance criteria, or authority semantics, it is a new contract revision and requires its own acceptance.
+
+A roadmap class change or acceptance-record index entry without a valid prior acceptance record does not create acceptance.
