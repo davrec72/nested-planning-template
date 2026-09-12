@@ -79,6 +79,10 @@ MilestoneID:
 Outcome:
 Acceptance criteria:
 Primary assigned Role:
+Acceptance authority:
 Authority source:
 Evidence location:
+Acceptance record: none | <durable locator>
 ```
+
+Assignment is responsibility for delivery, not implicit authority to accept the delivered outcome. A child milestone becomes `MILESTONE_DONE` only after a durable acceptance record is issued by the accepted authority for that milestone. Use `templates/MILESTONE_ACCEPTANCE.md`.
