@@ -4,13 +4,13 @@ Copy this structure into `planning/PLAN.md` and replace all placeholders.
 
 ```text
 plan_id: <stable PlanID>
-grammar: plan-grammar-v1
+grammar: plan-grammar-v2
 ```
 
 ```mermaid
 flowchart TD
 
-  %% PLAN GRAMMAR v1
+  %% PLAN GRAMMAR v2
   %% A --> B                         hard prerequisite
   %% A -. "preferred before" .-> B  scheduling preference only
   %% ROLE -- "assigned to" --> MILESTONE
