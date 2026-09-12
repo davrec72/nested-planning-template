@@ -125,6 +125,7 @@ flowchart TD
   ProjectLead -- "decides" --> D1
   D1 -- "integrate" --> M3
 
+  ProjectLead -- "assigned to" --> M1
   FeatureLead -- "assigned to" --> M2
   ProjectLead -- "assigned to" --> M3
 
