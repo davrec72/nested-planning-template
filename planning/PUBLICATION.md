@@ -86,6 +86,8 @@ All authority for the proposed semantic change comes from the accepted state roo
 
 Create/review the semantic planning or Role change normally.
 
+A semantic candidate MUST NOT modify `planning/CURRENT.md`; that file is changed only by the separate publication step.
+
 The portable default is to merge/stage that semantic change first and identify the exact resulting commit:
 
 ```text
