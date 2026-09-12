@@ -77,6 +77,7 @@ If `planning/CURRENT.md` changes before publication, the publication proposal is
 ## Validation checklist
 
 - [ ] The baseline `prior_publication_id` / `prior_plan_ref` came from the valid current publication.
+- [ ] This semantic candidate does not modify `planning/CURRENT.md`; publication is a separate step.
 - [ ] The plan declares the intended grammar version, and any parent/child grammar compatibility or migration impact is explicit.
 - [ ] Every node uses a defined class.
 - [ ] Every solid dependency is a true hard prerequisite.
