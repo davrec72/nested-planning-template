@@ -1,6 +1,17 @@
 # Planning conventions
 
-This file defines the exact planning grammar. Agents must not infer alternate meanings from layout, color, prose tone, or prior chats.
+This file defines the exact current planning grammar: `plan-grammar-v2`. Agents must not infer alternate meanings from layout, color, prose tone, or prior chats.
+
+## Grammar version
+
+`plan-grammar-v2` is intentionally incompatible with `plan-grammar-v1` in milestone acceptance/lifecycle semantics. In v2:
+
+- milestone delivery/evidence and milestone acceptance are separate facts;
+- accepted milestones use durable acceptance records;
+- milestone-source hard prerequisites become operational only when the current accepted PlanRef projects the milestone `MILESTONE_DONE` and indexes its acceptance;
+- issued acceptance records are immutable historical receipts.
+
+A historical v1 plan remains valid under v1. Do not silently reinterpret a v1 plan as v2 merely because it uses the same node names. Cross-version nesting and migration are defined in `NESTING.md`.
 
 ## Canonical node classes
 
@@ -13,6 +24,8 @@ An outcome with explicit acceptance criteria. Status is encoded only by class:
 - `MILESTONE_PENDING`
 - `MILESTONE_INPROGRESS`
 - `MILESTONE_DONE`
+
+These classes describe the state projected by the **current accepted roadmap snapshot**. They are not instantaneous claims about every external event that may have occurred since that PlanRef was accepted.
 
 Do not put status words into milestone labels.
 
@@ -35,9 +48,13 @@ A concrete evidence/artifact dependency important enough to appear in the overvi
 A --> B
 ```
 
-Meaning: A must be accepted/satisfied **and made operative in the current accepted roadmap** before substantive execution of B begins.
+Meaning: A must be accepted/satisfied before substantive execution of B begins.
 
-For a Milestone prerequisite, an external acceptance record alone is not enough to open downstream dispatch while the current accepted PlanRef still shows that milestone unfinished. The accepted current PlanRef must project the prerequisite milestone as `MILESTONE_DONE` and index the acceptance record that justifies that status.
+Activation is node-type-specific:
+
+- **Milestone source:** the prerequisite is operative only when the current accepted PlanRef projects that Milestone as `MILESTONE_DONE` and indexes the valid acceptance record that supports the projection. A visible external acceptance record alone does not open downstream dispatch while the current accepted roadmap still shows the Milestone unfinished.
+- **Gate source:** the prerequisite is operative when the Gate's objective predicate is demonstrably true. No separate Gate-status or Gate-projection commit is required. If the Gate counts Milestones, it counts only Milestones operative as `MILESTONE_DONE` in the current accepted PlanRef.
+- **Decision or DATA source:** use the satisfaction/activation semantics explicitly defined for that node and its incoming/outgoing records. Do not infer a Milestone-style status/projection lifecycle merely from the hard-prerequisite edge.
 
 For ordinary nodes, multiple hard incoming edges mean **AND**.
 
@@ -89,6 +106,8 @@ Every materially distinct outgoing Decision path must be labeled with the outcom
 - A Gate label must state a precise predicate.
 - A Role is never `assigned to` a Gate and never `decides` a Gate.
 - If a Gate requires someone to select, interpret, rank, or choose, split that judgment into a Decision node.
+- A Gate does not acquire a Milestone-style status lifecycle. Its predicate is evaluated directly.
+- When a Gate predicate depends on Milestones, only Milestones operative as `MILESTONE_DONE` in the current accepted PlanRef count as satisfied Milestone inputs.
 
 Example:
 
@@ -153,7 +172,7 @@ The later projection PlanRef is **not** the contract revision that was accepted 
 
 `Acceptance record index` is projection/index metadata. It may remain `none` in the `contract_plan_ref` and be populated only after the acceptance record exists. Populating it later changes the repository PlanRef but does not change which earlier contract revision the acceptance judged.
 
-Until that later projection PlanRef itself is accepted, Foreman and other agents must continue to use the current accepted roadmap state. They must not open downstream hard-prerequisite dispatch merely because they can see an acceptance record that the current PlanRef has not yet projected.
+Until that later projection PlanRef itself is accepted, Foreman and other agents must continue to use the current accepted roadmap state. They must not open downstream **Milestone** hard-prerequisite dispatch merely because they can see an acceptance record that the current PlanRef has not yet projected.
 
 If the milestone outcome, acceptance criteria, or authority semantics change materially, the new contract revision requires its own acceptance; an old acceptance record cannot silently migrate to the new contract.
 
@@ -187,6 +206,29 @@ Historical truth and current operational status are therefore separate:
 ```
 
 Use `templates/MILESTONE_ACCEPTANCE.md` for the durable record.
+
+### Lightweight projection example
+
+The v2 separation does **not** require a second milestone-acceptance judgment merely to update the roadmap.
+
+```text
+P1 = current accepted PlanRef
+     M1 is INPROGRESS
+     Acceptance record index: none
+
+AcceptanceRole, already authorized to accept M1,
+issues immutable acceptance record A against P1.
+
+PlannerRole, already authorized to publish the relevant plan change,
+publishes a mechanical status/index projection:
+     M1 -> MILESTONE_DONE
+     Acceptance record index -> A
+
+P2 = that projection after it is accepted as the new PlanRef.
+Only now does M1 open downstream Milestone hard prerequisites.
+```
+
+`PlannerRole` and `AcceptanceRole` are example labels, not required role names. The same underlying holder may occupy both if independently authorized. Foreman may coordinate/rout the projection, but Foreman gains neither milestone-acceptance authority nor plan-publication authority merely because the update is mechanical.
 
 ## Stable IDs
 
@@ -242,14 +284,16 @@ Activity detail belongs in the milestone record or child plan.
 
 ## Status rules
 
-- Every Milestone has exactly one status class.
-- `DONE` is a projection of a durable accepted milestone record; the class does not itself create acceptance.
-- `INPROGRESS` means substantive execution is active.
-- `PENDING` means not accepted and not currently active.
+- Every Milestone has exactly one status class in the current accepted roadmap.
+- Status classes describe the state projected by the **current accepted PlanRef**, not every external event that may have occurred after that PlanRef was accepted.
+- `DONE` means the current accepted PlanRef projects a durable accepted milestone record and indexes that record; the class does not itself create acceptance.
+- `INPROGRESS` means the current accepted roadmap projects substantive execution as active.
+- `PENDING` means the current accepted roadmap projects the Milestone as neither done nor currently active.
+- During the intentionally permitted interval after a durable acceptance record is issued but before its status/index projection is accepted, the displayed class remains whatever the current accepted PlanRef already says. No fourth status exists for this interval.
 - A diagram edit cannot make a milestone complete without the required acceptance evidence and accepting authority.
 - A status-only roadmap update must link the acceptance record that justifies the projection.
 - The PlanRef created by that status/index update does not replace the acceptance record's `contract_plan_ref`.
-- Until the status/index projection itself is accepted as the current PlanRef, downstream hard-prerequisite dispatch remains governed by the prior current roadmap state.
+- Until the status/index projection itself is accepted as the current PlanRef, downstream Milestone hard-prerequisite dispatch remains governed by the prior current roadmap state.
 
 ## Plan changes
 
