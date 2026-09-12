@@ -4,7 +4,7 @@ Fill every header field before substantive dispatch.
 
 ```text
 plan_id: <stable PlanID>
-grammar: plan-grammar-v1
+grammar: plan-grammar-v2
 parent_plan: <parent PlanID or external locator>
 parent_plan_ref: <exact accepted parent PlanRef>
 parent_milestone: <exact parent MilestoneID>
@@ -17,7 +17,7 @@ This child plan implements the parent milestone. It does not redefine it.
 ```mermaid
 flowchart TD
 
-  %% PLAN GRAMMAR v1
+  %% PLAN GRAMMAR v2
   %% A --> B                         hard prerequisite
   %% A -. "preferred before" .-> B  scheduling preference only
   %% ROLE -- "assigned to" --> MILESTONE
