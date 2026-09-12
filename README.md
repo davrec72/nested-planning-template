@@ -46,6 +46,7 @@ templates/
   WORK_PACKAGE.md
   PLAN_CHANGE.md
   PARENT_CONTRACT.md
+  MILESTONE_ACCEPTANCE.md
 examples/
   robot-plan/
     PLAN.md
@@ -56,6 +57,14 @@ examples/
 ```
 
 `planning/PLAN.md` is the at-a-glance roadmap. `planning/CONVENTIONS.md` defines the exact planning grammar. `planning/NESTING.md` defines recursive delegation. `planning/ROLES.md` records role holders and authority. `planning/PARENT.md` is used only when this repository itself is nested under another plan.
+
+## Current grammar version
+
+The current contract is **`plan-grammar-v2`**.
+
+v2 makes milestone delivery/evidence, milestone acceptance, and the roadmap projection of that acceptance separate facts. A milestone-source hard prerequisite becomes operational only when the current accepted PlanRef projects the milestone `MILESTONE_DONE` and indexes its durable acceptance record.
+
+`plan-grammar-v1` remains a valid historical contract. Do not silently reinterpret v1 plans as v2. Cross-version child plans are treated according to `planning/NESTING.md`; absent an explicit compatibility rule, a v2 parent treats an unmigrated v1 child's internals as opaque and relies on the parent-facing boundary contract/evidence.
 
 ## Required concepts
 
@@ -91,7 +100,7 @@ A **PlanRef** is the exact accepted Git commit SHA containing the planning state
 ```mermaid
 flowchart TD
 
-  %% PLAN GRAMMAR v1
+  %% PLAN GRAMMAR v2
   %% A --> B                        hard prerequisite
   %% A -. "preferred before" .-> B scheduling preference only
   %% ROLE -- "assigned to" --> MILESTONE
