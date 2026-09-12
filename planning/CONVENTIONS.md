@@ -16,6 +16,8 @@ An outcome with explicit acceptance criteria. Status is encoded only by class:
 
 Do not put status words into milestone labels.
 
+A Milestone definition, work performed toward it, evidence about it, and acceptance of it are distinct facts. Assignment means responsibility for delivery; it does not by itself grant acceptance authority.
+
 ### GATE
 An objective predicate. No Role decides a Gate.
 
@@ -59,7 +61,7 @@ Meaning: the Role has primary responsibility for delivering that Milestone to it
 
 Each Milestone has exactly one primary assigned Role before substantive dispatch.
 
-Assignment does not create permissions that are absent from the Role's accepted authority record.
+Assignment does not create permissions that are absent from the Role's accepted authority record, and it does not imply that the assigned Role may accept its own delivered outcome.
 
 ### Decision authority
 
@@ -107,6 +109,38 @@ flowchart TD
 - Exactly one Role decides it.
 - Consultation may be recorded elsewhere; do not add several `decides` edges.
 - If two accepted records appear to grant final authority over the same decision scope, stop that decision and escalate to the nearest common parent authority.
+
+## Milestone acceptance
+
+Milestone acceptance is a durable decision/evidence record, not a diagram edit and not an inference from work-package completion.
+
+A milestone contract must identify:
+
+```text
+Acceptance criteria:
+Acceptance authority:
+Evidence location:
+Acceptance record: none | <durable locator>
+```
+
+The accepting authority may be the same Role as the primary assigned Role only when accepted authority explicitly permits that arrangement. Do not infer self-acceptance from assignment.
+
+A milestone acceptance record should bind at least:
+
+```text
+milestone_id
+plan_id
+plan_ref
+accepted_by_role
+acceptance_authority_source
+accepted_evidence
+accepted_at
+limitations_or_residuals
+```
+
+The acceptance record certifies only the stated milestone outcome under its criteria and evidence. It does not imply that every attempted work package succeeded, that every proposed implementation step was necessary, or that unrelated downstream milestones are accepted.
+
+Use `templates/MILESTONE_ACCEPTANCE.md` for the durable record.
 
 ## Stable IDs
 
@@ -163,10 +197,11 @@ Activity detail belongs in the milestone record or child plan.
 ## Status rules
 
 - Every Milestone has exactly one status class.
-- `DONE` requires accepted evidence under the proper authority.
+- `DONE` is a projection of a durable accepted milestone record; the class does not itself create acceptance.
 - `INPROGRESS` means substantive execution is active.
 - `PENDING` means not accepted and not currently active.
-- A diagram edit cannot make a milestone complete without the required acceptance evidence.
+- A diagram edit cannot make a milestone complete without the required acceptance evidence and accepting authority.
+- A status-only roadmap update must link the acceptance/work evidence that justifies the projection.
 
 ## Plan changes
 
