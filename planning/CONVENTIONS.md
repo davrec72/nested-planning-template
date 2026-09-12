@@ -35,7 +35,9 @@ A concrete evidence/artifact dependency important enough to appear in the overvi
 A --> B
 ```
 
-Meaning: A must be accepted/satisfied before substantive execution of B begins.
+Meaning: A must be accepted/satisfied **and made operative in the current accepted roadmap** before substantive execution of B begins.
+
+For a Milestone prerequisite, an external acceptance record alone is not enough to open downstream dispatch while the current accepted PlanRef still shows that milestone unfinished. The accepted current PlanRef must project the prerequisite milestone as `MILESTONE_DONE` and index the acceptance record that justifies that status.
 
 For ordinary nodes, multiple hard incoming edges mean **AND**.
 
@@ -143,13 +145,15 @@ acceptance record
     = binds that exact contract_plan_ref + accepted evidence + accepting authority
 
 later roadmap/status projection
-    = may create a new PlanRef that marks MILESTONE_DONE and/or populates
+    = creates a new PlanRef that marks MILESTONE_DONE and populates
       the Acceptance record index
 ```
 
-The later projection PlanRef is **not** the contract revision that was accepted merely because it records `MILESTONE_DONE` or links the acceptance record. It is a later projection of the already-durable acceptance.
+The later projection PlanRef is **not** the contract revision that was accepted merely because it records `MILESTONE_DONE` or links the acceptance record. It is a later projection of the already-durable acceptance. The projection does not re-accept the milestone; it makes the accepted fact operative in the current roadmap.
 
 `Acceptance record index` is projection/index metadata. It may remain `none` in the `contract_plan_ref` and be populated only after the acceptance record exists. Populating it later changes the repository PlanRef but does not change which earlier contract revision the acceptance judged.
+
+Until that later projection PlanRef itself is accepted, Foreman and other agents must continue to use the current accepted roadmap state. They must not open downstream hard-prerequisite dispatch merely because they can see an acceptance record that the current PlanRef has not yet projected.
 
 If the milestone outcome, acceptance criteria, or authority semantics change materially, the new contract revision requires its own acceptance; an old acceptance record cannot silently migrate to the new contract.
 
@@ -167,6 +171,20 @@ limitations_or_residuals
 ```
 
 The acceptance record certifies only the stated milestone outcome under its criteria and evidence. It does not imply that every attempted work package succeeded, that every proposed implementation step was necessary, or that unrelated downstream milestones are accepted.
+
+### Acceptance history is immutable
+
+Once issued, an acceptance record is an immutable historical receipt. Do not edit, retarget, weaken, strengthen, or reinterpret it in place.
+
+If an acceptance record was erroneous or must be replaced, create a new durable record that explicitly references or supersedes the prior one under valid authority. If later evidence invalidates an otherwise historical acceptance for current planning, retain the old acceptance unchanged, record a separate revocation/reopening/correction decision, and project the resulting current state through an accepted plan change.
+
+Historical truth and current operational status are therefore separate:
+
+```text
+"Acceptance A was issued under contract_plan_ref X"
+    !=
+"Milestone M currently counts as done in the accepted roadmap"
+```
 
 Use `templates/MILESTONE_ACCEPTANCE.md` for the durable record.
 
@@ -231,6 +249,7 @@ Activity detail belongs in the milestone record or child plan.
 - A diagram edit cannot make a milestone complete without the required acceptance evidence and accepting authority.
 - A status-only roadmap update must link the acceptance record that justifies the projection.
 - The PlanRef created by that status/index update does not replace the acceptance record's `contract_plan_ref`.
+- Until the status/index projection itself is accepted as the current PlanRef, downstream hard-prerequisite dispatch remains governed by the prior current roadmap state.
 
 ## Plan changes
 
