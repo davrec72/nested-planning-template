@@ -14,9 +14,10 @@ This repository defines a planning and delegation system for AI-heavy projects. 
 8. **Role separation is not reviewer independence.** Two Roles held by the same underlying agent/context do not count as independent reviewers merely because their RoleIDs differ.
 9. **Milestones are outcomes.** Do not use milestone nodes for activities such as `review X` unless completion of that activity is itself the intended outcome.
 10. **Delivery, evidence, and acceptance are separate facts.** Completing work or producing evidence does not by itself accept a milestone. `MILESTONE_DONE` must project a durable acceptance record issued under explicit acceptance authority.
-11. **Gates are predicates; Decisions are judgments.** Do not hide human/agent choice inside a Gate.
-12. **Plan changes propagate by explicit notification plus boundary checks, not constant polling.**
-13. **Exact accepted Git commits are PlanRefs.** Mutable branch names are locators only.
+11. **A milestone contract may reference acceptance authority; it cannot create it.** Naming an `Acceptance authority` Role or an `Acceptance authority source` in the milestone record does not grant that authority. The cited authority source must be independently accepted and must actually cover that milestone/scope; otherwise acceptance authority is absent.
+12. **Gates are predicates; Decisions are judgments.** Do not hide human/agent choice inside a Gate.
+13. **Plan changes propagate by explicit notification plus boundary checks, not constant polling.**
+14. **Exact accepted Git commits are PlanRefs.** Mutable branch names are locators only.
 
 ## Before any substantive planning or execution action
 
@@ -28,7 +29,7 @@ An AI must identify from accepted records:
 - current holder binding for that Role;
 - milestone or decision scope;
 - authority source for the action;
-- if accepting a milestone: the exact milestone contract, acceptance authority, and evidence being accepted;
+- if accepting a milestone: the exact `contract_plan_ref`, the accepting Role, an independently accepted authority source covering that milestone/scope, and the evidence being accepted;
 - if nested: parent plan, parent PlanRef, parent milestone, and parent contract;
 - if delegating: the exact delegation capability that permits the action.
 
@@ -104,7 +105,9 @@ parent_plan_ref=<exact parent PlanRef>
 
 Foreman and executing agents must refuse or escalate materially contradictory bindings rather than silently choosing one.
 
-Work-package completion may return evidence for a milestone but does not itself accept that milestone. Milestone acceptance must be recorded separately under the acceptance authority named by the milestone contract; use `templates/MILESTONE_ACCEPTANCE.md`.
+Work-package completion may return evidence for a milestone but does not itself accept that milestone. Milestone acceptance must be recorded separately by a Role whose acceptance authority is established independently of the milestone contract; use `templates/MILESTONE_ACCEPTANCE.md`.
+
+The acceptance record binds the exact pre-acceptance `contract_plan_ref`. A later plan commit that projects `MILESTONE_DONE` or indexes the acceptance record is a different PlanRef and does not retroactively become the contract revision that was judged.
 
 ## Cross-repository nesting
 
