@@ -49,8 +49,9 @@ MilestoneID:
 Outcome:
 Acceptance criteria:
 Primary assigned Role:
+Assignment authority source:
 Acceptance authority:
-Authority source:
+Acceptance authority source:
 Evidence location:
 Acceptance record: none | <durable locator>
 Child plan: none | <internal path> | <external repository locator>
