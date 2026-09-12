@@ -12,11 +12,11 @@ The parent owns the boundary contract. The child owns only the internal decompos
 
 ## Required child-plan identity
 
-Every active child plan must declare:
+Every active child plan using the current grammar must declare:
 
 ```text
 plan_id: <stable PlanID>
-grammar: plan-grammar-v1
+grammar: plan-grammar-v2
 parent_plan: <parent PlanID or external locator>
 parent_plan_ref: <exact accepted parent PlanRef>
 parent_milestone: <exact parent MilestoneID>
@@ -67,6 +67,8 @@ The delegated decision scope must be explicit. The parent Role cannot retain sim
 ### ACCEPT_CHILD_MILESTONES
 
 Allows final acceptance of child-plan milestones within the delegated scope.
+
+Under `plan-grammar-v2`, possession of this capability does not itself accept any milestone. Each accepted child milestone still requires the milestone contract, authority source, and durable acceptance record required by `CONVENTIONS.md`.
 
 This does not imply authority to accept the parent milestone. Parent acceptance remains with the parent-facing authority unless explicitly delegated.
 
@@ -195,9 +197,30 @@ Internal child-plan changes that preserve the parent contract do not require a p
 
 ## Native vs. opaque child plans
 
-If both repositories use compatible `plan-grammar-v1`, the child is a **native nested plan**. Agents may reason about its Milestones, Gates, Decisions, Roles, and PlanRefs using this grammar.
+Native interpretation requires a grammar version that the parent explicitly knows to be compatible.
 
-A child using a different planning system is **opaque**. The parent may rely only on the explicit boundary contract and accepted evidence. Agents must not silently translate a foreign plan into this grammar.
+For the current contract:
+
+- a `plan-grammar-v2` parent may natively interpret a `plan-grammar-v2` child;
+- `plan-grammar-v1` and `plan-grammar-v2` are **not** silently compatible;
+- a v1 child remains valid under its own historical v1 semantics, but a v2 parent must not reinterpret its internal Milestones, acceptance state, or dependency activation as though the child had produced v2 records;
+- until a cross-version child is migrated or an explicit compatibility rule is accepted, treat the child boundary as **opaque**: rely only on the explicit parent contract and accepted boundary evidence.
+
+A child using a different planning system or an incompatible grammar version is opaque for the semantics the parent cannot safely interpret. Agents must not silently translate foreign or older records into the current grammar.
+
+### Migrating v1 child plans to v2
+
+Migration is a forward planning transition, not a rewrite of history.
+
+When migrating a child from `plan-grammar-v1` to `plan-grammar-v2`:
+
+1. create an accepted v2 PlanRef that declares `grammar: plan-grammar-v2` and adopts the v2 milestone/acceptance lifecycle for future operation;
+2. preserve historical v1 records and their original meaning;
+3. do **not** fabricate or backdate v2 milestone-acceptance receipts merely to make historical v1 completions appear native to v2;
+4. if a historical v1 completion must matter to current v2 reasoning, carry it forward through an explicit migration/current-state decision or re-establish the relevant current state under v2 evidence and authority; otherwise leave it outside native v2 milestone semantics;
+5. update the parent/child compatibility record if the migration changes what the parent may interpret natively.
+
+A v2 migration does not by itself broaden delegated scope, alter the parent contract, or grant new authority.
 
 ## Upward nesting
 

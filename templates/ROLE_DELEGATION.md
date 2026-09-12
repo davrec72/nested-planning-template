@@ -35,6 +35,8 @@ ACCEPT_CHILD_MILESTONES
 
 Omitted capability = not granted.
 
+`ACCEPT_CHILD_MILESTONES` permits the delegate to serve as an acceptance authority inside the delegated scope; it does not itself accept any milestone. Each milestone contract must still identify its acceptance authority, and each accepted milestone requires its own durable acceptance record.
+
 ## Explicit exclusions
 
 List retained parent authority and prohibited scope.
@@ -45,7 +47,7 @@ List conditions that must return to the delegator or higher parent authority.
 
 ## Acceptance responsibility
 
-State whether the delegate may accept child milestones and whether the delegator retains parent-milestone acceptance.
+State which child milestones, if any, the delegate may accept and whether the delegator retains parent-milestone acceptance. Do not infer milestone acceptance from delivery responsibility or from possession of `ACCEPT_CHILD_MILESTONES` alone.
 
 ## Validity checks
 

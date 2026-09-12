@@ -2,7 +2,7 @@
 
 ```text
 plan_id: <replace-with-stable-PlanID>
-grammar: plan-grammar-v1
+grammar: plan-grammar-v2
 ```
 
 This file is the canonical at-a-glance roadmap for the project. Replace all angle-bracket placeholders before treating it as operational.
@@ -12,7 +12,7 @@ Interpret this diagram only under `CONVENTIONS.md`. Current holder/authority bin
 ```mermaid
 flowchart TD
 
-  %% PLAN GRAMMAR v1
+  %% PLAN GRAMMAR v2
   %% A --> B                         hard prerequisite
   %% A -. "preferred before" .-> B  scheduling preference only
   %% ROLE -- "assigned to" --> MILESTONE
@@ -69,9 +69,20 @@ MilestoneID:
 Outcome:
 Acceptance criteria:
 Primary assigned Role:
-Authority source:
+Assignment authority source:
+Acceptance authority:
+Acceptance authority source:
 Evidence location:
+Acceptance record index: none | <durable locator>
 Child plan: none | <internal path> | <external repository locator>
 ```
 
-The Mermaid overview should remain terse. Put detailed acceptance criteria in milestone records, issues, or child plans rather than inside nodes.
+The primary assigned Role is responsible for delivery; it is not automatically the accepting authority. The same Role may perform both functions only when an independently accepted authority source explicitly grants both scopes.
+
+The milestone's `Acceptance authority` field only references authority; it does not create it. If the named Role lacks an independently accepted authority source covering this milestone/scope, acceptance authority is absent.
+
+`Acceptance record index` is projection/index metadata. In the exact pre-acceptance `contract_plan_ref` it will normally be `none`. After a durable acceptance record exists, a later status/index update may populate the locator and mark the node `MILESTONE_DONE`; that later commit has a different PlanRef and does not become the contract revision that was accepted.
+
+`MILESTONE_DONE` is a roadmap projection of a durable milestone acceptance record. The class does not itself create acceptance. Use `templates/MILESTONE_ACCEPTANCE.md` for the acceptance record.
+
+The Mermaid overview should remain terse. Put detailed acceptance criteria, evidence, and acceptance records in durable records rather than inside nodes.

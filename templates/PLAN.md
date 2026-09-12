@@ -4,13 +4,13 @@ Copy this structure into `planning/PLAN.md` and replace all placeholders.
 
 ```text
 plan_id: <stable PlanID>
-grammar: plan-grammar-v1
+grammar: plan-grammar-v2
 ```
 
 ```mermaid
 flowchart TD
 
-  %% PLAN GRAMMAR v1
+  %% PLAN GRAMMAR v2
   %% A --> B                         hard prerequisite
   %% A -. "preferred before" .-> B  scheduling preference only
   %% ROLE -- "assigned to" --> MILESTONE
@@ -41,5 +41,26 @@ flowchart TD
   class M2 MILESTONE_PENDING
   linkStyle default stroke:slategray,stroke-width:3.5px,fill:none;
 ```
+
+For each milestone maintain a durable record containing at least:
+
+```text
+MilestoneID:
+Outcome:
+Acceptance criteria:
+Primary assigned Role:
+Assignment authority source:
+Acceptance authority:
+Acceptance authority source:
+Evidence location:
+Acceptance record index: none | <durable locator>
+Child plan: none | <internal path> | <external repository locator>
+```
+
+The primary assigned Role delivers the milestone; it is not automatically the authority that accepts it. Naming an `Acceptance authority` Role does not grant that authority; the cited source must be independently accepted and cover the milestone/scope.
+
+`Acceptance record index` is projection metadata. The pre-acceptance `contract_plan_ref` normally contains `none`; after acceptance, a later plan/status commit may populate the locator and mark the node `MILESTONE_DONE`. That later PlanRef does not replace the acceptance record's `contract_plan_ref`.
+
+`MILESTONE_DONE` is only a projection of a durable acceptance record. Use `templates/MILESTONE_ACCEPTANCE.md`.
 
 Do not add custom edge semantics without first updating `planning/CONVENTIONS.md`.

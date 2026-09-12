@@ -4,6 +4,7 @@ This is an example only. It demonstrates a parent repository treating another re
 
 ```text
 plan_id: ROBOT
+grammar: plan-grammar-v2
 ```
 
 ```mermaid

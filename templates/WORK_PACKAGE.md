@@ -60,4 +60,12 @@ If future work is required, Foreman must actually schedule it. Do not write `wil
 
 State what this package may establish and what it cannot establish.
 
-Completion of a work package does not automatically accept its milestone unless the returning Role has `ACCEPT_CHILD_MILESTONES` for that scope or another accepted authority grants milestone acceptance.
+Completion of a work package is a report/evidence event, not milestone acceptance. Even when the returning Role is also authorized to accept the milestone, issue a separate milestone acceptance record that binds the exact criteria and accepted evidence. Use `templates/MILESTONE_ACCEPTANCE.md`.
+
+Never infer acceptance merely from:
+
+- a worker saying `done`;
+- a clean review;
+- passing tests outside their stated scope;
+- merge of an implementation PR;
+- the assigned delivery Role being the same holder as an accepting Role.

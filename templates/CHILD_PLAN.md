@@ -4,7 +4,7 @@ Fill every header field before substantive dispatch.
 
 ```text
 plan_id: <stable PlanID>
-grammar: plan-grammar-v1
+grammar: plan-grammar-v2
 parent_plan: <parent PlanID or external locator>
 parent_plan_ref: <exact accepted parent PlanRef>
 parent_milestone: <exact parent MilestoneID>
@@ -17,7 +17,7 @@ This child plan implements the parent milestone. It does not redefine it.
 ```mermaid
 flowchart TD
 
-  %% PLAN GRAMMAR v1
+  %% PLAN GRAMMAR v2
   %% A --> B                         hard prerequisite
   %% A -. "preferred before" .-> B  scheduling preference only
   %% ROLE -- "assigned to" --> MILESTONE
@@ -79,6 +79,15 @@ MilestoneID:
 Outcome:
 Acceptance criteria:
 Primary assigned Role:
-Authority source:
+Assignment authority source:
+Acceptance authority:
+Acceptance authority source:
 Evidence location:
+Acceptance record index: none | <durable locator>
 ```
+
+Assignment is responsibility for delivery, not implicit authority to accept the delivered outcome. Naming an `Acceptance authority` Role does not grant that authority; the cited authority source must be independently accepted and cover the child milestone/scope.
+
+The pre-acceptance `contract_plan_ref` normally has `Acceptance record index: none`. After a durable acceptance record exists, a later child-plan status/index commit may populate the locator and project `MILESTONE_DONE`. That later PlanRef is not the contract revision judged by the acceptance record.
+
+Use `templates/MILESTONE_ACCEPTANCE.md` for durable child milestone acceptance.
