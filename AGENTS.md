@@ -20,6 +20,8 @@ This repository defines a planning and delegation system for AI-heavy projects. 
 14. **Gates are predicates; Decisions are judgments.** Do not hide human/agent choice inside a Gate.
 15. **Plan changes propagate by explicit notification plus boundary checks, not constant polling.**
 16. **Exact accepted Git commits are PlanRefs.** Mutable branch names are locators only.
+17. **Current planning state comes from a valid publication record, not from branch freshness.** In an instantiated project, resolve `planning/CURRENT.md` under `planning/PUBLICATION.md`; the exact `plan_ref` named by the latest valid publication is the current accepted PlanRef. A newer default-branch commit may contain staged/unpublished planning content and must not silently become operative.
+18. **Root bootstrap is a one-time external exception.** A root project with no parent may use an explicitly designated external Founding Authority only to establish its first accepted authority state under `planning/PUBLICATION.md`. After the first valid publication, ordinary Role-based authority rules apply; repository ownership/write access never substitutes for the founding trust anchor.
 
 ## Before any substantive planning or execution action
 
@@ -27,7 +29,8 @@ An AI must identify from accepted records:
 
 - `plan_id`;
 - declared `grammar`;
-- exact `plan_ref`;
+- current `publication_id`;
+- exact current `plan_ref` obtained from a valid `planning/CURRENT.md` publication;
 - acting `role`;
 - current holder binding for that Role;
 - milestone or decision scope;
@@ -37,7 +40,11 @@ An AI must identify from accepted records:
 - if nested: parent plan, parent PlanRef, parent milestone, parent contract, and child/parent grammar compatibility;
 - if delegating: the exact delegation capability that permits the action.
 
-If any required item is unavailable or contradictory, do not infer it. Escalate to the nearest Role that has accepted authority over the disputed scope.
+Do not use the default-branch head as a substitute for `planning/CURRENT.md`.
+
+If an instantiated project has no valid `planning/CURRENT.md`, ordinary substantive project execution is not initialized under this protocol. Only the bounded root/parent bootstrap actions defined in `planning/PUBLICATION.md` may proceed.
+
+If any required item is unavailable or contradictory, do not infer it. Escalate to the nearest Role that has accepted authority over the disputed scope, or to the designated Founding/parent authority during valid bootstrap.
 
 If a nested plan declares an incompatible grammar, do not natively interpret its internal milestone/status semantics. Use the boundary rules in `planning/NESTING.md`.
 
@@ -47,9 +54,14 @@ Read these together:
 
 - `planning/PLAN.md` — at-a-glance roadmap.
 - `planning/CONVENTIONS.md` — exact node and edge grammar.
-- `planning/ROLES.md` — current Role holders and authority/delegation capabilities.
 - `planning/NESTING.md` — downward and upward nesting rules.
+- `planning/ROLES.md` — Role scopes, holders, and delegation capabilities.
+- `planning/PUBLICATION.md` — root bootstrap and current-PlanRef publication protocol.
+- `planning/CURRENT.md` — required in an instantiated project; authoritative locator/index for the current accepted PlanRef.
+- `planning/FOUNDING.md` — required for a root-project bootstrap; historical after the first publication.
 - `planning/PARENT.md` — parent relationship if this repository is itself nested.
+
+The template source may contain templates instead of an instantiated `CURRENT`/`FOUNDING` record. A copied/forked project becomes operational only after those records are instantiated as required by `planning/PUBLICATION.md`.
 
 ## Creating or changing a plan
 
@@ -68,6 +80,8 @@ Controlling decision/evidence:
 ```
 
 Do not add a new arrow label or node semantic without first changing the grammar.
+
+A semantic plan/Role change does not become current merely because its commit or PR is merged. Publish the exact resulting candidate under `planning/PUBLICATION.md`. Foreman propagation begins only after a valid publication makes that candidate the current accepted PlanRef.
 
 ## Creating child plans or subordinate Roles
 
@@ -90,6 +104,8 @@ A plain chat that cannot do both MUST NOT be bound to the Foreman Role.
 
 Foreman coordinates authorized work packages, reviewer routing, status follow-up, and plan-change propagation. Foreman acquires no Lead authority merely by coordinating a Lead's work.
 
+Foreman MUST discover the current accepted PlanRef through `planning/CURRENT.md` / `planning/PUBLICATION.md`, not by choosing the newest branch or commit.
+
 See `prompts/FOREMAN.md` for the complete Role prompt.
 
 ## Work packages
@@ -98,7 +114,7 @@ Every substantive work package must bind to accepted planning state using at lea
 
 ```text
 plan_id=<PlanID>
-plan_ref=<exact accepted commit SHA>
+plan_ref=<exact current accepted commit SHA from planning/CURRENT.md>
 role=<RoleID>
 milestone=<MilestoneID>
 ```
@@ -115,15 +131,17 @@ Work-package completion may return evidence for a milestone but does not itself 
 
 The acceptance record binds the exact pre-acceptance `contract_plan_ref`. A later plan commit that projects `MILESTONE_DONE` or indexes the acceptance record is a different PlanRef and does not retroactively become the contract revision that was judged.
 
-An acceptance record may exist before that projection commit, but it does not by itself authorize Foreman to treat a downstream **Milestone-source** hard prerequisite as open. Operational dispatch follows the current accepted PlanRef. Only after the accepted projection records `MILESTONE_DONE` and indexes the acceptance may that Milestone prerequisite be treated as satisfied for dispatch.
+An acceptance record may exist before that projection commit, but it does not by itself authorize Foreman to treat a downstream **Milestone-source** hard prerequisite as open. Operational dispatch follows the current accepted PlanRef. Only after the accepted projection is published as current and records `MILESTONE_DONE` plus the acceptance index may that Milestone prerequisite be treated as satisfied for dispatch.
 
-Do not mutate an issued acceptance record to reflect later planning state. Preserve it as history; record later correction/revocation/reopening separately and propagate the resulting current state through an accepted plan change.
+Do not mutate an issued acceptance record to reflect later planning state. Preserve it as history; record later correction/revocation/reopening separately and propagate the resulting current state through an accepted and published plan change.
 
 ## Cross-repository nesting
 
-Repositories keep independent Git histories. Parent/child authority is established through explicit parent contracts, Role delegations, and exact PlanRefs.
+Repositories keep independent Git histories. Parent/child authority is established through explicit parent contracts, Role delegations, exact PlanRefs, and each repository's valid publication state.
 
 Do not treat Git submodules, forks, copied trees, branch ancestry, or repository ownership as authority relationships.
+
+A child repository's first accepted internal state may be bootstrapped from an accepted parent contract under `planning/PUBLICATION.md`; it does not need an unrelated root Founding Authority.
 
 ## Domain-specific projects
 
