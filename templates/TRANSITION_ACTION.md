@@ -6,6 +6,8 @@ This is the currently required reconstruction contract for autonomous/Foreman-ma
 
 Prepare this immutable record at the configured path in the **successor publication carrier tree**, default `planning/TRANSITION_ACTION.md`. It need not be in the semantic candidate. It MUST NOT contain its own carrier SHA or its own blob hash. Preallocate stable publication, manifest, request/check and approval-event IDs before finalizing the content. The subsequent journal event binds the exact path, Git blob identity and record ID in the retained carrier. No PR/comment/history lookup is required to recover the actions.
 
+`none` -> v1 adoption may establish the first predecessor-authorized canonical path. After adoption, use exactly the predecessor accepted v1 path for this carrier and the journal binding; the path is fixed for v1's lifetime. A candidate staying on v1 cannot move it, even if both paths contain a manifest. Reject that candidate before ref movement under `planning/PUBLICATION_TRANSITIONS.md` section 9; this template provides no path-migration schema.
+
 ## Exact transition and impact baseline
 
 ```text

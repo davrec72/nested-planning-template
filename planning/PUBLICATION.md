@@ -38,6 +38,8 @@ transition_action_contract: none | transition-action-v1
 transition_action_path: none | planning/TRANSITION_ACTION.md | <explicit carrier-tree path>
 ```
 
+Predecessor-authorized `none` -> `transition-action-v1` adoption (including root/child bootstrap) chooses the first canonical path. Once accepted for this PlanID/publication configuration, that exact path is immutable for the lifetime of v1. Every later v1 normal/recovery candidate, journal path binding and successor carrier must use the predecessor accepted v1 path. Reject a proposed v1 path change before ref movement; duplicate files do not bridge paths. Future movement needs a separate explicit versioned migration contract, which v1 does not define. See `PUBLICATION_TRANSITIONS.md` section 9.
+
 The publication journal must be durable and append-only/tamper-evident under its configured trust basis and readable by a cold successor. Bare Git ancestry or a local reflog alone is not sufficient evidence of historical ref movements.
 
 The PlanRef-retention mechanism must keep every published exact PlanRef fetchable independently of ordinary work branches.
@@ -46,7 +48,7 @@ The carrier-evidence retention mechanism must keep every accepted publication ca
 
 ## Operational execution eligibility
 
-**Autonomous/Foreman-managed execution is eligible only while the current accepted publication configuration explicitly adopts `transition-action-v1`.** Its exact configured carrier path must resolve to the valid journal-bound manifest, and its adoption/legacy baseline must be validly reconciled under `PUBLICATION_TRANSITIONS.md` section 9. Adoption is a prerequisite for this execution workflow, not an optional recovery enhancement.
+**Autonomous/Foreman-managed execution is eligible only while the current accepted publication configuration explicitly adopts `transition-action-v1`.** Its exact adoption-fixed carrier path must equal the journal path binding and resolve to the valid manifest, and its adoption/legacy baseline must be validly reconciled under `PUBLICATION_TRANSITIONS.md` section 9. Adoption is a prerequisite for this execution workflow, not an optional recovery enhancement.
 
 `transition_action_contract: none` means **no autonomous Foreman dispatch**. It is permitted for planning-only/pre-execution configurations and systems with no dispatch capability. An inventory and read-only coordination may exist, but `none` never permits first or later dispatch/start/resume, or a new revision/attempt, rebind or supersession that creates execution obligations. An empty inventory, accepted Foreman binding or executor grant alone cannot enable that work.
 
@@ -66,7 +68,7 @@ The latest valid committed journal event is the accepted publication high-water 
 
 Every accepted carrier remains separately retrievable through the carrier-evidence retention contract for at least the lifetime of the publication journal, even if later divergent recovery makes it unreachable from the live publication-ref tip.
 
-After explicit `transition-action-v1` adoption, every planning carrier also contains its immutable transition-action manifest at the configured path, including a checked no-impact manifest. The existing journal binds that path/blob/record ID; existing carrier retention preserves it and its reconstruction inputs. This is not a second journal or new currentness protocol. Adoption/legacy rules and exact schema validation are in `PUBLICATION_TRANSITIONS.md` section 9 and `templates/TRANSITION_ACTION.md`.
+After explicit `transition-action-v1` adoption, every planning carrier also contains its immutable transition-action manifest at the fixed accepted path, including a checked no-impact manifest. The existing journal binds that same path/blob/record ID in the exact successor carrier; existing carrier retention preserves it and its reconstruction inputs. This is not a second journal or new currentness protocol. Adoption/legacy rules and exact schema validation are in `PUBLICATION_TRANSITIONS.md` section 9 and `templates/TRANSITION_ACTION.md`.
 
 ## CURRENT fields
 

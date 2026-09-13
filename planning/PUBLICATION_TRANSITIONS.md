@@ -139,7 +139,7 @@ For an adopted `transition-action-v1` publication, or its explicitly approved ad
 
 ```text
 transition_action_contract: transition-action-v1
-transition_action_path: <configured path in exact successor carrier tree>
+transition_action_path: <adoption-fixed v1 path in exact successor carrier tree; see section 9>
 transition_action_blob_id: <exact Git blob identity at that path>
 transition_action_record_id: <immutable manifest record ID>
 transition_action_inventory_validation_evidence: <exact analyzed inventory baseline/obligation set bound to this manifest and fence proof>
@@ -259,6 +259,10 @@ For `transition-action-v1`, the journal-bound manifest is the authoritative tran
 
 `transition-action-v1` is an explicitly adopted adjunct, not a new roadmap grammar or publication protocol. The existing journal remains the sole accepted-publication order/currentness source. Configure `transition_action_contract: transition-action-v1` and a canonical repository-relative `transition_action_path` in accepted publication configuration; the portable default is `planning/TRANSITION_ACTION.md`, distinct from `planning/CURRENT.md`. A template or proposed configuration does not activate the contract.
 
+For one PlanID/publication configuration, predecessor-authorized `none` -> `transition-action-v1` adoption, including first root/child publication, establishes the first canonical path. Once accepted, that exact path is **fixed for the lifetime of v1**. Every later v1 normal/recovery candidate MUST preserve the predecessor accepted v1 path; the event's single `transition_action_path` MUST equal it and bind the manifest at that path in the exact successor carrier.
+
+A candidate that remains on v1 but changes the path is unsupported/invalid: fail closed **before ref movement**. Duplicate manifests at old/new paths, Git history, notifications or candidate configuration cannot supply a migration bridge. An unrelated semantic/configuration publication remains conforming when it retains the fixed path and satisfies all other checks.
+
 An unsupported declared adjunct or incompatible path/schema blocks affected publication validation and dependent execution; sharing `plan-publication-v1` does not permit silently ignoring adopted manifest requirements.
 
 `transition-action-v1` is mandatory for this template's autonomous/Foreman-managed execution eligibility under `PUBLICATION.md` and `EXECUTION.md`. `none` is a planning/pre-execution no-dispatch mode, not an optional operational recovery path. Without adoption, a publication remaining in `none` may not alter active/outstanding affected execution obligations; use the explicit prior-authorized migration below or durable reconciliation/stop under valid legacy rules. No undefined alternative reconstruction contract is supported.
@@ -278,6 +282,7 @@ The portable order is:
 ```text
 resolve prior accepted state and serialized execution inventory/baseline obligation set
   -> prepare exact candidate
+  -> validate fixed-path equality or predecessor-authorized first-path adoption
   -> prepare exact transition-action manifest, impact baseline and preallocated fence ID/scope
   -> obtain predecessor-valid approval(s) binding candidate and manifest
   -> retain candidate PlanRef
@@ -317,7 +322,7 @@ Recovery while held preserves continuous scope coverage. Its required recovery m
 
 ### 9.3 Cold validation and adoption
 
-Fetch the exact retained successor carrier, verify the journal-bound path is the specified blob, and match its record ID, contract, plan, preallocated event/publication IDs, predecessor event/prior PlanRef and candidate to the journal/CURRENT. Validate the exact approval, predecessor-valid action authority, inventory snapshot/completeness, matching fence ID/scope/baseline and conditional acquisition/held-through-commit evidence, and complete deterministic per-attempt request/deadline/recovery data. A mismatched or unavailable required object/evidence fails closed for affected execution and reconciliation-marker advancement; do not substitute notification text, current inventory guesses or a manifest from another event. Historical carrier retention also preserves earlier manifests when a later carrier uses the same path for a new immutable record.
+Validate the path rule above: the adopting event establishes its predecessor-authorized first path; every later v1 event and candidate configuration must retain exactly the accepted predecessor's fixed path. Fetch the exact retained successor carrier, verify the journal-bound path is the specified blob, and match its record ID, contract, plan, preallocated event/publication IDs, predecessor event/prior PlanRef and candidate to the journal/CURRENT. Validate the exact approval, predecessor-valid action authority, inventory snapshot/completeness, matching fence ID/scope/baseline and conditional acquisition/held-through-commit evidence, and complete deterministic per-attempt request/deadline/recovery data. A mismatched or unavailable required object/evidence fails closed for affected execution and reconciliation-marker advancement; do not substitute notification text, current inventory guesses or a manifest from another event. Historical carrier retention also preserves earlier manifests when a later carrier uses the same path for a new immutable record.
 
 New root/child bootstrap authority may explicitly adopt this adjunct from first publication. It must approve the initial exact candidate/configuration and empty/baseline manifest; the first carrier contains it, with predecessor fields and legacy marker `none`. The existing bounded founding/parent authority and retention/journal rules still apply.
 
@@ -337,4 +342,6 @@ For `none` -> operational adoption, the ordered eligibility transition is:
 4. Publish/adopt through the trusted journal with required retention and fence evidence. Candidate rules cannot authorize this transition.
 5. Reconstruct/index the adopting event and every carried obligation, including after a lost adoption wake, and verify required checks before enabling managed dispatch. An unresolved baseline or failed reconciliation keeps execution ineligible even though the new PlanRef is accepted.
 
-Historical pre-adoption events remain valid under their original rules; never fabricate historical manifests or retroactively reject them for lacking this adjunct. Cold reconstruction validates that history under its accepted governance and uses the approved adoption baseline for remaining execution obligations. Later events use `legacy_reconciled_through_event_id: none`; retain the adoption event as history. Any later contract/path change requires an explicit predecessor-authorized compatibility/migration transition; omission alone cannot disable the adopted contract.
+Historical pre-adoption events remain valid under their original rules; never fabricate historical manifests or retroactively reject them for lacking this adjunct. Cold reconstruction validates that history under its accepted governance and uses the approved adoption baseline for remaining execution obligations. Later events use `legacy_reconciled_through_event_id: none`; retain the adoption event as history. Omission alone cannot disable the adopted contract.
+
+A future path move requires a separate explicit versioned migration contract defining predecessor-path validation, successor-path installation, required journal bindings, cold reconstruction, recovery and operational eligibility under predecessor-valid authority. Current v1 supplies no such migration contract; approval or an unspecified compatibility transition cannot make a v1 path change valid. No future migration schema is defined here.

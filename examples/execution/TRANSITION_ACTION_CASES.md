@@ -195,3 +195,20 @@ This is a separate fixture from the already-adopted TA2 above. Assume E1/P1 is a
 | 7. Consider new work or T1 resumption | Independently validate current configuration/path, authority, target/ancestor prerequisites, fence and outstanding publication actions. Unaffected authorized work may proceed; T1/dependents remain blocked while its material pause is unapplied. No duplicate T1 dispatch is created to populate the new inventory. |
 
 These cases add eligibility to the existing manifest/fence/receipt design. They demonstrate source-level ordering only, not a running adoption, scheduler or publication system.
+
+## Adoption-fixed v1 path regression
+
+These are separate symbolic variants. P1/E1 has validly adopted v1 with canonical path A = `planning/TRANSITION_ACTION.md`. B = `planning/actions/TRANSITION_ACTION.md` is a different proposed carrier path. The single journal path/blob/record binding validates the manifest in the exact successor carrier; duplicate files do not add another binding or migration semantics. All other authority, baseline, approval, fence, retention and eligibility checks still apply.
+
+| Proposed transition / observation | Required result |
+|---|---|
+| P1 uses v1/A; candidate P2 stays on v1 but configures B | Reject before ref movement under P1's accepted v1 rules. Candidate approval/configuration cannot bridge the path change. P2 does not become accepted. |
+| P2 configures B while the proposed event binds only A | Still reject before publication: satisfying the old location does not install an operative successor path. |
+| P2 configures B with identical or different manifests at both A and B | Still reject. Two files, Git history or notification prose cannot replace a defined versioned migration contract or change the event's single-path meaning. |
+| Unrelated P2 retains v1/A; its event binds A and the exact manifest there | May publish when all ordinary checks pass. After commit, eligibility and lost-wake replay resolve that same fixed A in E2's exact retained carrier. |
+| P2 retains A but the proposed journal binding names B | Reject the mismatched binding before publication; a manifest copy at B does not satisfy the fixed A contract. If invalid suffix/evidence already exists, use existing recovery and fail-closed rules, never adopt it by convenience. |
+| Recovery's actual invalid suffix mentions B, but last accepted P1 uses v1/A | Recovery candidate/event/manifest retain A from the accepted predecessor, not B from the unaccepted suffix. Ordinary recovery authority, retention and held-fence rules remain required. |
+| Predecessor contract is `none`; P2 first adopts v1 with B | First-path establishment is permitted under predecessor-authorized adoption and complete baseline/fence rules. E2 binds B, which is then fixed for v1's lifetime; dispatch waits for valid adoption reconciliation and verified checks. No historical path/manifests are invented. |
+| First root/child publication chooses v1 and an initial A or B | Bounded founding/parent authority approves that first path with the exact candidate/baseline. The adopting event/carrier binds it normally; first dispatch still waits for all adoption/eligibility checks. |
+
+These cases define no path-migration adjunct or dual-path schema. A future move requires a separately specified versioned contract covering both boundaries, journal bindings, cold reconstruction, recovery and eligibility; current v1 rejects the move.

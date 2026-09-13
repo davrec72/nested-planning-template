@@ -127,6 +127,7 @@ The event must satisfy `templates/PUBLICATION_EVENT.md` and be durably committed
 - [ ] The exact candidate is durably retained and cold-fetchable independently of ordinary branches.
 - [ ] Bootstrap trust configuration includes publication ref, journal, PlanRef-retention, and carrier-evidence-retention contracts.
 - [ ] Transition validation uses predecessor accepted governance; candidate governance does not validate itself.
+- [ ] For later v1 normal/recovery publication, candidate configuration, journal path binding and successor-carrier manifest location equal the predecessor accepted fixed path. A changed v1 path is rejected before ref movement, even with duplicate files. Only predecessor-authorized first adoption/bootstrap establishes the initial path under section 9.
 - [ ] For normal transition, successor carrier Git parent equals the last accepted carrier.
 - [ ] For recovery, successor carrier Git parent equals the actual bad/uncommitted ref tip, while accepted predecessor fields name the last valid accepted carrier/event.
 - [ ] Recovery explicitly records the quarantined invalid suffix and uses authority valid under the last accepted PlanRef.
