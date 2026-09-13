@@ -88,7 +88,9 @@ Keep actual execution observation separate from package state. A pause request o
 
 ## Material requests and receipts
 
-Material pause, revocation, scope reduction, redirection, or supersession must have a durable request before a wake is attempted. Record one recipient receipt per affected attempt/route, including nested coordinators. `templates/EXECUTION_RECEIPT.md` supplies the minimum fields.
+Material pause, revocation, scope reduction, redirection, or supersession must have a durable request before a wake is attempted. Record one receipt per **request + affected recipient identity/context + exact package revision/attempt**. Within the recorded project/plan context, the key is `request_id`, `recipient_identity_context`, `work_package_id`, `package_revision`, and `attempt_id`. `templates/EXECUTION_RECEIPT.md` supplies the minimum fields.
+
+Direct, fallback, retry, webhook, prompt, or other routes to that same recipient/attempt are transport attempts inside that one receipt; a route is not part of its key. Retain each route's historical observations, including failed/rejected/unknown attempts, without overwriting them when another route succeeds. A different independently obligated recipient/context or package revision/attempt has a different receipt. A nested coordinator that must itself acknowledge/apply an action is a separate recipient; a mere transit hop is not automatically another obligation.
 
 For a published change, bind the full publication payload required by `PUBLICATION_TRANSITIONS.md`, the exact package revision/attempt, requested action, recipient, supersession relationship, and deadlines. Validate journal/retained-carrier identity before applying a transition. For a stop issued under an existing authorization's revocation terms, cite that exact authorization, current issuing Role/binding, and durable stop record. This second path can restrict execution within its existing authority; it cannot publish changed plan governance or grant resumed/new scope.
 
@@ -101,9 +103,11 @@ Preserve these separate facts; evidence for one does not imply the next:
 | `delivered` | Transport evidence confirms receipt at the specified destination. If unavailable, leave unknown; an exact recipient acknowledgement can also establish receipt. |
 | `acknowledged` | The recipient durably identifies the exact request, package/revision/attempt and understands the required action, including any inability to apply it. |
 | `applied` | Durable evidence identifies what actually changed/stopped, when, the last action/revision, in-flight jobs/side effects, and any remaining limitations. |
-| `closed` | Foreman reconciled application evidence and follow-up disposition, or a validated later request explicitly superseded it. |
+| `closed` | Foreman reconciled the recipient's requested obligation, application evidence and follow-up disposition, or a validated later request explicitly superseded it. Closure does not require every transport route to succeed. |
 
 Acknowledgement of a pause is not confirmation of cessation. `paused`, cancelled execution, or effective revocation may be reported only for the exact scope supported by applied evidence or verified enforcement. If a subprocess continues, state that explicitly and keep the stop outstanding. No wording such as `sent`, `delivered`, `done`, or `closed` may silently promote weaker evidence to proof of stopped execution.
+
+A failed route remains retained transport evidence, not a second independently outstanding receipt after another route satisfies the same recipient's obligation. Acknowledgement through a fallback still leaves application outstanding when required. A different receipt does not automatically close an earlier obligation; closure requires its reconciliation or explicit valid supersession.
 
 Durable material records are transport-independent. Direct prompts, webhooks, explicit child messages, or scheduled polling may wake a receiver. A worker's bare completion event is not a guaranteed notification. A rejected send, including an archived/unreachable target, is not delivery and does not authorize unarchiving or changing its lifecycle.
 

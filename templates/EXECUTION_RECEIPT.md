@@ -1,12 +1,12 @@
 # Material execution request and receipt template
 
-Use with `planning/EXECUTION.md`. Record the request durably before attempting a wake. Preserve subsequent observations/receipts as history; do not overwrite a failed attempt with a successful one. One affected recipient/attempt has one receipt, even when a plan change fans out to many workers.
+Use with `planning/EXECUTION.md`. Record the request durably before attempting a wake. One receipt is keyed by request + affected recipient identity/context + exact package revision/attempt, even when a plan change fans out to many workers. Within its project/plan context, the key fields are `request_id`, `recipient_identity_context`, `work_package_id`, `package_revision`, and `attempt_id`; routes are not identity fields.
 
 ## Request identity and authority
 
 ```text
 request_id: <stable ID>
-receipt_id: <request plus recipient/attempt ID>
+receipt_id: <stable ID for this exact request/recipient/package-revision/attempt key>
 project: <existing project/repository identity>
 plan_id: <PlanID>
 work_package_id:
@@ -16,7 +16,7 @@ authorization_id:
 requested_action: continue | pause | revoke | reduce-scope | redirect | supersede
 exact_affected_scope:
 recipient_identity_context:
-recipient_route:
+recipient_route: <initial/preferred locator; not part of the receipt key>
 recorded_at:
 supersedes_request: <exact request or none>
 ```
@@ -39,7 +39,9 @@ For a stop under existing revocation terms instead record the exact authorizatio
 
 ## Transport attempts
 
-| Attempt / time | Route / exact recipient | Sent or wake attempted | Transport outcome / delivery evidence |
+Direct, fallback, retry, webhook and prompt routes to the same obligated recipient/context and package revision/attempt append transport history inside this receipt. Retain failed/rejected/unknown attempts when another route succeeds. If the obligated recipient/context or work attempt changes, use a different receipt; a transit hop alone creates no new recipient obligation.
+
+| Transport attempt / time | Route / observed destination | Sent or wake attempted | Transport outcome / delivery evidence |
 |---|---|---|---|
 | `<ID/time>` | `<supported route/context>` | `<observed fact>` | `<delivered / rejected / unknown; exact evidence>` |
 
@@ -90,3 +92,5 @@ remaining_obligations_and_schedule_disposition:
 ```
 
 Do not close on send, timeout, inaccessible executor, or an unrelated later message. Supersession requires explicit validated disposition and linkage; it cannot erase an unresolved stop or manufacture permission to resume. Reconcile publication requests in journal order and keep the inventory's reconciliation marker distinct from the attempt's application marker.
+
+Closure reconciles this recipient's requested obligation (or explicit valid supersession), not success of every route. A failed route remains history, not a separate outstanding receipt once this obligation is satisfied through another route. An independently obligated nested coordinator has its own receipt; a mere forwarding hop does not. Neither that separate receipt nor a new recipient/attempt automatically settles this one.

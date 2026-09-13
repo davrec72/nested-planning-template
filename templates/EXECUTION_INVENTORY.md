@@ -52,11 +52,13 @@ next_recovery_action_owner_and_due_time:
 
 ## Material request index
 
-Use one receipt per recipient/attempt. Retain closed/superseded records and their ordering evidence.
+Use one receipt per request + affected recipient identity/context + exact package revision/attempt. Within this project/plan, index `request_id`, `recipient_identity_context`, `work_package_id`, `package_revision`, and `attempt_id`; do not add a row/receipt merely for another route to the same recipient/attempt. Retain closed/superseded records and all transport-attempt history, including failed routes.
 
-| Request / receipt | Exact source and package revision / attempt | Recipient / route | Requested action | Sent / delivered evidence | Acknowledged evidence | Applied evidence / stopped scope | Ack/apply deadlines and recovery checks | Closure / supersession |
+| Request / receipt | Exact source and package revision / attempt | Obligated recipient identity/context | Requested action | Transport-attempt history / delivery evidence | Acknowledged evidence | Applied evidence / stopped scope | Ack/apply deadlines and recovery checks | Closure / supersession |
 |---|---|---|---|---|---|---|---|---|
-| `<IDs/locator>` | `<publication event or valid stop authority; package/revision/attempt>` | `<identity/context/route>` | `<action>` | `<observations or unknown>` | `<receipt or none>` | `<receipt or not confirmed stopped>` | `<absolute deadlines; actual check IDs>` | `<open or evidence/linked successor>` |
+| `<IDs/locator>` | `<publication event or valid stop authority; package/revision/attempt>` | `<identity/context>` | `<action>` | `<routes, destinations, times and observations/locators or unknown>` | `<receipt or none>` | `<receipt or not confirmed stopped>` | `<absolute deadlines; actual check IDs>` | `<open or evidence/linked successor>` |
+
+An independently obligated different recipient/context or package revision/attempt gets a separate receipt. This includes a nested coordinator with its own acknowledgement/application duty, but not a mere transit hop. Close on reconciled obligation/application or explicit valid supersession, not on every route succeeding; failed route history is retained without becoming a second outstanding obligation. A separate receipt does not automatically settle the earlier one.
 
 ## Scheduler index
 

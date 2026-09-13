@@ -75,15 +75,17 @@ Continue fixture 1 with Lead held by Alice and worker Bob in B.
 
 Use a separate long-running test package `WP-TEST/r1`, attempt `T1`, at P1/E1. The package allows bounded five-minute segments and an explicit safe-stop procedure. In the fixture, Foreman's publication reconciliation runs every two minutes, acknowledgement timeout is one minute, and application timeout is two minutes. These values illustrate configured finite policy, not universal defaults.
 
+The obligated recipient is Tester/context T. Receipt alias `Q2-T1` binds the full key `Q2 + Tester/context T + WP-TEST/r1/T1` within this fixture's project/plan. Direct and fallback routes below reach that same recipient/context; they are retained transport attempts inside Q2-T1, not separate receipts.
+
 | Time (UTC) / event | Durable state and required behavior |
 |---|---|
 | 12:00: E2/P2 validly publishes a scope reduction with `pause`; initial Foreman wake is lost | P2 is current. E2 remains after the inventory's E1 reconciliation marker, so the scheduled reconciliation can discover it. No claim that T1 stopped. |
-| 12:02: verified publication check reads E2 | It indexes request Q2/receipt Q2-T1, exact package/revision/attempt and route, and real recovery checks S-ACK/S-APPLY. Only then may the reconciliation marker advance to E2. T1 is `pause-requested`; last applied event is still E1. |
+| 12:02: verified publication check reads E2 | It indexes request Q2/receipt Q2-T1, exact package/revision/attempt, recipient and transport route, and real recovery checks S-ACK/S-APPLY. Only then may the reconciliation marker advance to E2. T1 is `pause-requested`; last applied event is still E1. |
 | 12:02: direct-send route rejects an archived target | Record `sent/wake attempted`, `rejected`, delivered unknown/not established, no acknowledgement or application. Keep **not confirmed stopped**. No automatic unarchive authority. |
 | 12:03: S-ACK fires | Query the supported fallback and actual effects, attempt an authorized wake, and escalate if still unreachable. Do not dispatch a replacement or report `paused`. Maintain a verified next check for unresolved work. |
-| 12:04: worker responds through fallback | Exact Q2/T1 acknowledgement establishes receipt. It reports a tool still draining, so state remains `pause-requested`; acknowledgement is not application. S-APPLY remains necessary. |
+| 12:04: worker responds through fallback | Exact Q2-T1 acknowledgement from Tester/context T satisfies acknowledgement in the same receipt; retain the failed direct attempt. It reports a tool still draining, so state remains `pause-requested`; acknowledgement is not application. S-APPLY remains necessary. |
 | 12:05: worker's bounded checkpoint cannot validate continued scope | It starts no further segment and uses its authorized safe stop. A non-interruptible/unbounded job would not have been eligible under this package. |
-| 12:06: applied receipt proves last action, retained output, and every tool stopped | Foreman records `paused`, last applied event E2, exact evidence and disposition of S-ACK/S-APPLY. Only the proved stopped scope is confirmed. |
+| 12:06: applied receipt proves last action, retained output, and every tool stopped | Foreman records `paused`, last applied event E2, exact evidence and disposition of S-ACK/S-APPLY, then closes the reconciled Q2-T1 obligation. The rejected direct route remains history, not another open receipt. Only the proved stopped scope is confirmed. |
 
 If no applied receipt/enforcement proof arrives at 12:06, the application timeout escalates; T1 remains **not confirmed stopped**. A timestamp, timeout, missing target, or cancelled schedule cannot substitute for cessation evidence. An unenforced lease cannot justify a competing T2. Sensitive work requiring faster stop guarantees needs the project's explicit enforceable lease/fencing policy before dispatch.
 
@@ -92,7 +94,16 @@ If no applied receipt/enforcement proof arrives at 12:06, the application timeou
 | E2 arrives twice after application | Preserve duplicate evidence; do not apply the pause twice. |
 | E3 validly changes future scope but an old E2 message arrives later | Reconcile journal order; the old message cannot undo E3's valid applied disposition. |
 | E3 says `continue` while Q2's stop is unresolved | Do not close Q2 on that word. Reconcile E2/E3 and explicit stop disposition; get valid reauthorization before resuming. |
-| Only Foreman acknowledges E2; child coordinator never acknowledges Q2 | The child attempt's receipt stays outstanding. Parent receipt does not prove child cessation. |
+| Only Foreman acknowledges E2; an independently obligated child coordinator never acknowledges Q2 | That coordinator's own recipient/attempt receipt stays outstanding. Parent receipt does not prove child cessation. |
+
+| Receipt-key counterexample | Required outcome |
+|---|---|
+| Retry, webhook or prompt reaches the same Tester/context T for Q2 and WP-TEST/r1/T1 | Append transport observations to Q2-T1; do not create another receipt or overwrite earlier route failures. |
+| Fallback reaches a different obligated recipient/context | Use a separate receipt for that recipient; it does not automatically acknowledge/apply or close Tester's Q2-T1 obligation. |
+| The same recipient has a different independently authorized package revision/attempt | Its receipt has a different key. Merely creating a receipt cannot authorize that work attempt. |
+| A new request Q3 concerns the same recipient and package attempt | Q3 has its own receipt; Q2 remains until reconciled or explicitly validly superseded, with history retained. |
+| A nested coordinator must itself acknowledge/apply Q2 | Give that obligated coordinator its own receipt; the worker's receipt cannot discharge it. |
+| A relay only forwards Q2 to Tester/context T | Record the transit route/observation inside Q2-T1; forwarding alone does not create a new obligated recipient or receipt. |
 
 ## 4. Replacement Foreman recovers without redispatch
 
