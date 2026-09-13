@@ -77,6 +77,12 @@ Do not write `full authority`, `as needed`, `etc.`, `all normal powers`, or simi
 - Foreman coordinates execution but does not acquire the substantive decision authority of the Roles whose work it coordinates.
 - A proposed Role/binding change is not operative until the exact candidate planning state containing it is approved and published as current under `PUBLICATION.md`.
 
+## Holder attribution
+
+Define durable holder-reference and action-attribution rules in accepted governance, and use references that let a later reader distinguish the bound holder and actual acting context. When several chats/agents share an account or display name, that account/name alone cannot identify which context occupied or exercised the Role. An alias or reused label must not silently retarget a historical binding; retain its exact resolution at the relevant accepted revision. These rules do not grant authority through identity, tooling or account ownership.
+
+Milestone acceptance must preserve `issued_by_holder`, the exact issuance-time `authority_state_ref` and binding locator, and attributable issuance evidence under `CONVENTIONS.md` -> **Issuer and authority at issuance**. Rebinding changes who may act subsequently; it does not substitute the new holder into old receipts. The holder reference is not part of the Role's enduring qualified identity. No universal identity provider or signature infrastructure is required by this template.
+
 ## Foreman holder qualification
 
 Before binding a holder to `Foreman`, verify that the holder's environment can:

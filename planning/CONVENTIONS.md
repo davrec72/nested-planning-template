@@ -189,20 +189,51 @@ Until that later projection PlanRef itself is accepted, Foreman and other agents
 
 If the milestone outcome, acceptance criteria, or authority semantics change materially, the new contract revision requires its own acceptance; an old acceptance record cannot silently migrate to the new contract.
 
-A milestone acceptance record should bind at least:
+A milestone acceptance record must bind at least:
 
 ```text
 milestone_id
 plan_id
 contract_plan_ref
 accepted_by_role
+issued_by_holder
+authority_state_ref
+authority_binding_locator
+acceptance_authority_plan_ref
 acceptance_authority_source
+issuance_evidence
 accepted_evidence
 accepted_at
 limitations_or_residuals
 ```
 
 The acceptance record certifies only the stated milestone outcome under its criteria and evidence. It does not imply that every attempted work package succeeded, that every proposed implementation step was necessary, or that unrelated downstream milestones are accepted.
+
+### Issuer and authority at issuance
+
+The accepting **Role**, the **holder/context that actually issued the receipt**, and the **accepted authority state valid at issuance** are separate facts. The receipt must let a later reader reconstruct all three. Neither the holder at `contract_plan_ref` nor today's holder can substitute for the holder who acted then.
+
+| Field | Required meaning |
+|---|---|
+| `accepted_by_role` | The authority-bearing Role; fully qualified when it crosses the receipt's plan boundary under `REFERENCES.md`. |
+| `issued_by_holder` | A durable, attributable holder reference under the accepting plan's accepted attribution rules, including the actual acting context when needed to distinguish users of a shared account or holder label. It must resolve to the holder authorized by the cited binding. |
+| `authority_state_ref` | Exact accepted PlanRef of the accepting Role's plan **current at issuance**, containing the Role definition, scope and holder binding used for this act. It is distinct in meaning from `contract_plan_ref`, even if their SHAs happen to match. |
+| `authority_binding_locator` | Unambiguous path/record/Role-row locator within `authority_state_ref` for that definition and holder binding. Preserve any exact linked binding records and attribution rules needed to resolve it. |
+| `acceptance_authority_plan_ref` | The existing Role-authority revision field: for receipts using these rules, it must equal `authority_state_ref`. An older grant revision belongs in `acceptance_authority_source`, not in this field. |
+| `acceptance_authority_source` | Independently accepted grant/source covering this exact acceptance scope. Bind each external source's qualified identity, own exact PlanRef and locator; retain the current authority/relationship checks used at issuance. |
+| `issuance_evidence` | Durable attributable action/event evidence binding this exact receipt, its issuer, and the authority/publication state and ordering at issuance. It includes or exactly references the accepted attribution rules, relevant trusted publication events and retained PlanRef/carrier evidence. A bare timestamp or an assertion that a SHA was current is insufficient. |
+
+Before issuing, resolve the current accepted Role/binding and all required external authority from their configured publication journals, verify that the actual issuer matches that binding, and verify that its scope permits accepting this exact contract. A historically accepted but superseded binding, a proposed rebind or grant, repository write access, or an old child relationship pin alone cannot authorize the act. If authority changes before issuance, revalidate against the new current state; do not backdate issuance to the earlier check. Missing, contradictory or unverifiable attribution, currentness, scope or ordering stops the affected acceptance.
+
+An adopting project defines how its durable holder/context references and issuance evidence are attributed and retained under accepted governance. A shared GitHub account, display name or commit author alone is insufficient when it cannot distinguish the actual contexts. No universal identity provider, signature system or new publication journal is prescribed. An existing attributable durable event may provide the evidence, but a self-authored holder string without the accepted attribution basis does not establish who acted.
+
+Retain the exact receipt and its issuance evidence, including the historical bindings, attribution rules and authority/publication evidence needed for audit, for as long as the receipt is retained or relied upon. Evidence may accompany the receipt or use exact immutable linked records; a mutable profile, chat title or branch locator alone cannot preserve historical attribution. Evidence must bind the exact receipt content, not just an ID that could be reused for different content. Stable receipt/event IDs may be allocated before issuance so linked records do not require mutually self-containing commit hashes. This does not replace or relax the existing PlanRef/carrier retention and journal trust contracts.
+
+For a historical audit, validate who could act **then** using the retained issuance state and evidence. A later holder replacement or scope reduction does not rewrite who validly issued the old receipt, nor automatically revoke it. Current use still checks the applicable contract, any explicit revocation/reopening and accepted roadmap projection. A later replacement receipt is a new act requiring authority current at its own issuance.
+
+These are receipt-evidence requirements, not a change to `plan-grammar-v2` node syntax. Existing projects adopt them through an explicit accepted planning change under prior authority. Apply them to subsequent issuance; preserve earlier receipts under their original rules. If an old receipt lacks attributable issuance evidence, report that limit rather than filling its fields with the contract's or today's holder. An independently authorized supplementary audit record may link demonstrable historical evidence without modifying the receipt; it cannot fabricate missing provenance or retroactively authorize an invalid issuer. If current reliance requires evidence that cannot be established, stop that reliance and resolve it under valid authority. A candidate migration cannot authorize itself or silently invalidate/reinterpret historical receipts.
+
+See `examples/acceptance-issuance/README.md` for rebinding, shared-account, external authority and immutable-history counterexamples.
 
 ### Acceptance history is immutable
 
