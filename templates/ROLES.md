@@ -4,6 +4,8 @@ Local RoleIDs inherit this registry's accepted plan header (repository identity 
 
 Copy this structure into `planning/ROLES.md` and replace all placeholders.
 
+Define the accepted holder-reference/attribution rules under `planning/ROLES.md` -> **Holder attribution**. Populate `Current holder` with a durable reference that distinguishes the actual authorized holder/context; retain exact historical bindings. A shared account or display name alone may be ambiguous. Acceptance receipts preserve the issuing holder and issuance-time authority state under `planning/CONVENTIONS.md`; later rebindings do not rewrite them.
+
 The template requires **explicit authority**, not a fixed set of substantive role names. Create only substantive Roles whose authority/responsibility must remain stable across holder changes or be granted/revoked/delegated independently.
 
 For a **root project's first accepted state only**, the initial Role authority source may cite the founding record/publication established under `planning/PUBLICATION.md`. After that first publication, the founding exception expires and ordinary pre-existing Role authority rules apply. Any continuing founder power must itself be represented by a Role in the accepted registry.

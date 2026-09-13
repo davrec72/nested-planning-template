@@ -48,7 +48,7 @@ Resolve from accepted records:
 - typed target and its own prerequisites/authority under `planning/EXECUTION.md`;
 - authority source;
 - exact authority revisions separately for external Role/source references; do not confuse a subject contract's PlanRef with an external accepting/delegating Role's PlanRef;
-- when accepting a Milestone: exact `contract_plan_ref`, accepting Role, authority source, and evidence;
+- when accepting a Milestone: exact `contract_plan_ref`, accepting Role, attributable `issued_by_holder`, exact current issuance-time `authority_state_ref`/holder binding, authority source, and durable issuance/evidence records under `planning/CONVENTIONS.md`;
 - when dispatch depends on DONE: current PlanRef must actually project DONE and index acceptance;
 - when dispatch depends on an adopted Decision/DATA contract: current accepted PlanRef must index the exact operative result/resolution, and its contract/input/authority or objective usability checks must pass under `planning/NODE_CONTRACTS.md`;
 - when nested: parent plan/ref/milestone/contract and grammar compatibility;
