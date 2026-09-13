@@ -1,6 +1,6 @@
 # Human navigation examples
 
-These are nonoperational presentation examples under [the navigation convention](../../planning/CONVENTIONS.md#human-navigation). They add no accepted identities, authority, dependencies or evidence. The existing example roadmaps and all their edges/statuses remain unchanged. No Mermaid interaction or browser experiment is needed to follow the visible links.
+These are nonoperational presentation examples under [the navigation convention](../../planning/CONVENTIONS.md#human-navigation). They add no accepted identities, authority, dependencies or evidence. The existing example roadmaps and all their edges/statuses remain unchanged. Visible navigation needs no Mermaid interaction; unresolved external placeholders must be filled before use.
 
 ## Same-repository child
 
@@ -18,7 +18,7 @@ The child header then uses `parent_plan_navigation_locator: ../../PLAN.md` and i
 
 These deployment paths are illustrative, not files instantiated here. Both resolve from the containing roadmap. If the Milestone record is in another directory, adjust the table's relative spelling to reach the same source target. The separate parent/child PlanIDs, qualified references and relationship/publication state remain required even within one repository.
 
-For a working co-located navigation pair in this source tree, open the [robot roadmap](../robot-plan/PLAN.md#navigation), follow R2 to the [child roadmap](../child-project/PLAN.md), then follow its parent link back. Those pages illustrate fictional external authority identities; their local links only navigate the example copies, not a new authority relationship.
+The [robot example page](../robot-plan/PLAN.md#navigation) and [child example page](../child-project/PLAN.md) are working source-tree documentation mirrors. Their separately labeled local mirror links navigate these copies only. The fictional cross-repository pair's canonical R2/parent navigation instead uses unresolved external PLAN-file placeholders, not the local copies.
 
 ## External child
 
@@ -26,9 +26,9 @@ For the fictional `example-owner/learning-project` deployment described by the r
 
 ```text
 MilestoneID: R2
-Child plan: https://<host>/<owner>/<child-repository>/blob/<navigation-ref>/planning/PLAN.md
+Child plan: https://<host>/example-owner/learning-project/blob/<navigation-ref>/planning/PLAN.md
 
-| R2 | child plan | [Child plan](https://<host>/<owner>/<child-repository>/blob/<navigation-ref>/planning/PLAN.md) |
+| R2 | child plan | [Child plan (unresolved external placeholder)](https://<host>/example-owner/learning-project/blob/<navigation-ref>/planning/PLAN.md) |
 ```
 
 Fill the source with the actual file locator before rendering a working link and derive the row from it. A mutable navigation ref is only for browsing; resolve the child's qualified identity and exact accepted PlanRef/publication evidence independently before any dependent action. An external child can similarly set its parent navigation locator to the parent's specific roadmap URL while retaining its existing relationship pin and contract locator.
@@ -39,7 +39,7 @@ The [node-lifecycle roadmap](../node-lifecycle/README.md#navigation) has visible
 
 ## No-click and mismatch cases
 
-- With all Mermaid interaction unavailable, R2's Markdown row, the child's visible parent link, and D0/REPORT's Markdown rows still provide every declared navigation target. No click directives are needed in these examples.
+- With all Mermaid interaction unavailable, R2's Markdown row and the child's visible parent link still expose their external PLAN-file placeholders; they become usable after those locators are filled. D0/REPORT's Markdown rows and the separately labeled source-tree documentation links already resolve locally. Every declared navigation target remains visible without click directives; visibility does not resolve a placeholder.
 - If an instantiated renderer adds a safe click, it must resolve to the same target as the corresponding Markdown link. A click to a repository homepage while the table/source points to `planning/PLAN.md` is a mismatch; correct or omit the click. It cannot override the table.
 - A renamed/moved human-facing locator can be repaired as presentation maintenance, preserving source/table consistency. If qualified identity, the semantic contract locator or another planning boundary also changes, the existing accepted-change rules still apply; navigation cannot silently retarget authority.
 - An unresolved template target is visibly a placeholder. It is not a broken link presented as a real child plan, permission to infer an identity, or a reason to invent an accepted PlanRef.

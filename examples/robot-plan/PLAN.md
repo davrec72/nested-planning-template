@@ -46,9 +46,11 @@ flowchart TD
 
 | Node | Relation | Go to |
 |---|---|---|
-| R2 | child plan | [Child learning-project plan](../child-project/PLAN.md) |
+| R2 | child plan | [Child plan (unresolved external placeholder)](https://<host>/example-owner/learning-project/blob/<navigation-ref>/planning/PLAN.md) |
 
-This link follows R2's `Child plan` below to the co-located example page in this template repository. It does not turn the fictional two-repository relationship into a same-plan or same-repository authority binding. For external deployment, replace the source locator with the actual child `PLAN.md` URL and derive the table link from it; see [external navigation](../navigation/README.md#external-child).
+This canonical target matches R2's `Child plan` below and the fictional external child repository/path. It is unresolved and nonoperational: fill the host and navigation ref with the actual child `PLAN.md` locator before use, then derive the table link from that source. See [external navigation](../navigation/README.md#external-child).
+
+Source-tree documentation mirror only: [child example page](../child-project/PLAN.md). This local copy is not R2's canonical external child-plan target.
 
 ## Child implementation binding for R2
 
@@ -56,7 +58,7 @@ Navigation excerpt of the Milestone record (other contract semantics remain in t
 
 ```text
 MilestoneID: R2
-Child plan: ../child-project/PLAN.md
+Child plan: https://<host>/example-owner/learning-project/blob/<navigation-ref>/planning/PLAN.md
 ```
 
 ```text
