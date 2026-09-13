@@ -20,12 +20,12 @@ This repository defines a planning and delegation system for AI-heavy projects. 
 14. **Gates are predicates; Decisions are judgments.** Do not hide judgment in a Gate.
 15. **Plan-change notifications are wake mechanisms, not authority.** Apply transition-specific actions only after matching them to accepted publication state.
 16. **Exact accepted Git commits are PlanRefs.** Mutable branches are locators only.
-17. **Current planning state comes from a trusted publication journal.** The latest valid committed journal event, plus its retained exact PlanRef and carrier evidence, establishes the accepted high-water mark. A mutable publication ref or Git ancestry alone is insufficient to prove past ref movements.
-18. **Published PlanRefs must remain durably fetchable.** Every accepted exact PlanRef has a retained snapshot independent of ordinary branch cleanup, squash, or rebase.
+17. **Current planning state comes from a trusted publication journal.** The latest valid committed journal event, plus its retained exact PlanRef and retained carrier evidence, establishes the accepted high-water mark. A mutable publication ref or Git ancestry alone is insufficient to prove past ref movements.
+18. **Published PlanRefs and accepted carrier evidence must remain durably fetchable.** Every accepted exact PlanRef and every accepted publication carrier has retained evidence independent of ordinary branch cleanup, squash, rebase, live-ref reachability, and garbage collection. Recovery also retains the invalid suffix evidence required for cold validation.
 19. **The predecessor accepted rules validate the next publication transition.** Candidate governance cannot validate the transition that makes itself current.
 20. **Normal publication is serialized and externally evidenced.** A normal carrier advances conditionally/non-force from the exact accepted incumbent, and a trusted journal event records the successful old->new ref update.
 21. **Invalid publication suffixes are preserved, not adopted.** Recovery may fast-forward over an invalid/uncommitted actual tip while naming the last valid accepted carrier separately; invalid suffix content does not become accepted governance.
-22. **Root bootstrap is one bounded external exception.** A root project may use an explicitly designated Founding Authority only to establish its first accepted state and initial publication/journal/retention trust contract. The exception expires after first valid journaled publication.
+22. **Root bootstrap is one bounded external exception.** A root project may use an explicitly designated Founding Authority only to establish its first accepted state and initial publication/journal/PlanRef-retention/carrier-retention trust contract. The exception expires after first valid journaled publication.
 
 ## Before any substantive planning or execution action
 
@@ -36,6 +36,7 @@ Resolve from accepted records:
 - trusted publication journal kind/locator/trust basis;
 - latest valid `publication_event_id`, `publication_commit`, `publication_id`, and current `plan_ref`;
 - exact retained snapshot locator/evidence for that PlanRef;
+- exact retained carrier evidence locator/evidence for the accepted publication carrier and any recovery suffix evidence required by its event;
 - declared grammar;
 - acting Role and current holder binding;
 - target Milestone/Decision/scope;
@@ -47,7 +48,7 @@ Resolve from accepted records:
 
 Do not use unpublished default-branch governance, mutable ref freshness, local reflogs, or message arrival order as substitutes for trusted publication state. Follow `planning/PUBLICATION.md` and `planning/PUBLICATION_TRANSITIONS.md`.
 
-If the trusted journal, required retained snapshots, or accepted authority state is unavailable/invalid, ordinary dependent execution fails closed. Only bounded root/parent bootstrap or explicitly authorized recovery may proceed.
+If the trusted journal, required retained PlanRef snapshots, required retained carrier/suffix evidence, or accepted authority state is unavailable/invalid, ordinary dependent execution fails closed. Only bounded root/parent bootstrap or explicitly authorized recovery may proceed.
 
 ## Canonical files
 
@@ -69,13 +70,13 @@ The template source may ship templates rather than an instantiated operational p
 
 Use only the accepted grammar. State semantic delta, affected milestones/Roles, active-work impact, authority impact, Foreman dispatch requirement, and controlling evidence/decision.
 
-A semantic candidate does not become current merely because it exists or merges. Approval binds the exact candidate; the candidate is durably retained; the publication ref moves under accepted governance; and a trusted journal event commits that exact transition before operational propagation begins.
+A semantic candidate does not become current merely because it exists or merges. Approval binds the exact candidate; the candidate is durably retained; the publication ref moves under accepted governance; the exact carrier evidence is durably retained; and a trusted journal event commits that exact transition before operational propagation begins.
 
 ## Foreman
 
 `Foreman` is execution-orchestration infrastructure, not automatic substantive authority.
 
-The holder must be able to delegate work, schedule follow-ups, read canonical records, validate trusted publication history/retained PlanRefs, and preserve/recover concurrent package state. One holder may occupy Foreman bindings for several projects, but every action/state item remains project/plan-qualified; cross-project reach does not merge authority.
+The holder must be able to delegate work, schedule follow-ups, read canonical records, validate trusted publication history/retained PlanRefs/retained carrier evidence, and preserve/recover concurrent package state. One holder may occupy Foreman bindings for several projects, but every action/state item remains project/plan-qualified; cross-project reach does not merge authority.
 
 See `prompts/FOREMAN.md`.
 
@@ -100,7 +101,7 @@ semantic_delta
 active_work_impact
 ```
 
-Before transition-specific actions, match the payload to validated journal state and durable last-applied state. Ignore duplicates; do not let stale/superseded messages reapply older actions. Reconcile skipped/out-of-order events in trusted journal order.
+Before transition-specific actions, match the payload to validated journal state and retained carrier evidence plus durable last-applied state. Ignore duplicates; do not let stale/superseded messages reapply older actions. Reconcile skipped/out-of-order events in trusted journal order.
 
 ## Cross-repository nesting
 
