@@ -137,6 +137,12 @@ Temporary executors validate the exact package authorization, authorizing Role/c
 
 Recheck operational eligibility, then check current durable publication fences and persist the exact attempt/route claim through the same serialized inventory mechanism. Block every affected obligation-creating/broadening dispatch/start/resume, new revision/attempt, executor/recipient rebind or mutation while held; a stale check or old claim is insufficient. Pure observations/reductions may proceed only when they cannot broaden obligations. The fence covers potential affected attempts, not just listed workers. Schedule and verify any asynchronous check before dispatch. Record delivery/start evidence separately; a send of unknown outcome must be reconciled. Repeated delivery of one attempt is idempotent, not a new assignment. Follow `planning/EXECUTION.md` before any replacement executor or package revision.
 
+## Execution-context capabilities
+
+Before selecting a substrate or relying on lifecycle, scheduling, recovery or cleanup behavior, consult its durable inventory profile under `planning/EXECUTION.md` -> **Execution-context capability profiles**. Match exact environment/resource/container identity, route/target mode, per-fact evidence and current applicability; do not transfer remembered behavior from another context. Bind attempts and scheduler records to the applicable profile revision and actual schedule owner/resource relation.
+
+Keep supported, unsupported and unknown explicit. Unknown/stale required facts block reliance until authorized verification; an absent tool describes only the tested route, not universal impossibility. Verify actual context/task state separately through the existing succession procedure. For destructive operations, unresolved support/scope fails closed and the existing exact-target/scope authority rules still apply; a capability profile grants no permissions. Weigh setup, verification, cleanup and usage cost against capability/isolation benefit without imposing a duration threshold or changing Foreman topology.
+
 ## Scheduling and durable recovery
 
 Use scheduled follow-ups for CI, review returns, timed windows, promised later evidence, and other authorized asynchronous work.

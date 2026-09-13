@@ -47,6 +47,40 @@ Acquisition is conditional against the manifest's exact approved baseline; misma
 
 Hold through valid trusted journal commit. Record normal release afterward and validate successor state for new dispatch. Pre-ref abort needs verified non-publication before release. Post-ref retention/journal failure keeps the fence durable until explicit recovery while held, or durable abort and suffix reconciliation before predecessor release; any later publication after release needs fresh baseline/manifest/approval/fence. Successful journal commit plus failed release remains conservatively blocked until a successor validates and releases. Unknown outcomes, timeout/lease expiry and holder loss cannot erase fences. See `planning/PUBLICATION_TRANSITIONS.md` section 9; this index is neither a second currentness journal nor proof that in-flight work stopped.
 
+## Execution-context capability profiles
+
+Keep one profile per actual environment/context and applicability scope under `planning/EXECUTION.md` -> **Execution-context capability profiles**. Detailed records may be linked from this inventory. Use existing project/plan qualification, serialized updates and retained history; profiles neither replace the inventory nor grant permissions. Bind package attempts and scheduler rows to the applicable exact profile revision.
+
+```text
+profile_id_and_revision: <durable local profile identity/revision>
+context_identity_and_locator: <provider/environment; actual resource ID and retrievable locator, or unknown>
+container_identity_and_relation: <actual containing resource ID/locator and relation, none with evidence, or unknown>
+profile_applicability: <exact environment/configuration/tool surface/routes/target modes and limits>
+route_limitations: <operation-specific read/send/recovery routes and constraints or unknown>
+associated_attempts_and_scheduler_records: <exact inventory record links or none with evidence>
+context_kind: <actual substrate/context kind or unknown>
+create_supported: supported | unsupported | unknown
+creation_constraints_or_target_modes: <bounded modes/conditions or unknown>
+archive_supported: supported | unsupported | unknown
+unarchive_supported: supported | unsupported | unknown
+permanent_delete_supported: supported | unsupported | unknown
+child_creation_supported: supported | unsupported | unknown
+scheduled_task_supported: supported | unsupported | unknown
+schedule_owner: <actual owning resource/context, scheduler/task record links and ownership relation; or unknown>
+archive_effect_on_own_schedules: <scoped observed/configured effect or unknown>
+archive_effect_on_descendants: <scoped archive/retirement effect and descendant resource relation or unknown>
+unarchive_effect_on_schedules: <scoped observed/configured effect or unknown>
+archived_target_reachability_or_delivery_behavior: <operation/route-specific read/send limitations or unknown>
+project_or_container_delete_supported: supported | unsupported | unknown
+deletion_scope: <operation and exact target/affected resource set/limits, or unknown>
+capability_evidence_and_last_verified: <per-fact evidence records below>
+prior_profile_and_change_evidence: <retained prior revision and reason, or none for first record>
+```
+
+For each fact retain source/evidence identity and locator, observed versus configured basis, exact environment/resource/operation/route tested, scope/limitations, verifier and verification time/event, and validity/recheck conditions with the current applicability conclusion. Unknown/stale facts remain explicit; a timestamp or verified create capability cannot validate other fields. Record unsupported only within the evidenced bounds, not as a universal product claim. Additional scoped facts such as rename support may use the same evidence structure without implying any untested capability.
+
+Actual context reachability/lifecycle outcomes, task liveness and operation/cleanup results stay in the linked attempt, scheduler and succession records, separate from capability support. A profile can identify what to query but cannot supply a current state result. Before relying on required facts, check their continuing applicability or perform authorized verification; unresolved deletion support/scope blocks deletion, and capability evidence supplies no destructive authority.
+
 ## Package index
 
 Every package is discoverable here, including drafts and dispatches with uncertain outcomes. Exact detailed records may be linked to keep the table short.
