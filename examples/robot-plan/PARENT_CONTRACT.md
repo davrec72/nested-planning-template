@@ -59,7 +59,7 @@ These capabilities apply only inside the delegated learning-project scope.
 ## Parent acceptance authority
 
 ```text
-parent_acceptance_role: RobotProgramLead
+parent_acceptance_role: ProgramLead
 ```
 
 ## Escalation triggers
