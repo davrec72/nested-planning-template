@@ -1,6 +1,6 @@
 # Execution inventory template
 
-An instantiated project creates this inventory at the locator configured in its accepted `planning/EXECUTION.md`, or uses an explicitly configured equivalent. This index contains runtime coordination facts, not new planning authority. Keep issued package revisions, historical attempts/receipts, and results retrievable.
+First operational adoption creates/configures this inventory, or an explicitly chosen initial representation, under accepted `planning/EXECUTION.md` and the complete legacy/adoption baseline rules. Its logical locator/identity, serialization mechanism, coordination domain and history contract are then fixed for that PlanID/execution-contract lifetime; no later same-version store move or silent fallback is supported. This index contains runtime coordination facts, not new planning authority. Keep issued package revisions, historical attempts/receipts, and results retrievable.
 
 ## Inventory and recovery identity
 
@@ -8,6 +8,7 @@ An instantiated project creates this inventory at the locator configured in its 
 project: <existing project/repository identity>
 plan_id: <PlanID>
 configuration_plan_ref: <accepted revision configuring this inventory>
+fixed_inventory_contract: <exact adopted logical locator/identity, serialization, domain and retention bindings in EXECUTION.md>
 inventory_revision: <serialized current revision/event>
 coordination_claim: <current Foreman binding and exclusive mutation/dispatch claim evidence>
 prior_claim_disposition: <released/fenced/other proven disposition>
@@ -16,6 +17,8 @@ current_checked_plan_ref: <exact current accepted PlanRef>
 publication_reconciliation_check: <logical check ID below>
 recovery_escalation_route: <configured authority and fallback route>
 ```
+
+For operationally adopted execution, validate fixed-contract continuity from adoption before using this inventory. An unavailable/contradictory mechanism fails closed; similar rows in another store are insufficient. Current writer/Foreman authority and claim are separate mutable facts, validated at use. Keep ordinary row/revision/fence lifecycles and authorized holder/claim, credential/session/route and scheduler-ID changes inside the same configured mechanism, retaining old/new evidence. Same-contract provider upgrades require proof of preserved conditional-serialization/history semantics; see `planning/EXECUTION.md`.
 
 Do not advance the reconciliation marker merely because a message was sent. Per-attempt application remains separate below. Use the configured serialization mechanism for claims and updates; retain uncertain mutation outcomes for reconciliation.
 

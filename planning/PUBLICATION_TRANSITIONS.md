@@ -283,6 +283,7 @@ The portable order is:
 resolve prior accepted state and serialized execution inventory/baseline obligation set
   -> prepare exact candidate
   -> validate fixed-path equality or predecessor-authorized first-path adoption
+  -> validate adopted execution-inventory identity/mechanism/domain/history continuity under EXECUTION.md
   -> prepare exact transition-action manifest, impact baseline and preallocated fence ID/scope
   -> obtain predecessor-valid approval(s) binding candidate and manifest
   -> retain candidate PlanRef
@@ -296,6 +297,8 @@ resolve prior accepted state and serialized execution inventory/baseline obligat
 ```
 
 After manifest approval and before ref movement, acquire the named **durable publication/dispatch fence** conditionally against the exact analyzed inventory baseline/obligation set, using the **same serialized coordination mechanism that protects inventory/dispatch claims**. If the baseline/affected set changed, acquisition fails and publication stops: rebuild/reapprove the manifest and carrier against the new baseline. A plain inventory reread, conditional Git ref update or timing promise does not close this race.
+
+For an operationally adopted execution contract, reject a candidate's same-version change to the fixed logical inventory identity/locator, serialization mechanism, coordination domain or required history semantics before ref movement under `EXECUTION.md`. A manifest/baseline copy or fence in the old store cannot authorize moving current discovery/dispatch to another store. First operational adoption may establish the initial contract under prior authority and complete baseline reconciliation; ordinary holder/claim and runtime changes within that same mechanism remain supported.
 
 The approved fence scope names the exact coordination domain, plan/scope and mutation entry points that could create affected execution obligations, including **potential new attempts**, not just the attempts already listed. All applicable dispatch/start/resume, new package revisions/attempts, executor/recipient rebindings and other obligation-creating/broadening mutations MUST check the current fence through that same serialization and block/fail while held. A stale pre-read or a previously prepared dispatch claim cannot bypass it. Unrelated work may proceed only when proved outside the protected domain; incomplete/ambiguous coverage blocks publication.
 

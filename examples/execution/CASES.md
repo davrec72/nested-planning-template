@@ -162,6 +162,26 @@ Alternative observations have distinct outcomes:
 
 ## 5. Adoption and distinct node semantics
 
+### Fixed inventory identity and permitted succession
+
+These independent variants use an operationally adopted inventory A, logical conditional-serialization mechanism/domain A and its accepted history contract. At P1, A retains running T1, open pause receipt Q, live check S, the current holder/claim, reconciliation/application markers and an active/uncertain publication fence. The fixture assumes exact accepted configuration and supporting authority/evidence; these labels are not live stores or experiments.
+
+| Proposed change / observation | Required result |
+|---|---|
+| P2 switches current discovery to inventory B/mechanism B under the same execution-contract version | Reject before publication/ref movement. A predecessor-side manifest/fence cannot make B a valid successor store or hide T1/Q/S/the claim/markers/fence. |
+| B copies similar or even apparently complete rows from A | Still reject same-version identity/mechanism migration. Ad hoc copies do not establish a versioned handover or preserve the same conditional domain. |
+| Locator is unchanged, but P2 changes serialization mechanism, coordination domain or required history semantics | Reject before ref movement. Matching the locator string alone does not preserve the fixed contract. |
+| Foreman F1 is replaced by currently authorized F2 while remaining on A | F2 validates/reconstructs A and obtains a new serialized claim with prior-claim disposition. Retain T1/Q/S and fence history; no duplicate dispatch, lost receipt or implicit fence release. Holder succession is not inventory migration. |
+| Authorized writer credential/session/route rotates inside A | Allowed only when current writer authority and the same underlying mechanism/domain/history remain valid, with retained old/new identity/route and change evidence. Credentials do not authorize a new store or bypass the current claim. |
+| S is replaced by S2 inside A | Follow existing scheduler reconciliation: verify actual state, retain old/new IDs and disposition, verify S2 and reconcile possible duplicate wakes. No live-check assumption or state loss. |
+| A is unavailable or its identity/mechanism evidence is contradictory | Fail closed for dependent managed execution; do not initialize B, guess A's obligations empty or clear its uncertain fence. Preserve recovery/escalation obligations. |
+| First operational adoption chooses initial A | Prior/root/parent authority may establish A's initial locator/identity/mechanism/domain/history contract, with complete legacy/adoption baseline. Dispatch waits for accepted adoption, all carried records indexed/reconciled and verified checks. No historical state is fabricated. |
+| Provider upgrades its implementation within A | Permitted only with evidence of the same accepted logical conditional-serialization/history contract and domain. A changed store/domain is not an upgrade exception. Ordinary revisions and package/receipt/result/check/fence lifecycles remain mutable. |
+
+This is no inventory/provider migration framework. A future identity/mechanism move requires a separately specified/versioned contract. The fixed domain is distinct from each runtime fence's affected scope and from the current holder/claim.
+
+### Other adoption and node cases
+
 | Input | Migration/compatibility result |
 |---|---|
 | Legacy `milestone: M1` with valid historical evidence | Preserve history and create explicit typed revision; independently recover current executor grant/attempt before continuing. |

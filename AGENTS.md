@@ -40,6 +40,7 @@ Resolve from accepted records:
 - latest valid `publication_event_id`, `publication_commit`, `publication_id`, and current `plan_ref`;
 - exact retained snapshot locator/evidence for that PlanRef;
 - exact retained carrier evidence locator/evidence for the accepted publication carrier and any recovery suffix evidence required by its event;
+- before using operational inventory state: fixed logical inventory locator/identity, serialization mechanism, coordination domain and history-retention contract with continuity from adoption under `planning/EXECUTION.md`; validate current writer/Foreman holder and claim separately. A same-version configuration move fails before publication; unavailable/contradictory state is not permission for a fallback store;
 - before managed execution: current accepted `transition-action-v1` configuration and exact carrier path, valid adopting/legacy baseline with complete indexed/reconciled obligations and verified checks, and no publication-reconciliation failure blocking the affected action; an empty inventory under `none` does not authorize dispatch;
 - when `transition-action-v1` applies: exact journal-bound carrier manifest, predecessor-valid approval, protected inventory-impact baseline and durable publication/dispatch fence evidence under `planning/PUBLICATION_TRANSITIONS.md` section 9;
 - declared grammar;

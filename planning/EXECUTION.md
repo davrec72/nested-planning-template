@@ -13,11 +13,11 @@ Before any Foreman-managed substantive dispatch, start or resume, including a ne
 3. The required adopting event and legacy baseline are valid; their complete carried obligations are durably indexed/reconciled with required checks verified.
 4. Publication reconciliation has no unresolved failure blocking the affected execution. Reconcile the relevant journal history and outstanding actions before treating the target as eligible; absent reconciliation evidence is not permission.
 
-These checks supplement authority, target prerequisites, executor authorization and the serialized fence guards below. They do not themselves authorize work. Recheck current eligibility at the action; an old package validation cannot preserve permission after current configuration or reconciliation state changes.
+These checks supplement authority, target prerequisites, executor authorization and the serialized fence guards below. Validate the fixed inventory contract and its continuity from operational adoption under **Configuration and durable records** before relying on inventory/reconciliation state; an unavailable or contradictory configured mechanism fails closed. These checks do not themselves authorize work. Recheck current eligibility at the action; an old package validation cannot preserve permission after current configuration or reconciliation state changes.
 
 `transition_action_contract: none` is no-autonomous-dispatch mode. Inventory maintenance/read-only coordination may continue under valid authority, but neither an empty inventory nor an accepted Foreman/worker binding permits creating or starting an executor attempt. Commissioned read-only research is still an execution obligation; it is not merely observing the inventory. For legacy active/outstanding work under `none`, block new dispatch/resume and material publication that would alter those obligations pending the prior-authorized reconciliation/adoption or durable legacy stop described in `PUBLICATION.md`. Never guess a missing pause payload from notification text or current worker state.
 
-Only `transition-action-v1` currently supplies the supported operational reconstruction contract. An alternate inventory representation or provider-specific fence implementation must still preserve that adopted contract; it is not an undefined substitute. External template-source maintenance continues to use its actual external authorization, not invented operational bindings.
+Only `transition-action-v1` currently supplies the supported operational reconstruction contract. An initial alternate inventory representation or provider-specific fence implementation must preserve that adopted contract and the fixed inventory rules below; it is not permission for a later same-version inventory/mechanism move. External template-source maintenance continues to use its actual external authorization, not invented operational bindings.
 
 ## Configuration and durable records
 
@@ -25,20 +25,32 @@ The accepted project configuration in this file must identify:
 
 ```text
 execution_inventory_locator: planning/EXECUTION_INVENTORY.md
-inventory_write_policy: <authorized writer, serialized update/claim mechanism, history retention>
+execution_inventory_identity: <stable logical inventory identity within this PlanID>
+inventory_serialization_contract: <exact logical conditional-update/dispatch-claim mechanism>
+inventory_coordination_domain: <exact shared coordination domain/scope>
+inventory_history_retention_contract: <required durable history and cold-discovery semantics>
+inventory_write_policy: <authorized writer Roles/rules; validate current holder and claim at use>
 publication_reconciliation_interval: <finite maximum interval>
 receipt_ack_timeout: <finite interval>
 receipt_apply_timeout: <finite interval after acknowledgement>
 recovery_escalation_route: <Role and reachable fallback route>
 ```
 
-Replace placeholders before operational dispatch. An accepted configuration may select an exact alternate inventory locator, such as an issue index. A branch, chat memory, or worker's unindexed report cannot silently replace that configured inventory.
+Replace placeholders before operational dispatch. First operational adoption may select the initial exact inventory locator/identity and mechanism, including an alternative such as an issue index, under predecessor-valid/root/parent authority and the complete legacy/adoption baseline rules. After operational adoption these logical bindings are fixed for this PlanID/execution-contract lifetime. A branch, chat memory, worker's unindexed report or similarly populated store cannot replace the configured inventory.
 
 The inventory is authoritative for **coordination state**, not for planning authority. Foreman may update runtime records under accepted coordination permissions without publishing a new PlanRef for every check. Preserve exact package revisions, prior attempts, requests/receipts, results, and state-change evidence in recoverable history. Serialize inventory changes and dispatch claims through the configured mechanism (for example, conditional versioned updates that reject a stale inventory revision); a pre-write read alone is insufficient. A claim binds its ID, inventory revision, current holder/binding and prior claim disposition. Check the current claim before each dispatch or other coordination mutation; stale holders/claims must fail. If a claim/update has an unknown outcome, reconcile it before retrying.
 
-Use `templates/EXECUTION_INVENTORY.md`, `templates/WORK_PACKAGE.md`, and `templates/EXECUTION_RECEIPT.md`. An equivalent representation must preserve all required fields and transitions. Discover the full outstanding set from the configured inventory, including prepared/dispatched attempts, material receipts, and schedules; do not require knowledge of old chat IDs to discover it.
+Use `templates/EXECUTION_INVENTORY.md`, `templates/WORK_PACKAGE.md`, and `templates/EXECUTION_RECEIPT.md`. The initially adopted representation must preserve all required fields and transitions. Discover the full outstanding set from that fixed configured inventory, including prepared/dispatched attempts, material receipts, and schedules; do not require knowledge of old chat IDs to discover it.
 
 Every record is project/plan-qualified using the existing plan identity rules. Local package IDs, Role names, and schedule IDs alone are not globally unique. This requirement does not create cross-project authority.
+
+### Fixed inventory contract and permitted runtime changes
+
+Once operational execution is adopted/enabled, the logical `execution_inventory_locator`/identity, conditional-serialization mechanism, coordination domain/scope and required history-retention semantics are fixed for this PlanID and execution-contract lifetime. History must retain cold-discoverable packages/revisions/attempts, claims, requests/receipts, results, scheduler records, reconciliation/application markers and active/uncertain fences. Before publishing a later candidate under this same contract version, validate that it preserves all four bindings. A change to any of them is unsupported and MUST fail before publication/ref movement, even if rows are copied or the new store appears equivalent. A future move needs a separately specified/versioned migration contract; none is defined here. If the configured mechanism is unavailable or contradictory, fail closed; do not silently start a fallback inventory.
+
+These fixed bindings do not freeze ordinary rows/revisions or a human/process holder. Within the same mechanism/domain, package/receipt/result/check/fence lifecycles, Foreman/writer succession and serialized claim handoff remain governed by their existing rules. `inventory_write_policy` names writer authority/rules separately from the fixed mechanism; validate the writer's current accepted authority and claim at use. Authorized credential/session/route replacement and evidenced scheduler-ID replacement may proceed with retained old/new state and evidence, without losing history or moving the coordination domain. Provider implementation upgrades are permitted only with evidence that they preserve the same accepted logical conditional-serialization/history contract; a new store/domain is not such an upgrade.
+
+An individual publication fence still selects its affected scope inside this fixed coordination domain under `PUBLICATION_TRANSITIONS.md`; fence creation/transition/release is runtime state, not a domain migration. Holder/claim succession does not clear an active/uncertain fence or close an outstanding receipt.
 
 ### Publication/dispatch fences
 
@@ -180,7 +192,7 @@ Inventory every publication watch, package check, receipt retry/application chec
 
 On startup, succession, or capability loss:
 
-1. Validate current accepted publication state and locate the configured inventory. Check operational eligibility before any dispatch/obligation-creating mutation; `none` permits only bounded inventory/read-only coordination and valid legacy reconciliation. Acquire the serialized coordination/dispatch claim under current Foreman binding before making mutations; a prior holder cannot continue using an obsolete claim. Discover active/uncertain publication fences, their exact transitions and acquisition/release history; apply section 9 recovery before affected dispatch. A replaced Foreman or expired lease does not clear them.
+1. Validate current accepted publication state; for operationally adopted execution, validate the inventory identity/mechanism/domain/history continuity from adoption, then locate that same configured inventory. Unavailable/contradictory state blocks dependent execution; no fallback store or ad hoc copy substitutes. Check operational eligibility before any dispatch/obligation-creating mutation; `none` permits only bounded inventory/read-only coordination and valid legacy reconciliation. Acquire the serialized coordination/dispatch claim under current Foreman binding before making mutations; a prior holder cannot continue using an obsolete claim. Discover active/uncertain publication fences, their exact transitions and acquisition/release history; apply section 9 recovery before affected dispatch. A replaced Foreman or expired lease does not clear them.
 2. Reconstruct each nonterminal package revision/attempt, executor route, authorization, last applied event, material receipt, exact result, and check. Preserve historical records. Mark unsupported old liveness claims `unknown`.
 3. Query actual executor and scheduler state through available read-only routes. Reconcile results and in-flight effects before any dispatch retry or replacement. A durable result may settle a returned package even when its old executor is unreachable; absence of a result cannot prove non-execution.
 4. Classify each outstanding check as `verified-live`, `recreated`, `completed`, or `lost/cancelled`, with evidence. If verification is unavailable, retain `unknown` as an unresolved blocker; do not force it into a proven class. Recreate a missing check only after resolving an old possibly live check or ensuring duplicate wakeups are harmless and idempotent. Index the replacement ID/owner and disposition of the old one. Follow-up checks must reconcile before dispatching, so a duplicated wake never authorizes duplicated execution.
@@ -194,6 +206,8 @@ Externalize results, inventory, and recovery routes before a planned holder tear
 ## Compatibility and migration
 
 This contract leaves `plan-grammar-v2` and `plan-publication-v1` semantics unchanged. It adds an explicit execution contract and stricter operational records; adopting projects must approve/publish the change under their preceding accepted governance. It does not retroactively validate old packages or create temporary grants from a legacy `role` field.
+
+First operational adoption chooses the initial inventory identity/locator, conditional mechanism, coordination domain and retention contract under prior authority. Reconcile complete legacy state into that initial baseline before managed dispatch is enabled; do not fabricate missing history. After adoption, the fixed-contract rule above prohibits same-version inventory/mechanism migration. Ordinary holder/claim and resource-ID succession inside the same domain remains supported; this section is not a provider/store migration framework.
 
 Configure explicit `transition-action-v1` adoption before any operational Foreman dispatch/start/resume or obligation-creating revision/attempt/rebind/supersession. Its adopting transition carries the predecessor-approved legacy baseline; every later planning publication includes an approved manifest, including no-impact transitions. Under predecessor governance, prevent new obligation creation while identifying/reconciling the complete legacy set. After journaled adoption, index/reconcile the adopting event and all carried obligations and verify required checks before enabling execution. `none` remains no-dispatch until those conditions hold, even for an empty inventory. Existing authority, journal currentness and PlanRef/carrier-retention trust roots remain unchanged.
 

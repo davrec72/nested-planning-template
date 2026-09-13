@@ -68,7 +68,7 @@ planning/EXECUTION.md
 planning/PARENT.md when applicable
 ```
 
-Read the execution inventory at the locator configured in the accepted `planning/EXECUTION.md` (default `planning/EXECUTION_INVENTORY.md`). Recover durable coordination state:
+For operationally adopted execution, validate the inventory's fixed logical locator/identity, serialization mechanism, coordination domain and history contract from adoption under accepted `planning/EXECUTION.md`. Read that same configured inventory (default `planning/EXECUTION_INVENTORY.md`); under `none`, only authorized inventory/read-only coordination and legacy reconciliation remain permitted. Unavailable/contradictory state fails closed; another store or copied rows cannot substitute. Holder/claim succession and authorized credential/route/scheduler-ID changes remain within this mechanism with retained evidence and current authority checks. Recover durable coordination state:
 
 ```text
 package IDs, immutable revisions, exact authorizations and attempts (including uncertain dispatch)
