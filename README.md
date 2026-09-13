@@ -22,6 +22,7 @@ Use this template when you want to avoid:
 - a root project needing a fictional pre-existing Role;
 - a rewritten publication ref silently reviving revoked authority;
 - accepted exact PlanRefs disappearing after branch cleanup/rebase;
+- accepted publication carriers disappearing after divergent recovery or garbage collection;
 - stale notifications reapplying superseded work instructions.
 
 ## Repository layout
@@ -144,7 +145,8 @@ The founding act pins:
 - initial Role/binding state;
 - initial publication protocol/ref;
 - trusted publication-journal contract;
-- exact PlanRef-retention contract.
+- exact PlanRef-retention contract;
+- exact publication-carrier-evidence retention contract.
 
 The founding exception expires after the first valid journaled publication. Any continuing founder authority must then exist as an ordinary Role/binding.
 
@@ -152,7 +154,7 @@ A child repository may instead bootstrap from accepted parent authority covering
 
 ## Publishing current accepted planning state
 
-`plan-publication-v1` deliberately separates candidate content, approval, retention, ref movement, trusted transition evidence, and current state.
+`plan-publication-v1` deliberately separates candidate content, approval, semantic retention, ref movement, carrier retention, trusted transition evidence, and current state.
 
 ```text
 exact semantic candidate exists
@@ -160,6 +162,7 @@ exact semantic candidate exists
     -> exact candidate is durably retained for cold fetch
     -> successor publication carrier is prepared
     -> configured publication ref conditionally/non-force advances
+    -> exact carrier and required recovery evidence are durably retained
     -> trusted append-only/tamper-evident journal commits the exact ref-update event
     -> only then is candidate the current accepted PlanRef
 ```
@@ -172,11 +175,22 @@ Bare Git ancestry or local reflogs alone are insufficient for cold reconstructio
 
 ### Retaining accepted PlanRefs
 
-A carrier containing the text of a SHA does not keep that commit reachable. Before publication succeeds, every exact published PlanRef must have a durable cold-fetchable snapshot locator independent of ordinary work-branch cleanup, squash, or rebase.
+A carrier containing the text of a SHA does not keep that semantic commit reachable. Before publication succeeds, every exact published PlanRef must have a durable cold-fetchable snapshot locator independent of ordinary work-branch cleanup, squash, or rebase.
+
+### Retaining accepted publication carriers
+
+The journal also depends on historical publication carriers as evidence: their exact commit object, parent relation, tree, and `planning/CURRENT.md` content are used by later cold validation. A carrier SHA written into a journal event is not a reachability edge.
+
+Therefore every accepted carrier must have durable cold-fetchable carrier evidence for at least the publication-journal lifetime. That evidence is independent of live-ref reachability and ordinary repository garbage collection.
+
+For divergent recovery, NPT retains both:
+
+- the displaced accepted carrier chain referenced by earlier accepted events; and
+- the quarantined invalid/uncommitted suffix needed to validate what the recovery actually crossed.
 
 ### Normal transition
 
-A normal successor carrier has the actual accepted incumbent carrier as both its Git parent and accepted predecessor. The publication ref advances conditionally/non-force from that exact commit. The trusted journal then records the exact successful old→new ref update and retained PlanRef.
+A normal successor carrier has the actual accepted incumbent carrier as both its Git parent and accepted predecessor. The publication ref advances conditionally/non-force from that exact commit. The exact successor carrier evidence is retained, then the trusted journal records the successful old→new ref update, retained PlanRef, and retained carrier evidence.
 
 ### Invalid/uncommitted tip recovery
 
@@ -186,10 +200,12 @@ Recovery preserves it rather than rewriting history:
 
 ```text
 actual Git parent of recovery carrier = actual bad/uncommitted tip
-accepted predecessor              = last valid journaled carrier
+accepted predecessor                  = last valid journaled carrier
 ```
 
-The recovery is validated under the last accepted PlanRef's governance. The trusted journal records both identities and quarantines the invalid suffix as preserved but non-accepted history.
+The recovery is validated under the last accepted PlanRef's governance. Before its journal event commits, it retains the recovery carrier, the quarantined invalid suffix, and the separately retained displaced accepted predecessor evidence. The trusted journal then records both predecessor identities and all required evidence locators.
+
+This allows the live graph to move onto a divergent recovery branch without making the prior accepted branch disappear from cold validation after garbage collection.
 
 See `planning/PUBLICATION.md`, `planning/PUBLICATION_TRANSITIONS.md`, `templates/CURRENT.md`, and `templates/PUBLICATION_EVENT.md`.
 
@@ -213,7 +229,7 @@ A qualified Foreman environment must be able to delegate, schedule real follow-u
 
 One holder may coordinate several project-scoped Foreman bindings, or nested plans may use separate Foreman holders. Coordination reach never merges substantive authority.
 
-Foreman startup resolves current accepted state from the trusted publication journal, verifies retained PlanRefs, then reads the exact accepted planning snapshot. It does not choose the newest branch, newest message, or mutable ref payload by convenience.
+Foreman startup resolves current accepted state from the trusted publication journal, verifies retained PlanRefs and retained carrier/suffix evidence, then reads the exact accepted planning snapshot. It does not choose the newest branch, newest message, or mutable ref payload by convenience.
 
 Scheduled tasks are treated as execution-context-bound resources; succession must verify/recreate them rather than trusting old IDs.
 
@@ -230,14 +246,15 @@ Every notification binds the exact committed publication event/carrier. Foreman 
 1. Copy/fork the template.
 2. Create the initial roadmap and sparse project-specific Roles.
 3. Decide root vs child bootstrap.
-4. Configure founding/parent authority plus publication ref, trusted journal, and PlanRef-retention mechanism.
+4. Configure founding/parent authority plus publication ref, trusted journal, PlanRef-retention mechanism, and carrier-evidence-retention mechanism.
 5. Prepare the exact first candidate.
 6. Approve that exact candidate and trust configuration.
-7. Retain the exact candidate under the configured snapshot contract.
-8. Create the first publication carrier.
-9. Establish the publication ref and commit the first trusted journal event.
-10. Only then are the initial Roles—including Foreman—operational.
-11. Use `templates/PLAN_CHANGE.md` for later semantic changes and the publication protocol to make them current.
+7. Retain the exact candidate under the configured semantic snapshot contract.
+8. Create and install the first publication carrier.
+9. Retain the exact first carrier evidence under the configured carrier contract.
+10. Commit the first trusted journal event.
+11. Only then are the initial Roles—including Foreman—operational.
+12. Use `templates/PLAN_CHANGE.md` for later semantic changes and the publication protocol to make them current.
 
 ## Authority rule that overrides convenience
 
@@ -245,7 +262,7 @@ A planning file is not a magic permission source.
 
 A proposed edit cannot authorize its own approval. A child cannot create powers the parent never granted. Repository access, prompt reach, tool availability, branch freshness, or coordination convenience do not substitute for accepted authority.
 
-If accepted authority, trusted publication-journal evidence, or retained exact planning snapshots are missing/contradictory, fail closed and escalate.
+If accepted authority, trusted publication-journal evidence, retained exact planning snapshots, or retained carrier/suffix evidence are missing/contradictory, fail closed and escalate.
 
 ## Scope
 
