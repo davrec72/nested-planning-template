@@ -14,17 +14,34 @@ plan_id: <PlanID>
 contract_plan_ref: <exact accepted pre-acceptance PlanRef containing the milestone contract being judged>
 milestone_id: <MilestoneID>
 accepted_by_role: <local RoleID or qualified cross-plan role reference>
-acceptance_authority_plan_ref: <exact accepted PlanRef for the accepting Role's authority>
+issued_by_holder: <durable attributable holder/actual context reference, matching the accepted binding>
+authority_state_ref: <exact accepting Role plan PlanRef current at issuance>
+authority_binding_locator: <exact Role definition/holder-binding path and record at authority_state_ref>
+acceptance_authority_plan_ref: <same exact PlanRef as authority_state_ref>
 acceptance_authority_source: <independently accepted source granting this Role acceptance authority over this milestone/scope>
+issuance_evidence: <retained attributable event/evidence binding exact receipt, issuer and accepted authority/publication state and order at issuance>
 accepted_at: <time or durable event reference>
 supersedes: <prior acceptance record or none>
 ```
 
 `contract_plan_ref` is deliberately **not** the later PlanRef that may record `MILESTONE_DONE`. It identifies the exact contract revision whose outcome, criteria, and authority references are being judged.
 
-The header fixes the Milestone's repository/plan context. A Role in a different plan is fully qualified under `planning/REFERENCES.md`; its separate `acceptance_authority_plan_ref` is in that Role's plan and is not assumed equal to the subject's `contract_plan_ref`. Qualify any external authority-source object and bind its own exact revision. These references identify objects/revisions, not an additional authority or issuer-provenance mechanism.
+The header fixes the Milestone's repository/plan context. A Role in a different plan is fully qualified under `planning/REFERENCES.md`; `authority_state_ref` and the matching `acceptance_authority_plan_ref` are in that Role's plan and are not assumed equal to the subject's `contract_plan_ref`. Qualify any external authority-source object and bind its own exact revision. Qualified references identify objects/revisions; they do not themselves attribute an issuer or grant authority.
 
 The milestone contract may name `accepted_by_role` and an authority-source locator, but those fields do not grant authority. Before issuing this record, verify that the cited authority source is independently accepted and actually covers this milestone/scope. If not, do not issue acceptance.
+
+## Issuance authority evidence
+
+Follow `planning/CONVENTIONS.md` -> **Issuer and authority at issuance** and `planning/ROLES.md` -> **Holder attribution**. Record or exactly link:
+
+- the accepted attribution rules and evidence identifying the actual issuing holder/context, including disambiguation when several contexts share an account;
+- the exact Role definition and holder binding at `authority_state_ref`, with the trusted publication event and retained snapshot/carrier evidence establishing the state current at issuance;
+- the independently accepted acceptance grant and each external authority/relationship revision checked at issuance, with its own publication evidence;
+- the attributable issuance action/event binding the exact receipt content, issuer and issuance order under those rules. An earlier current-state check alone does not prove authority remained current when the act occurred.
+
+Do not substitute the holder at `contract_plan_ref` or today's holder for `issued_by_holder`. If the actual issuer, binding, authority scope or ordering cannot be verified, do not issue acceptance. Preserve the receipt and linked evidence for historical audit; later holder/scope changes do not rewrite them. This template supplies no signature or identity-provider infrastructure.
+
+For an existing project, adopt these requirements by an accepted planning change before subsequent issuance. Do not backfill an old receipt in place; record any demonstrable supplemental historical evidence separately, with its limitations, under the canonical migration rules.
 
 ## Milestone contract being accepted
 

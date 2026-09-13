@@ -20,6 +20,8 @@ The first row's parent Role crosses a plan boundary and must be fully qualified,
 
 ## Roles
 
+Use durable holder/context references and accepted attribution rules under `planning/ROLES.md` -> **Holder attribution**. A shared account alone cannot disambiguate its contexts. Preserve the exact holder binding used for each acceptance at issuance; neither a historical parent pin nor a later rebind identifies the issuer by itself.
+
 | RoleID | Current holder | Parent Role | Scope | Final decision authority | Delegation capabilities | Authority source | State |
 |---|---|---|---|---|---|---|---|
 | `<ChildLead>` | `<holder or —>` | `<qualified parent role reference>` | `<bounded child scope>` | `<exact decisions>` | `<capability IDs or none>` | `<qualified delegation; exact parent PlanRef/locator>` | `<Active/Vacant/Retired>` |
