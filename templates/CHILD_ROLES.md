@@ -5,18 +5,24 @@ This registry is subordinate to the parent contract. It cannot create authority 
 ## Child scope owner
 
 ```text
-plan_id: <child PlanID>
-parent_plan_ref: <exact parent PlanRef>
-parent_milestone: <parent MilestoneID>
+reference_contract: qualified-reference-v1
+child_plan: <qualified child plan reference; fixes all local RoleID context>
+parent_plan_ref: <exact accepted parent relationship PlanRef containing the bound contract>
+parent_milestone: <qualified parent milestone reference>
 scope_owner_role: <RoleID>
-parent_contract: <path/link>
+parent_contract: <qualified parent contract reference>
+parent_contract_locator: <path/link at parent_plan_ref>
 ```
+
+This child-side pin differs from the parent contract's prior authority baseline. Validate the retained relationship and current parent authority before relying on its delegation; see `planning/REFERENCES.md`.
+
+The first row's parent Role crosses a plan boundary and must be fully qualified, with its authority source at an exact accepted parent revision. Internal `ChildLead`/`SpecialistLead` references may remain local because `child_plan` fixes their context. Qualify any other external source/Role and bind its exact authority revision separately.
 
 ## Roles
 
 | RoleID | Current holder | Parent Role | Scope | Final decision authority | Delegation capabilities | Authority source | State |
 |---|---|---|---|---|---|---|---|
-| `<ChildLead>` | `<holder or —>` | `<parent RoleID>` | `<bounded child scope>` | `<exact decisions>` | `<capability IDs or none>` | `<accepted delegation>` | `<Active/Vacant/Retired>` |
+| `<ChildLead>` | `<holder or —>` | `<qualified parent role reference>` | `<bounded child scope>` | `<exact decisions>` | `<capability IDs or none>` | `<qualified delegation; exact parent PlanRef/locator>` | `<Active/Vacant/Retired>` |
 | `<SpecialistLead>` | `<holder or —>` | `<ChildLead>` | `<strict subset>` | `<exact decisions or none>` | `<capability IDs or none>` | `<accepted child delegation>` | `<Active/Vacant/Retired>` |
 
 ## Rules

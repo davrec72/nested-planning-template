@@ -5,7 +5,12 @@ Copy this structure into `planning/PLAN.md` and replace all placeholders.
 ```text
 plan_id: <stable PlanID>
 grammar: plan-grammar-v2
+reference_contract: qualified-reference-v1
+repository_identity: {scheme: github-repository-id-v1, authority: <GitHub host>, id: <numeric repository ID>}
+repository_locator: <readable owner/repo or URL>
 ```
+
+The reference declaration requires explicit accepted adoption under `planning/REFERENCES.md`. Local nodes inherit the header's repository/PlanID; cross-plan references use full qualified identities with exact revisions bound separately. Placeholders and proposed adoption are not operational authority.
 
 ```mermaid
 flowchart TD

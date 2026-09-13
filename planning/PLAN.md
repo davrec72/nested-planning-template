@@ -3,9 +3,14 @@
 ```text
 plan_id: <replace-with-stable-PlanID>
 grammar: plan-grammar-v2
+reference_contract: qualified-reference-v1
+repository_identity: {scheme: github-repository-id-v1, authority: <GitHub host>, id: <numeric repository ID>}
+repository_locator: <readable owner/repo or URL>
 ```
 
 This file is the canonical at-a-glance roadmap for the project. Replace all angle-bracket placeholders before treating it as operational.
+
+This proposed reference-contract declaration becomes operative only through accepted publication. Existing plans explicitly migrate under `REFERENCES.md`; local nodes inherit this plan's repository/PlanID context, while cross-plan references use full qualified identities and separate exact revisions.
 
 Interpret this diagram only under `CONVENTIONS.md`. Current holder/authority bindings are in `ROLES.md`. Parent scope, if any, is in `PARENT.md`.
 

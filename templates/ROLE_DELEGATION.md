@@ -4,14 +4,21 @@ Use this record when one accepted Role delegates authority to another Role.
 
 ```text
 delegation_id: <stable ID>
+reference_contract: qualified-reference-v1
+repository_identity: {scheme: github-repository-id-v1, authority: <GitHub host>, id: <numeric repository ID>}
 plan_id: <PlanID>
-plan_ref: <exact accepted PlanRef at delegation>
-delegator_role: <RoleID>
-delegate_role: <RoleID>
-parent_milestone: <MilestoneID or none>
-effective_from: <accepted commit/decision>
+authority_baseline_plan_ref: <exact prior accepted delegator PlanRef authorizing this grant>
+delegator_role: <qualified role reference>
+delegator_authority_source: <exact source locator at authority_baseline_plan_ref>
+delegate_role: <qualified role reference>
+parent_milestone: <qualified milestone reference or none>
+activation_rule: <accepted publication of this grant and required valid delegate Role/binding>
 supersedes: <prior delegation ID or none>
 ```
+
+The authority baseline is not the unknown SHA of the commit that first contains this delegation. Its accepted containing relationship PlanRef is resolved from publication evidence afterward. For a new child, the intended delegate identity is bounded by the parent-authorized initialization; the child Role/binding must actually become accepted before it can act. See `planning/REFERENCES.md`.
+
+The header's repository/PlanID identifies the delegation record, not both endpoints. Each cross-plan endpoint must be fully qualified; a same-plan endpoint may use a short RoleID only in that unambiguous context. At use, bind the delegate's accepted PlanRef and the delegator's current authority/relationship PlanRef separately. They need not equal each other or this grant's prior baseline. Naming both endpoints `ChildLead` does not make them the same Role.
 
 ## Delegated scope
 

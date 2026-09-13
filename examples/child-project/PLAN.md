@@ -1,13 +1,19 @@
 # Example: child learning-project roadmap
 
+The repository IDs 1001/1002 and readable names are fictional examples, not verified live bindings. Operational adoption requires accepted publication and verified provider identities under `planning/REFERENCES.md`.
+
 ```text
 plan_id: LEARNING
 grammar: plan-grammar-v2
-parent_plan: ROBOT
-parent_plan_ref: <exact accepted parent PlanRef>
-parent_milestone: R2
+reference_contract: qualified-reference-v1
+repository_identity: {"scheme": "github-repository-id-v1", "authority": "github.com", "id": "1002"}
+repository_locator: example-owner/learning-project
+parent_plan: {"repository_identity": {"scheme": "github-repository-id-v1", "authority": "github.com", "id": "1001"}, "plan_id": "ROBOT", "object_kind": "plan"}
+parent_plan_ref: <P1: exact accepted parent relationship PlanRef>
+parent_milestone: {"repository_identity": {"scheme": "github-repository-id-v1", "authority": "github.com", "id": "1001"}, "plan_id": "ROBOT", "object_kind": "milestone", "object_id": "R2"}
 scope_owner_role: LearningLead
-parent_contract: examples/robot-plan/PARENT_CONTRACT.md
+parent_contract: {"repository_identity": {"scheme": "github-repository-id-v1", "authority": "github.com", "id": "1001"}, "plan_id": "ROBOT", "object_kind": "contract", "object_id": "ROBOT-R2-LEARNING-v1"}
+parent_contract_locator: examples/robot-plan/PARENT_CONTRACT.md
 ```
 
 ```mermaid

@@ -35,6 +35,7 @@ planning/
   CONVENTIONS.md
   NODE_CONTRACTS.md
   NESTING.md
+  REFERENCES.md
   ROLES.md
   PUBLICATION.md
   PUBLICATION_TRANSITIONS.md
@@ -62,6 +63,7 @@ examples/
   robot-plan/
   child-project/
   node-lifecycle/
+  cross-plan/
 ```
 
 The template source is not itself an instantiated operational plan. Instantiated projects additionally create the required publication/founding records under `planning/PUBLICATION.md`.
@@ -75,6 +77,8 @@ v2 keeps Milestone delivery/evidence, Milestone acceptance, and roadmap projecti
 Historical v1 plans remain v1; do not silently reinterpret them.
 
 Decision and DATA semantics can explicitly adopt the separately versioned `decision-result-v1` and `data-dependency-v1` contracts. Their current accepted PlanRef indexes exact immutable records; the node contracts do not replace roadmap grammar v2. Legacy explicit semantics continue until an accepted migration. See `planning/NODE_CONTRACTS.md`.
+
+`qualified-reference-v1` is a separately adopted reference contract, leaving v2 Mermaid syntax intact. It qualifies cross-plan objects by stable provider repository identity, repository-local PlanID, kind and local ID. Readable repository names/paths are locators; exact PlanRefs remain separate. Existing plans adopt and migrate through accepted publication, preserving historical meanings. See `planning/REFERENCES.md`.
 
 ## Required concepts
 
@@ -230,6 +234,8 @@ See `planning/PUBLICATION.md`, `planning/PUBLICATION_TRANSITIONS.md`, `templates
 A child plan owns internal decomposition only inside an accepted parent contract. It may not broaden scope, weaken parent acceptance criteria, alter parent dependencies, invent permissions, or modify contracts owned above it.
 
 Create durable child planning only when it reduces real coordination complexity.
+
+First publish the parent relationship under prior accepted parent authority, then publish the child pin to that exact relationship. The parent's authority baseline and the child's relationship pin have different meanings; neither requires its own containing commit SHA. See `planning/REFERENCES.md` and `examples/cross-plan/README.md` for finite same-repository and cross-repository sequences.
 
 ## Upward nesting and multiple repositories
 

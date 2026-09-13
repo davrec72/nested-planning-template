@@ -4,14 +4,19 @@ Every substantive assignment coordinated through Foreman should bind to accepted
 
 ```text
 work_package_id: <stable ID>
+reference_contract: qualified-reference-v1
+repository_identity: {scheme: github-repository-id-v1, authority: <GitHub host>, id: <numeric repository ID>}
 plan_id: <PlanID>
 plan_ref: <exact accepted commit SHA>
 role: <RoleID whose authority the package serves>
 milestone: <MilestoneID>
-parent_plan_ref: <exact parent PlanRef or none>
+parent_plan: <qualified parent plan reference or none>
+parent_plan_ref: <exact accepted parent relationship pin or none>
 created_by_role: <RoleID>
 return_to: <RoleID with final substantive authority>
 ```
+
+Local IDs inherit this package's repository/PlanID and their field's kind. Every cross-plan Role, target, parent contract or return authority uses a full qualified reference under `planning/REFERENCES.md`. Bind each relied-upon external authority's exact PlanRef separately; the package `plan_ref` names only its own plan. For nested use also resolve the current parent PlanRef and verify the pinned relationship still applies. A locator or shared Role name is not authority.
 
 ## Objective
 
