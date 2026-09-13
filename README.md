@@ -1,31 +1,28 @@
 # Nested Planning Template
 
-A repository-native planning system for AI-heavy projects that need clear authority, recursive delegation, visual roadmaps, and low-overhead execution coordination.
+A repository-native planning system for AI-heavy projects that need clear authority, recursive delegation, visual roadmaps, durable current-state discovery, and low-overhead execution coordination.
 
-The system is designed so a project can be understood at a glance at one level, while allowing any sufficiently large milestone to become its own nested plan. The same mechanism also works upward: an entire repository can be one child milestone in a larger portfolio or super-project plan.
-
-The core idea is simple:
+Core idea:
 
 > **Plans describe outcomes and dependencies. Roles hold authority. Holders temporarily occupy roles. Delegation can narrow authority downward, but never widen it. Parent plans own contracts; child plans own implementation inside those contracts.**
 
-This repository is intentionally documentation-first. It does not require a planning service, database, workflow engine, or custom bot.
+Planning topology and coordination topology are independent: a child plan may have its own Foreman, share a Foreman holder with another plan, or use another bounded coordination arrangement without changing substantive authority.
 
 ## What this solves
 
-Use this template when you want to avoid common failure modes in AI-managed projects:
+Use this template when you want to avoid:
 
-- chats or agents silently acquiring authority because they happen to have context;
-- plans becoming prose that different agents interpret differently;
-- top-level diagrams becoming unreadable as detail grows;
-- subordinate leads creating incompatible planning conventions;
-- a parent project needing to supervise every internal child-plan edit;
-- plan changes failing to reach active workers;
-- agents continuously polling for changes instead of receiving targeted updates;
-- role names being confused with the person/chat currently holding them;
-- multiple roles held by one agent being mistaken for independent review;
-- child plans changing parent requirements or permissions without authorization;
-- agents treating the newest branch head as accepted planning state without a durable publication event;
-- root projects needing to invent a fictional pre-existing Role to create their first real Role.
+- chats/agents silently acquiring authority because they have context or tools;
+- plans becoming ambiguous prose;
+- unreadable top-level diagrams;
+- child plans weakening parent requirements;
+- Role names being confused with current holders;
+- nominally separate Roles being mistaken for independent review;
+- current planning state being inferred from the newest branch head;
+- a root project needing a fictional pre-existing Role;
+- a rewritten publication ref silently reviving revoked authority;
+- accepted exact PlanRefs disappearing after branch cleanup/rebase;
+- stale notifications reapplying superseded work instructions.
 
 ## Repository layout
 
@@ -50,79 +47,56 @@ templates/
   WORK_PACKAGE.md
   PLAN_CHANGE.md
   PARENT_CONTRACT.md
+  ROLE_DELEGATION.md
   MILESTONE_ACCEPTANCE.md
   CURRENT.md
   FOUNDING.md
+  PUBLICATION_EVENT.md
 examples/
   robot-plan/
-    PLAN.md
-    PARENT_CONTRACT.md
   child-project/
-    PLAN.md
-    PARENT.md
 ```
 
-`planning/PLAN.md` is the at-a-glance roadmap. `planning/CONVENTIONS.md` defines the exact planning grammar. `planning/NESTING.md` defines recursive delegation. `planning/ROLES.md` records role holders and authority. `planning/PUBLICATION.md` defines root bootstrap and the publication model. `planning/PUBLICATION_TRANSITIONS.md` defines the normative validator source, serialized publication-carrier history, recovery, and notification matching. `planning/PARENT.md` is used only when this repository itself is nested under another plan.
+The template source is not itself an instantiated operational plan. Instantiated projects additionally create the required publication/founding records under `planning/PUBLICATION.md`.
 
-An instantiated project carries `planning/CURRENT.md` from `templates/CURRENT.md` on its configured publication ref. The portable default is `refs/heads/plan-publications`. A root project also creates `planning/FOUNDING.md` from `templates/FOUNDING.md` during first initialization.
+## Current grammar
 
-## Current grammar version
+The current roadmap grammar is **`plan-grammar-v2`**.
 
-The current contract is **`plan-grammar-v2`**.
+v2 keeps Milestone delivery/evidence, Milestone acceptance, and roadmap projection separate. A Milestone-source hard prerequisite opens only when the current accepted PlanRef projects the Milestone `MILESTONE_DONE` and indexes its durable acceptance record.
 
-v2 makes milestone delivery/evidence, milestone acceptance, and the roadmap projection of that acceptance separate facts. A milestone-source hard prerequisite becomes operational only when the current accepted PlanRef projects the milestone `MILESTONE_DONE` and indexes its durable acceptance record.
-
-`plan-grammar-v1` remains a valid historical contract. Do not silently reinterpret v1 plans as v2. Cross-version child plans are treated according to `planning/NESTING.md`; absent an explicit compatibility rule, a v2 parent treats an unmigrated v1 child's internals as opaque and relies on the parent-facing boundary contract/evidence.
+Historical v1 plans remain v1; do not silently reinterpret them.
 
 ## Required concepts
 
 ### Role
 
-A **Role** is a stable authority/responsibility slot. It is not a person, chat, model, account, or process.
-
-A holder can occupy multiple roles. Rebinding a role to another holder does not change the role's scope. Two roles held by the same underlying agent do not create reviewer independence.
+A **Role** is a stable authority/responsibility slot, not a person, chat, model, or process. A holder may occupy multiple Roles. Rebinding a holder does not itself change Role scope.
 
 ### Milestone
 
-A **Milestone** is an outcome with acceptance criteria. Milestone labels describe what becomes true, not an activity such as `review X` or `work on Y`.
+A **Milestone** is an outcome with acceptance criteria. Milestones describe what becomes true, not an activity such as `review X`.
 
 ### Gate
 
-A **Gate** is an objective predicate. No role decides a gate.
-
-Examples:
-
-- `At least 2 source foundations validated`
-- `All required checks passed`
+A **Gate** is an objective predicate. No Role decides a Gate.
 
 ### Decision
 
-A **Decision** requires judgment. Every Decision has exactly one role with a `decides` edge.
+A **Decision** requires judgment and has exactly one final deciding Role under the accepted grammar.
 
 ### PlanRef
 
 A **PlanRef** is an exact Git commit SHA naming one planning/authority snapshot.
 
-An exact SHA alone proves content identity, not that the content is accepted or current.
+An exact SHA proves content identity, not that the content is accepted/current or durably retained.
 
-In an instantiated project, the **current accepted PlanRef** is the `plan_ref` named by the validated tip carrier of the configured publication ref under `planning/PUBLICATION.md` and `planning/PUBLICATION_TRANSITIONS.md`.
-
-Mutable branch names such as `main` are content/work locators, not authority evidence. A newer default-branch commit may contain staged or merged-but-unpublished planning changes and must not silently replace the published current PlanRef.
+In an instantiated project, current accepted planning state is determined through the publication protocol below.
 
 ## Mermaid grammar at a glance
 
 ```mermaid
 flowchart TD
-
-  %% PLAN GRAMMAR v2
-  %% A --> B                        hard prerequisite
-  %% A -. "preferred before" .-> B scheduling preference only
-  %% ROLE -- "assigned to" --> MILESTONE
-  %% ROLE -- "decides" --> DECISION
-  %% ordinary multiple hard inputs = AND
-  %% OR / N-of-M requires an explicit GATE
-  %% milestone status is expressed only by class
-
   ProjectLead["Project Lead"]
   FeatureLead["Feature Lead"]
   class ProjectLead,FeatureLead ROLE
@@ -155,198 +129,124 @@ flowchart TD
   class D1 DECISION
   class M1 MILESTONE_INPROGRESS
   class M2,M3 MILESTONE_PENDING
-
-  linkStyle default stroke:slategray,stroke-width:3.5px,fill:none;
 ```
 
-Do not invent new arrow meanings casually. If the grammar needs a new relationship, change `planning/CONVENTIONS.md` first.
+Solid arrows are hard prerequisites; dotted `preferred before` edges are scheduling preferences. OR/N-of-M logic requires an explicit Gate. See `planning/CONVENTIONS.md` for the exact grammar.
 
 ## Root bootstrap
 
-A root project has no parent Role that can authorize its first Role. Do not solve this by pretending repository ownership, write access, or a proposed Role is already authority.
+A root project has no prior Role. NPT therefore permits one bounded external **Founding Authority** to establish the first accepted plan/Role/governance state.
 
-Instead, `planning/PUBLICATION.md` defines one narrow bootstrap exception:
+The founding act pins:
 
-1. the project adopter explicitly designates an external **Founding Authority** and trust basis;
-2. create `planning/FOUNDING.md` from `templates/FOUNDING.md`;
-3. prepare the exact first candidate plan/Role/governance state;
-4. the Founding Authority approves that exact candidate **and the exact initial publication protocol/locator**;
-5. create the first publication carrier containing `planning/CURRENT.md` with `prior_*: none`;
-6. establish the configured publication ref at that carrier and validate it under the founding-approved protocol;
-7. the candidate named by that carrier becomes the first current accepted PlanRef;
-8. the founding exception expires.
+- founding identity, trust basis, and bounded scope;
+- exact first candidate planning state;
+- initial Role/binding state;
+- initial publication protocol/ref;
+- trusted publication-journal contract;
+- exact PlanRef-retention contract.
 
-Any continuing authority of the founder must be represented by an ordinary Role/binding in that first accepted state.
+The founding exception expires after the first valid journaled publication. Any continuing founder authority must then exist as an ordinary Role/binding.
 
-A child project normally bootstraps instead from its accepted parent contract/delegation, which must also authorize the initial child publication protocol/locator.
+A child repository may instead bootstrap from accepted parent authority covering the same boundary/trust setup.
 
-## Publishing the current accepted PlanRef
+## Publishing current accepted planning state
 
-Plan publication separates candidate content, candidate approval, and serialized publication.
+`plan-publication-v1` deliberately separates candidate content, approval, retention, ref movement, trusted transition evidence, and current state.
 
 ```text
-semantic planning content exists
-    -> exact candidate PlanRef is identified
-    -> already-valid authority approves that exact candidate
-    -> successor carrier names it in planning/CURRENT.md
-    -> configured publication ref advances non-force from the exact incumbent carrier
-    -> candidate becomes current accepted PlanRef
+exact semantic candidate exists
+    -> valid pre-existing authority approves that exact SHA
+    -> exact candidate is durably retained for cold fetch
+    -> successor publication carrier is prepared
+    -> configured publication ref conditionally/non-force advances
+    -> trusted append-only/tamper-evident journal commits the exact ref-update event
+    -> only then is candidate the current accepted PlanRef
 ```
 
-The semantic candidate may be merged or staged on an ordinary branch before publication. That does **not** make it operative.
+### Why both Git carriers and a journal?
 
-For every publication after the first:
+Git ancestry proves content relationships, but a fresh clone cannot prove that a mutable ref was never previously advanced and later reset. NPT therefore requires a bootstrap-configured trusted publication journal that preserves committed publication events independently of the mutable ref.
 
-- the successor carrier's Git parent must equal the actual incumbent publication carrier;
-- `CURRENT.prior_publication_commit`, `prior_publication_id`, and `prior_plan_ref` must match the validated predecessor;
-- transition validation uses the **predecessor accepted PlanRef's governance**, so an unpublished candidate cannot validate its own new publication rules;
-- the publication ref must advance non-force from the exact incumbent carrier, so concurrent stale siblings and replayed old records cannot win by timestamp or notification order.
+Bare Git ancestry or local reflogs alone are insufficient for cold reconstruction.
 
-Cold readers reconstruct accepted state from the actual serialized publication-carrier history, not from self-reported `prior_*` fields alone.
+### Retaining accepted PlanRefs
 
-See `planning/PUBLICATION.md`, `planning/PUBLICATION_TRANSITIONS.md`, and `templates/CURRENT.md`.
+A carrier containing the text of a SHA does not keep that commit reachable. Before publication succeeds, every exact published PlanRef must have a durable cold-fetchable snapshot locator independent of ordinary work-branch cleanup, squash, or rebase.
+
+### Normal transition
+
+A normal successor carrier has the actual accepted incumbent carrier as both its Git parent and accepted predecessor. The publication ref advances conditionally/non-force from that exact commit. The trusted journal then records the exact successful old→new ref update and retained PlanRef.
+
+### Invalid/uncommitted tip recovery
+
+A bad/uncommitted carrier may exist at the actual publication-ref tip without becoming accepted state.
+
+Recovery preserves it rather than rewriting history:
+
+```text
+actual Git parent of recovery carrier = actual bad/uncommitted tip
+accepted predecessor              = last valid journaled carrier
+```
+
+The recovery is validated under the last accepted PlanRef's governance. The trusted journal records both identities and quarantines the invalid suffix as preserved but non-accepted history.
+
+See `planning/PUBLICATION.md`, `planning/PUBLICATION_TRANSITIONS.md`, `templates/CURRENT.md`, and `templates/PUBLICATION_EVENT.md`.
 
 ## Downward nesting
 
-A lead may create a child plan only when its accepted role authority explicitly grants the required delegation capability.
+A child plan owns internal decomposition only inside an accepted parent contract. It may not broaden scope, weaken parent acceptance criteria, alter parent dependencies, invent permissions, or modify contracts owned above it.
 
-Example:
-
-```text
-Top-level plan
-  M1B: Glasses foundation
-      child plan: GLASSES
-        G1: Vendor connection validated
-        G2: Durable capture validated
-        G3: Diagnostics validated
-        G4: Integrated glasses foundation accepted
-```
-
-The parent plan continues to show only `M1B`. The child plan contains the detailed graph.
-
-The child may change its internal decomposition without changing the parent plan **only if the parent-facing contract is unchanged**.
-
-A child may never use its own plan to:
-
-- broaden its scope;
-- weaken the parent milestone's acceptance criteria;
-- alter parent-level dependencies;
-- grant itself repository/device/data/spending authority;
-- modify shared contracts owned above it;
-- assign itself authority the parent never delegated.
-
-See `planning/NESTING.md`.
+Create durable child planning only when it reduces real coordination complexity.
 
 ## Upward nesting and multiple repositories
 
-The same rules work upward.
+The same contracts work upward across repositories. Parent/child authority is explicit through parent contracts/delegations and exact accepted publication state—not submodules, forks, copied trees, or repository ownership.
 
-A repository such as `robot-plan` can treat another repository as one child milestone:
+Repositories may keep independent Git histories.
 
-```text
-robot-plan
-  R1: Robot hardware foundation
-  R2: Learning subsystem ready
-      child implementation -> another repository
-  R3: Integrated robot validation
-```
+## Foreman
 
-The parent repository stores a **parent contract** describing what the child must provide. The child repository stores `planning/PARENT.md` pointing back to the exact parent plan and milestone.
+`Foreman` is execution-orchestration infrastructure, not automatic substantive authority.
 
-The repositories keep independent Git histories. Do not use Git submodules, copied source trees, or branch ancestry as the authority mechanism.
+A qualified Foreman environment must be able to delegate, schedule real follow-ups, access canonical records, validate accepted publication state, and preserve/recover concurrent work state.
 
-The parent normally changes only when the child boundary changes: child identity, parent-facing outcome, delegated authority, parent scheduling/dependency semantics, or parent milestone status. Internal child-plan edits do not require parent commits.
+One holder may coordinate several project-scoped Foreman bindings, or nested plans may use separate Foreman holders. Coordination reach never merges substantive authority.
 
-## The Foreman role
+Foreman startup resolves current accepted state from the trusted publication journal, verifies retained PlanRefs, then reads the exact accepted planning snapshot. It does not choose the newest branch, newest message, or mutable ref payload by convenience.
 
-`Foreman` is the shared execution-orchestration role. It is not automatically the technical authority for the work it coordinates.
+Scheduled tasks are treated as execution-context-bound resources; succession must verify/recreate them rather than trusting old IDs.
 
-The Foreman holder **must** be a chat/agent environment capable of both:
+See `prompts/FOREMAN.md`.
 
-1. delegating work to other agents/contexts; and
-2. scheduling its own future follow-up tasks or checks.
+## Propagation
 
-Examples include ChatGPT Work-style conversations or another environment with equivalent delegation and scheduling capabilities.
+Published-change notifications are wake mechanisms, not authority.
 
-Do **not** bind a plain chat that cannot schedule future work to the Foreman role. It may act as a worker or lead, but it cannot satisfy the Foreman contract.
+Every notification binds the exact committed publication event/carrier. Foreman tracks the last applied event per relevant scope/package; duplicate, stale, skipped, and out-of-order notifications are reconciled in trusted journal order before transition-specific actions are applied.
 
-Foreman uses scheduled follow-ups for work that depends on time or asynchronous external state, such as CI completion, independent review returns, release windows, or later checkpoints. Foreman does not continuously poll the plan. Plan propagation is event-driven with boundary checks.
+## Starting a project
 
-The complete operating prompt is in `prompts/FOREMAN.md`.
-
-## How plan changes propagate
-
-Use **serialized publication, then event-driven notification plus boundary checks**.
-
-For a semantic plan/Role change:
-
-1. resolve and validate the configured publication-ref tip, recording the incumbent carrier, publication ID, and PlanRef;
-2. prepare/review the semantic candidate;
-3. identify the exact resulting candidate PlanRef;
-4. obtain approval of that exact candidate from authority valid before the candidate becomes current;
-5. prepare a successor publication carrier under the predecessor accepted governance;
-6. advance the publication ref non-force from the exact incumbent carrier to the successor;
-7. only then send Foreman a payload bound to that exact transition: `publication_id`, `publication_commit`, `new_plan_ref`, `prior_publication_id`, `prior_plan_ref`, semantic delta, affected scopes, and active-work impact;
-8. Foreman validates that transition, reconciles duplicate/stale/out-of-order notifications against durable last-applied publication state, and then routes only the relevant delta;
-9. unaffected work continues;
-10. new or materially revised work packages bind the newly current PlanRef.
-
-Foreman also validates current publication state before:
-
-- dispatching new substantive work;
-- materially resuming paused work;
-- final readiness/merge/acceptance handoffs whose validity depends on the plan.
-
-Role holders do not need timer-driven polling.
-
-## When to create a child plan
-
-Create durable nesting only when it reduces complexity. Good reasons include:
-
-- several meaningful parallel workstreams;
-- multiple durable decision scopes;
-- supervision burden too large for one lead;
-- a milestone with its own nontrivial dependency graph;
-- a stable subsystem that needs its own roadmap.
-
-Do not create a durable role or child plan merely because another worker is useful. Temporary workers are cheap; durable authority structures should remain sparse.
-
-## How to start a project from this template
-
-1. Copy or fork this repository.
-2. Replace `planning/PLAN.md` with your initial roadmap using only the defined grammar.
-3. Define the initial Roles/holders in `planning/ROLES.md`.
-4. Decide whether the repository is a root plan or child plan.
-5. **Root:** explicitly designate the external Founding Authority and instantiate `planning/FOUNDING.md` from `templates/FOUNDING.md`, including the initial publication protocol/locator.
-6. **Child:** fill `planning/PARENT.md` and identify accepted parent authority covering the child scope and initial publication protocol/locator.
-7. Prepare the exact first candidate planning/governance commit.
-8. Obtain founding/parent approval of that exact candidate and initial publication protocol/locator.
-9. Create the first publication carrier with `planning/CURRENT.md` from `templates/CURRENT.md`, and establish the configured publication ref at that carrier.
-10. Validate the first publication. Only then are the initial Roles—including Foreman—operational.
-11. Bind a qualified Foreman holder if autonomous execution coordination is part of the accepted state.
-12. Record the current accepted PlanRef in substantive work packages.
-13. Use `templates/PLAN_CHANGE.md` plus the serialized publication protocol for later semantic changes.
-14. Add child plans only when a delegated Role has the required capability.
+1. Copy/fork the template.
+2. Create the initial roadmap and sparse project-specific Roles.
+3. Decide root vs child bootstrap.
+4. Configure founding/parent authority plus publication ref, trusted journal, and PlanRef-retention mechanism.
+5. Prepare the exact first candidate.
+6. Approve that exact candidate and trust configuration.
+7. Retain the exact candidate under the configured snapshot contract.
+8. Create the first publication carrier.
+9. Establish the publication ref and commit the first trusted journal event.
+10. Only then are the initial Roles—including Foreman—operational.
+11. Use `templates/PLAN_CHANGE.md` for later semantic changes and the publication protocol to make them current.
 
 ## Authority rule that overrides convenience
 
 A planning file is not a magic permission source.
 
-A proposed edit cannot authorize its own approval. A child plan cannot create powers that the parent did not grant. Repository write access, seniority, chat history, tool availability, being the most informed agent, or being on the newest branch are not substitutes for accepted authority.
+A proposed edit cannot authorize its own approval. A child cannot create powers the parent never granted. Repository access, prompt reach, tool availability, branch freshness, or coordination convenience do not substitute for accepted authority.
 
-The only root bootstrap exception is the explicitly designated external Founding Authority defined by `planning/PUBLICATION.md`, and it expires after first valid publication.
+If accepted authority, trusted publication-journal evidence, or retained exact planning snapshots are missing/contradictory, fail closed and escalate.
 
-When accepted records are missing, contradictory, ambiguous, or only proposed in an unpublished candidate, treat authority as absent and escalate.
+## Scope
 
-## Scope of this template
-
-This template defines planning and delegation mechanics. It does not prescribe:
-
-- a software-development methodology;
-- a particular review count;
-- a release process;
-- a budgeting system;
-- a specific AI provider;
-- a requirement that every project use nested plans.
-
-Projects should add domain-specific safety, data, release, legal, and technical invariants in their own `AGENTS.md` and durable contracts.
+NPT defines planning/delegation/publication mechanics. Projects still add their own safety, privacy, release, data-integrity, hardware, legal, and technical invariants.
