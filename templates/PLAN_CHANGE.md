@@ -2,6 +2,8 @@
 
 Use this for every semantic planning or Role change.
 
+Record the current and proposed `transition_action_contract` and apply `planning/PUBLICATION.md` -> **Operational execution eligibility**. `none` permits planning/no-dispatch mode only; a material change staying in `none` must affect no active/outstanding execution obligation. Legacy work requires valid prior-authorized stop/reconciliation or a conforming adopting transition, never a guessed pause request. Managed execution requires current accepted v1 configuration/path, valid adoption/legacy reconciliation and verified checks before dispatch, including a first attempt in an empty inventory.
+
 After explicit `qualified-reference-v1` adoption, fix this change record's repository/PlanID context and fully qualify every affected cross-plan object, Role or source under `planning/REFERENCES.md`. Bind external authority PlanRefs separately from the candidate's own baseline/candidate refs. Reference adoption/migration itself is an explicit semantic change; a proposed field does not activate it.
 
 Candidate creation/approval, snapshot retention, publication-ref movement, trusted journal commit, and propagation are separate events. Follow `planning/PUBLICATION.md` and `planning/PUBLICATION_TRANSITIONS.md`.
@@ -13,8 +15,12 @@ Affected roles:
 Active work impact: none | continue | pause | redirect | supersede
 Authority impact: none | binding change | scope change
 Foreman dispatch required: yes | no
+Current / proposed transition_action_contract:
+Adoption / legacy-baseline and operational-eligibility evidence:
 Controlling decision/evidence:
 ```
+
+For `none` -> operational adoption, predecessor governance first prevents new obligation creation and reconciles the complete legacy set through its high-water. Prepare/approve the conforming baseline manifest/fence, journal-publish it, then index/reconcile the adopting event and all carried obligations with required checks verified before enabling dispatch. Choosing v1 in this form or approving the candidate alone does not enable execution.
 
 ## Before the change
 

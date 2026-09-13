@@ -4,6 +4,21 @@ This is the shared Foreman–executor contract for typed packages, temporary exe
 
 This template source is not an operational execution inventory. An instantiated project adopts/configures this contract through its normal accepted publication process before using it.
 
+## Operational eligibility
+
+Before any Foreman-managed substantive dispatch, start or resume, including a new package revision/attempt, executor/recipient rebind or supersession that creates execution obligations, validate and retain evidence of all four checks:
+
+1. Resolve current accepted `plan-publication-v1` state from the trusted journal and retained PlanRef/carrier evidence.
+2. The current accepted publication configuration explicitly adopts `transition-action-v1`, and the exact configured carrier path resolves to its valid journal-bound manifest. A candidate declaration or a manifest at an unconfigured path is insufficient.
+3. The required adopting event and legacy baseline are valid; their complete carried obligations are durably indexed/reconciled with required checks verified.
+4. Publication reconciliation has no unresolved failure blocking the affected execution. Reconcile the relevant journal history and outstanding actions before treating the target as eligible; absent reconciliation evidence is not permission.
+
+These checks supplement authority, target prerequisites, executor authorization and the serialized fence guards below. They do not themselves authorize work. Recheck current eligibility at the action; an old package validation cannot preserve permission after current configuration or reconciliation state changes.
+
+`transition_action_contract: none` is no-autonomous-dispatch mode. Inventory maintenance/read-only coordination may continue under valid authority, but neither an empty inventory nor an accepted Foreman/worker binding permits creating or starting an executor attempt. Commissioned read-only research is still an execution obligation; it is not merely observing the inventory. For legacy active/outstanding work under `none`, block new dispatch/resume and material publication that would alter those obligations pending the prior-authorized reconciliation/adoption or durable legacy stop described in `PUBLICATION.md`. Never guess a missing pause payload from notification text or current worker state.
+
+Only `transition-action-v1` currently supplies the supported operational reconstruction contract. An alternate inventory representation or provider-specific fence implementation must still preserve that adopted contract; it is not an undefined substitute. External template-source maintenance continues to use its actual external authorization, not invented operational bindings.
+
 ## Configuration and durable records
 
 The accepted project configuration in this file must identify:
@@ -75,7 +90,7 @@ Separate the stable package ID, immutable `package_revision`, and per-executor `
 
 Before sending work:
 
-1. Validate current publication/retention/authority, typed target prerequisites, authorization, executor route, and exact input revisions.
+1. Validate all operational eligibility checks above, current publication/retention/authority, typed target prerequisites, authorization, executor route, and exact input revisions.
 2. Through the same serialized mechanism, check current publication fences and persist a durable claim containing the package/revision, attempt ID, executor/return routes, current authorization, state `dispatch-pending`, and recovery obligation. A fence blocks affected obligation-creating/broadening claims. Create and verify a real scheduled check whenever any dispatch acknowledgement, return, or future condition will be asynchronous; persist its ID, owner, trigger, and evidence before dispatch.
 3. Send the exact package/revision and attempt ID only under the current serialized fence/dispatch guard; an old claim cannot bypass an intervening fence. Record each transport attempt and its observed outcome. An ambiguous send leaves `dispatch-pending`/unknown execution, not permission to create another attempt.
 4. The executor acknowledges the exact assignment and starts/resumes only after validation, including the same serialized fence guard for obligation-creating/broadening actions. It deduplicates repeat delivery of that attempt, returning current state or existing results instead of starting again. Foreman records `running` only with executor/start evidence.
@@ -123,7 +138,7 @@ Durable material records are transport-independent. Direct prompts, webhooks, ex
 
 ## Lost requests and continued execution
 
-There are two required recovery loops:
+Operational Foreman execution requires both recovery loops below, and therefore current accepted `transition-action-v1` adoption plus valid baseline reconciliation before dispatch. A `none` configuration can perform read-only discovery, but cannot use discovery as permission to dispatch or invent absent historical actions.
 
 - **Publication to Foreman:** maintain a verified scheduled reconciliation at the configured maximum interval. Reconstruct every newly accepted transition's obligations from its exact retained `transition-action-v1` manifest using the procedure below, even when no notification arrived. The current worker set or notification prose cannot supply missing approved actions.
 - **Foreman to executor:** before relying on a material request, schedule and verify its acknowledgement/application checks, indexed to that receipt. Foreman owns timeout handling: retry an authorized supported wake route, query the executor/effects, use a known fallback route, and escalate to the configured authority if still unresolved. Acknowledgement without application still needs its application deadline and recovery check. Failed scheduling is `ACTION NEEDED`; an unscheduled future intention is not recovery.
@@ -138,11 +153,11 @@ For each applicable committed event after `last_reconciled_publication_event`, i
 4. Reconcile every specified logical recovery check and record its actual verified scheduler ID/owner/trigger or unresolved recovery blocker. Do not duplicate possibly live checks; use the existing scheduler procedure. Already overdue obligations trigger immediate authorized recovery with their original deadlines retained. Index requests/receipts before any wake. If verification fails, leave the event pending, fail closed for affected execution and escalate; a placeholder task ID is not a verified check.
 5. Only after **all** event obligations are durably indexed/reconciled and required checks verified may the serialized `last_reconciled_publication_event` advance. A crash partway through resumes missing obligations under the same IDs, without duplicate dispatch. Valid empty impact permits advancement without receipts. Indexed is not applied: per-attempt application/closure remains a separate marker and evidence requirement.
 
-The record schema and publication/adoption order are in `templates/TRANSITION_ACTION.md` and `PUBLICATION_TRANSITIONS.md` section 9. The publication-to-Foreman guarantee requires explicit adjunct adoption with a reconciled legacy baseline. Pre-adoption events retain their historical rules; reconcile their execution obligations during adoption rather than inventing old manifests or inferring actions from PR history. Unknown legacy obligations cannot be skipped. No second action/currentness journal is introduced.
+The record schema and publication/adoption order are in `templates/TRANSITION_ACTION.md` and `PUBLICATION_TRANSITIONS.md` section 9. Explicit adoption and reconciled baseline are mandatory for operational eligibility, including the first dispatch. Pre-adoption events retain their historical rules; reconcile their execution obligations during adoption rather than inventing old manifests or inferring actions from PR history. Unknown legacy obligations cannot be skipped. No second action/currentness journal is introduced.
 
 While a material authority/scope restriction remains unapplied, Foreman blocks new dependent dispatch, replacement execution, resumption, and final readiness/acceptance handoffs. Preserve unaffected work. Report the affected attempt as **not confirmed stopped**, including the exposure interval and last verified action. A timeout or unavailable worker is not evidence that it stopped.
 
-Each executor revalidates current publication/authority and outstanding requests at the package's bounded execution checkpoints, as well as before new/resumed substantive work and final handoff. If it cannot validate, it starts no further segment and follows its preauthorized safe-stop procedure. A non-interruptible action must have an explicit bounded duration/effect and stop procedure before it starts. This bounds cooperative operation; messaging alone cannot instantly halt already-running effects or an unreachable worker.
+Each executor revalidates current operational eligibility, publication/authority and outstanding requests at the package's bounded execution checkpoints, as well as before new/resumed substantive work and final handoff. If it cannot validate, it starts no further segment and follows its preauthorized safe-stop procedure. A non-interruptible action must have an explicit bounded duration/effect and stop procedure before it starts. This bounds cooperative operation; messaging alone cannot instantly halt already-running effects or an unreachable worker.
 
 Projects needing stronger guarantees may require fail-closed leases/heartbeats and external fencing. Such a policy must define expiry, renewal authority, enforcement point, clock/failure assumptions, and proof of effect cessation. An unenforced lease timestamp is not a fence. If the configured stop bound cannot be met, do not dispatch that work under a best-effort assumption.
 
@@ -154,7 +169,7 @@ Inventory every publication watch, package check, receipt retry/application chec
 
 On startup, succession, or capability loss:
 
-1. Validate current accepted publication state and locate the configured inventory. Acquire the serialized coordination/dispatch claim under current Foreman binding before making mutations; a prior holder cannot continue using an obsolete claim. Discover active/uncertain publication fences, their exact transitions and acquisition/release history; apply section 9 recovery before affected dispatch. A replaced Foreman or expired lease does not clear them.
+1. Validate current accepted publication state and locate the configured inventory. Check operational eligibility before any dispatch/obligation-creating mutation; `none` permits only bounded inventory/read-only coordination and valid legacy reconciliation. Acquire the serialized coordination/dispatch claim under current Foreman binding before making mutations; a prior holder cannot continue using an obsolete claim. Discover active/uncertain publication fences, their exact transitions and acquisition/release history; apply section 9 recovery before affected dispatch. A replaced Foreman or expired lease does not clear them.
 2. Reconstruct each nonterminal package revision/attempt, executor route, authorization, last applied event, material receipt, exact result, and check. Preserve historical records. Mark unsupported old liveness claims `unknown`.
 3. Query actual executor and scheduler state through available read-only routes. Reconcile results and in-flight effects before any dispatch retry or replacement. A durable result may settle a returned package even when its old executor is unreachable; absence of a result cannot prove non-execution.
 4. Classify each outstanding check as `verified-live`, `recreated`, `completed`, or `lost/cancelled`, with evidence. If verification is unavailable, retain `unknown` as an unresolved blocker; do not force it into a proven class. Recreate a missing check only after resolving an old possibly live check or ensuring duplicate wakeups are harmless and idempotent. Index the replacement ID/owner and disposition of the old one. Follow-up checks must reconcile before dispatching, so a duplicated wake never authorizes duplicated execution.
@@ -169,7 +184,7 @@ Externalize results, inventory, and recovery routes before a planned holder tear
 
 This contract leaves `plan-grammar-v2` and `plan-publication-v1` semantics unchanged. It adds an explicit execution contract and stricter operational records; adopting projects must approve/publish the change under their preceding accepted governance. It does not retroactively validate old packages or create temporary grants from a legacy `role` field.
 
-Configure explicit `transition-action-v1` adoption before relying on reconstructible publication-to-Foreman recovery. Its adopting transition carries the predecessor-approved legacy baseline; every later planning publication includes an approved manifest, including no-impact transitions. Existing authority, journal currentness and PlanRef/carrier-retention trust roots remain unchanged.
+Configure explicit `transition-action-v1` adoption before any operational Foreman dispatch/start/resume or obligation-creating revision/attempt/rebind/supersession. Its adopting transition carries the predecessor-approved legacy baseline; every later planning publication includes an approved manifest, including no-impact transitions. Under predecessor governance, prevent new obligation creation while identifying/reconciling the complete legacy set. After journaled adoption, index/reconcile the adopting event and all carried obligations and verify required checks before enabling execution. `none` remains no-dispatch until those conditions hold, even for an empty inventory. Existing authority, journal currentness and PlanRef/carrier-retention trust roots remain unchanged.
 
 Fence adoption must itself be protected by a predecessor-valid mechanism when legacy execution is active or still dispatchable. Stop/reconcile and exclude further legacy dispatch, or obtain an explicitly authorized bounded one-time fence under prior authority; the candidate cannot supply its own authority. A first root/child publication may use explicit no-active-execution evidence only when no pre-existing dispatch-capable system exists. Historical events receive no invented fences.
 

@@ -27,6 +27,8 @@ This repository defines a planning and delegation system for AI-heavy projects. 
 21. **Invalid publication suffixes are preserved, not adopted.** Recovery may fast-forward over an invalid/uncommitted actual tip while naming the last valid accepted carrier separately; invalid suffix content does not become accepted governance.
 22. **Root bootstrap is one bounded external exception.** A root project may use an explicitly designated Founding Authority only to establish its first accepted state and initial publication/journal/PlanRef-retention/carrier-retention trust contract. The exception expires after first valid journaled publication.
 
+23. **Operational Foreman execution requires accepted `transition-action-v1` adoption.** `transition_action_contract: none` is no-autonomous-dispatch mode. Valid adoption/legacy-baseline reconciliation and verified required checks must precede dispatch/start/resume or any revision/attempt/rebind/supersession that creates execution obligations.
+
 ## Before any substantive planning or execution action
 
 Resolve from accepted records:
@@ -38,6 +40,7 @@ Resolve from accepted records:
 - latest valid `publication_event_id`, `publication_commit`, `publication_id`, and current `plan_ref`;
 - exact retained snapshot locator/evidence for that PlanRef;
 - exact retained carrier evidence locator/evidence for the accepted publication carrier and any recovery suffix evidence required by its event;
+- before managed execution: current accepted `transition-action-v1` configuration and exact carrier path, valid adopting/legacy baseline with complete indexed/reconciled obligations and verified checks, and no publication-reconciliation failure blocking the affected action; an empty inventory under `none` does not authorize dispatch;
 - when `transition-action-v1` applies: exact journal-bound carrier manifest, predecessor-valid approval, protected inventory-impact baseline and durable publication/dispatch fence evidence under `planning/PUBLICATION_TRANSITIONS.md` section 9;
 - declared grammar;
 - for Role authority: acting Role and its own current holder binding; for temporary execution: exact bounded authorization, authorizing Role/current binding, and executor identity under `planning/EXECUTION.md`;
@@ -85,7 +88,7 @@ For adopted `transition-action-v1`, prepare the complete immutable transition-ac
 
 ## Foreman
 
-`Foreman` is execution-orchestration infrastructure, not automatic substantive authority.
+`Foreman` is execution-orchestration infrastructure, not automatic substantive authority. Under `transition_action_contract: none`, it may maintain inventory/read-only coordination under valid authority but cannot dispatch/start/resume or create execution obligations. Material publication affecting active/outstanding legacy obligations requires prior-authorized reconciliation/adoption or durable stop under valid legacy rules; do not invent missing action payloads. See `planning/PUBLICATION.md` for the sole supported operational reconstruction contract and eligibility boundary.
 
 The holder must be able to delegate work, schedule follow-ups, read canonical records, validate trusted publication history/retained PlanRefs/retained carrier evidence, and preserve/recover concurrent package state. One holder may occupy Foreman bindings for several projects, but every action/state item remains project/plan-qualified; cross-project reach does not merge authority.
 
@@ -97,7 +100,7 @@ Every substantive package must bind project/plan identity, exact accepted PlanRe
 
 Temporary executors validate their own bounded authorization and its authorizer's current accepted authority, not a fictional claim to hold the serving Role. Assignment grants no acceptance, reserved Decision, Role-binding, or re-delegation authority. Rebinding/revocation and bounded execution checkpoints follow `planning/EXECUTION.md`. Completion/evidence does not itself accept a Milestone or decide a Decision.
 
-Before dispatch/start/resume or any obligation-creating/broadening coordination mutation, check current publication fences through the same serialized inventory mechanism and block within held scope. Durably claim/index the exact attempt and verify required follow-ups. On succession or uncertain delivery/execution, reconcile the existing attempt, routes, results, receipts, and actual scheduler state before retrying/replacing it. Missing state never permits speculative redispatch.
+Before dispatch/start/resume or any obligation-creating/broadening coordination mutation, validate operational eligibility under `planning/EXECUTION.md`, then check current publication fences through the same serialized inventory mechanism and block within held scope. Durably claim/index the exact attempt and verify required follow-ups. On succession or uncertain delivery/execution, reconcile the existing attempt, routes, results, receipts, and actual scheduler state before retrying/replacing it. Missing state never permits speculative redispatch.
 
 ## Publication notifications
 

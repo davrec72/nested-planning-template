@@ -2,7 +2,7 @@
 
 These are fictional protocol fixtures for manually checking `planning/EXECUTION.md`, not an instantiated plan, live dispatch, acceptance, or scheduler experiment. P1/P2/P3 below stand for distinct exact 40-character accepted Git SHAs with validated journal events E1/E2/E3 and retained snapshot/carrier evidence. In a real package, use those exact identities and retrievable records, never these abbreviations.
 
-All fixtures use project `example/research`, PlanID `research`, a configured durable inventory, and serialized claims. Schedule IDs and verification receipts below are **assumed fixture evidence**, not claims that tasks were actually created. These walkthroughs assess specified behavior; they do not prove transport reliability or external enforcement.
+All operational fixtures use project `example/research`, PlanID `research`, current accepted `transition-action-v1` configuration, its validated/indexed/reconciled adoption baseline with required checks verified, a configured durable inventory, and serialized claims. A `none` configuration would block their dispatch steps even if inventory were empty; see the adoption eligibility cases in `TRANSITION_ACTION_CASES.md`. Schedule IDs and verification receipts below are **assumed fixture evidence**, not claims that tasks were actually created. These walkthroughs assess specified behavior; they do not prove transport reliability or external enforcement.
 
 ## 1. Standalone Decision research
 

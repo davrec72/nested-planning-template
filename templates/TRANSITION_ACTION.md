@@ -2,6 +2,8 @@
 
 Use only after explicit adoption of `transition-action-v1`, or as the predecessor-approved baseline evidence for its adoption. This adjunct leaves `plan-grammar-v2`, `plan-publication-v1`, publication-journal ordering and existing retention trust roots unchanged. See `planning/PUBLICATION_TRANSITIONS.md` for normative adoption, ordering and cold validation.
 
+This is the currently required reconstruction contract for autonomous/Foreman-managed execution, not an optional enhancement. `none` remains no-dispatch. For initial/later operational adoption, predecessor authority excludes new obligation creation and reconciles legacy history before baseline preparation; dispatch remains blocked until the adopting event and all carried obligations are durably indexed/reconciled with required checks verified. See `planning/EXECUTION.md` -> **Operational eligibility**; this manifest's existence or approval alone cannot enable execution.
+
 Prepare this immutable record at the configured path in the **successor publication carrier tree**, default `planning/TRANSITION_ACTION.md`. It need not be in the semantic candidate. It MUST NOT contain its own carrier SHA or its own blob hash. Preallocate stable publication, manifest, request/check and approval-event IDs before finalizing the content. The subsequent journal event binds the exact path, Git blob identity and record ID in the retained carrier. No PR/comment/history lookup is required to recover the actions.
 
 ## Exact transition and impact baseline

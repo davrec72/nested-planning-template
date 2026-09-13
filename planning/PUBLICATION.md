@@ -44,6 +44,18 @@ The PlanRef-retention mechanism must keep every published exact PlanRef fetchabl
 
 The carrier-evidence retention mechanism must keep every accepted publication carrier—and every Git object needed to perform the protocol's carrier checks—cold-fetchable independently of the mutable publication ref. For recovery, it must also retain the quarantined invalid/uncommitted suffix evidence required by the protocol. A carrier SHA written into a journal entry is not durable carrier evidence by itself.
 
+## Operational execution eligibility
+
+**Autonomous/Foreman-managed execution is eligible only while the current accepted publication configuration explicitly adopts `transition-action-v1`.** Its exact configured carrier path must resolve to the valid journal-bound manifest, and its adoption/legacy baseline must be validly reconciled under `PUBLICATION_TRANSITIONS.md` section 9. Adoption is a prerequisite for this execution workflow, not an optional recovery enhancement.
+
+`transition_action_contract: none` means **no autonomous Foreman dispatch**. It is permitted for planning-only/pre-execution configurations and systems with no dispatch capability. An inventory and read-only coordination may exist, but `none` never permits first or later dispatch/start/resume, or a new revision/attempt, rebind or supersession that creates execution obligations. An empty inventory, accepted Foreman binding or executor grant alone cannot enable that work.
+
+A publication that remains in `none` mode may materially change planning only when no active/outstanding dispatch-capable execution obligation is affected and the accepted mode remains no-dispatch. Establish that impact under prior authority; do not equate missing inventory with no obligations. If legacy work is active/outstanding, block new dispatch/resume and any publication altering those obligations until prior-authorized reconciliation/migration establishes `transition-action-v1`, or the work is durably stopped/reconciled under valid legacy rules. The defined adopting transition is the migration path; a manifest-free material change cannot substitute for it or invent missing pause requests.
+
+`transition-action-v1` is the only supported operational reconstruction contract. An unspecified "equivalent" does not qualify. A future alternative needs an explicitly versioned contract defining journal binding, completeness, fencing, replay, adoption/migration and failure semantics before compatibility can be claimed. Permitted representations or atomic fence implementations within v1 do not waive v1 adoption.
+
+For first root/child publication intended to enable managed execution, adopt v1 and approve/publish its valid empty/baseline manifest in that first publication. Choosing `none` keeps bootstrap no-dispatch until later valid adoption. For every adoption, first block new obligation creation under predecessor governance, reconcile the complete legacy set through the predecessor high-water, and publish the conforming baseline manifest/fence under section 9. Enable dispatch only after the adopting event and all carried obligations are durably indexed/reconciled with required checks verified. Accepted publication alone does not settle that execution-enablement check; unresolved legacy or reconciliation failures fail closed.
+
 ## Publication carrier
 
 Each carrier on the configured publication ref contains `planning/CURRENT.md`.

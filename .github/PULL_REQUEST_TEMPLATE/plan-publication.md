@@ -4,6 +4,8 @@ Use this checklist for one `plan-publication-v1` bootstrap, normal, or recovery 
 
 A semantic PR/merge is not the publication event. Accepted publication requires a durable retained PlanRef, durable retained carrier evidence, a successful exact ref movement, and a committed trusted journal event.
 
+`transition_action_contract: none` is planning/no-autonomous-dispatch mode under [operational eligibility](../../planning/PUBLICATION.md#operational-execution-eligibility), even with an empty inventory. A material publication remaining in that mode must affect no active/outstanding execution obligation. Legacy obligations require valid prior-authorized stop/reconciliation or conforming adoption; no guessed action payload substitutes. To enable managed execution, adopt `transition-action-v1` and reconcile/index the adopting event and carried obligations with checks verified before dispatch. First root/child publication follows the same choice: `none` stays no-dispatch; v1 needs its accepted/reconciled baseline.
+
 ## Trusted publication baseline
 
 ```text
@@ -46,6 +48,8 @@ For `transition-action-v1`, including its approved adoption baseline, prepare th
 
 ```text
 transition_action_contract: none | transition-action-v1
+prior_transition_action_contract:
+adoption_baseline_reconciliation_and_eligibility_evidence:
 transition_action_path:
 transition_action_blob_id:
 transition_action_record_id:
@@ -116,6 +120,7 @@ The event must satisfy `templates/PUBLICATION_EVENT.md` and be durably committed
 ## Validation checklist
 
 - [ ] Candidate approval binds the exact `candidate_plan_ref` under already-valid governance.
+- [ ] Execution eligibility is explicit: no-dispatch under `none`, or current accepted v1 plus valid adopting/legacy baseline; autonomous dispatch remains blocked until baseline obligations are indexed/reconciled and checks verified.
 - [ ] An applicable manifest has predecessor-valid approval binding its exact blob/record ID and complete serialized inventory analysis; no-impact and legacy baseline claims are evidenced.
 - [ ] Manifest ID/scope/baseline match the durable conditional fence acquisition and held-through-valid-commit evidence; every affected dispatch/mutation path uses the same serialization.
 - [ ] Abort/recovery/release disposition is durable under section 9; no timeout or holder loss clears a fence.

@@ -56,6 +56,8 @@ If authority changes, cite authority valid before this candidate.
 
 ## Foreman dispatch required
 
+Managed execution requires current accepted `transition-action-v1`, its exact configured carrier path, valid adoption/legacy-baseline reconciliation and verified required checks, with no reconciliation failure blocking the action. `none` permits planning/inventory/read-only coordination, not first/later dispatch/start/resume or obligation-creating attempts/rebindings. A propagation wake is not permission to create an executor obligation.
+
 ```text
 yes | no
 ```
@@ -76,11 +78,15 @@ Link the accepted decision, delegation, or evidence that justifies the change.
 
 ## Candidate / retention / publication handoff
 
+Apply the [operational eligibility boundary](../../planning/PUBLICATION.md#operational-execution-eligibility). A material publication remaining in `none` must affect no active/outstanding execution obligation and remain no-dispatch. Legacy active/outstanding work blocks material alteration until valid prior-authorized stop/reconciliation or conforming adoption. For adoption, first prevent new obligations and reconcile the complete legacy set, then publish the approved baseline manifest/fence; enable dispatch only after the adopting event/carried obligations are indexed/reconciled with checks verified.
+
 When `transition-action-v1` applies, including its explicitly approved adoption baseline, prepare the [immutable transition-action manifest](../../templates/TRANSITION_ACTION.md) before approval. Preserve the full impact/inventory analysis and per-attempt recipient/action/deadline/recovery data in the successor carrier, including explicit `continue` or a checked empty manifest. The PR is not reconstruction storage.
 
 ```text
 candidate_plan_ref:
 transition_action_contract: none | transition-action-v1
+prior_transition_action_contract:
+adoption_baseline_reconciliation_and_eligibility_evidence:
 transition_action_path_blob_and_record_id:
 execution_inventory_revision_or_snapshot:
 publication_fence_id:
@@ -128,6 +134,7 @@ Track recorded, sent/wake attempted, delivered, acknowledged, applied and closed
 ## Validation checklist
 
 - [ ] Baseline identities come from the trusted publication journal.
+- [ ] `none` is no-dispatch and affects no outstanding execution obligation through this material change; any operational adoption has prior-authorized legacy reconciliation and dispatch waits for its indexed baseline/verified checks.
 - [ ] Candidate does not use its own new governance/authority to validate or authorize its transition.
 - [ ] Plan declares intended grammar and nesting compatibility/migration impact.
 - [ ] Every node/edge obeys the accepted planning grammar.

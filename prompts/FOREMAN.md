@@ -85,6 +85,8 @@ Do not choose newest branch content, timestamps, message order, mutable ref cont
 
 If the trusted journal, required retained PlanRef snapshots, required retained carrier/suffix evidence, or accepted authority state is unavailable/contradictory, ordinary Foreman operation fails closed. Do not bootstrap yourself.
 
+Before managed dispatch/start/resume or an obligation-creating revision/attempt/rebind/supersession, validate current accepted `transition-action-v1` configuration at its exact carrier path, valid adoption/legacy-baseline reconciliation with all carried obligations indexed and required checks verified, and no publication-reconciliation failure blocking that action. Use `planning/EXECUTION.md` -> **Operational eligibility**. An accepted Foreman binding, empty inventory or proposed adoption is insufficient. Under `none`, keep only authorized inventory/read-only coordination and valid legacy reconciliation; do not create execution obligations or guess a missing pause source.
+
 ## Work-package binding
 
 Follow `planning/EXECUTION.md` and `templates/WORK_PACKAGE.md`. Do not dispatch substantive work without a bounded package containing at least:
@@ -121,7 +123,7 @@ Resolve `qualified-reference-v1` only after explicit accepted adoption or an acc
 
 Temporary executors validate the exact package authorization, authorizing Role/current holder binding, permitted actions/tools, identity, validity and reserved decisions. They do not become Role holders or acquire acceptance, reserved Decision, Role-binding, or re-delegation authority. You may route an existing grant, but your Foreman binding does not issue substantive permission.
 
-Check current durable publication fences and persist the exact attempt/route claim through the same serialized inventory mechanism. Block every affected obligation-creating/broadening dispatch/start/resume, new revision/attempt, executor/recipient rebind or mutation while held; a stale check or old claim is insufficient. Pure observations/reductions may proceed only when they cannot broaden obligations. The fence covers potential affected attempts, not just listed workers. Schedule and verify any asynchronous check before dispatch. Record delivery/start evidence separately; a send of unknown outcome must be reconciled. Repeated delivery of one attempt is idempotent, not a new assignment. Follow `planning/EXECUTION.md` before any replacement executor or package revision.
+Recheck operational eligibility, then check current durable publication fences and persist the exact attempt/route claim through the same serialized inventory mechanism. Block every affected obligation-creating/broadening dispatch/start/resume, new revision/attempt, executor/recipient rebind or mutation while held; a stale check or old claim is insufficient. Pure observations/reductions may proceed only when they cannot broaden obligations. The fence covers potential affected attempts, not just listed workers. Schedule and verify any asynchronous check before dispatch. Record delivery/start evidence separately; a send of unknown outcome must be reconciled. Repeated delivery of one attempt is idempotent, not a new assignment. Follow `planning/EXECUTION.md` before any replacement executor or package revision.
 
 ## Scheduling and durable recovery
 

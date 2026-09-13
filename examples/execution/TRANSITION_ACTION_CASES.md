@@ -114,6 +114,8 @@ A duplicate E2 wake does not create Q3, another receipt for the same key, or a s
 
 An existing project's E0..E5 pre-adoption publications remain valid under their original governance. Before adopting in E6, reconcile legacy obligations through E5 under already-valid authority; retain exact inventory baseline I6 and any outstanding carry-forward obligations in TA6. TA6 records `legacy_reconciled_through_event_id: E5`, predecessor E5 and its PlanRef, and candidate P6. Predecessor-valid approval binds P6/TA6 before E6 publishes, so proposed P6 rules do not approve themselves.
 
+Under the current eligibility rule, `none` blocks new managed dispatch/start/resume while that baseline is formed under prior authority. Even after valid E6 commit, managed execution remains ineligible until E6/TA6 and the complete carried obligations are durably indexed/reconciled with required checks verified. A lost adoption wake invokes the same exact retained-baseline replay; it does not authorize dispatch before that step. A precisely defined outstanding stop may be carried without claiming cessation, but unknown legacy scope/payload cannot be guessed.
+
 If a legacy stop cannot be resolved or precisely carried forward, adoption/dependent work stays blocked; do not invent an E4 manifest. A precisely identified outstanding stop can be explicitly carried into TA6 with its predecessor relation and recovery obligations without claiming the worker stopped. A cold successor validates old journal history under old rules, then uses TA6's approved baseline and later exact manifests. If its marker is missing or predates adoption, reconstruct TA6's complete carried/adoption obligation set before advancing to E6; do not first demand an E4 manifest or skip unverified legacy obligations. Later records use legacy marker `none`.
 
 A new root or child may adopt at first publication under its bounded founding/accepted-parent bootstrap authority. Prepare/approve an explicit empty/baseline manifest with predecessor and legacy fields `none`, include it in the first carrier and bind it in the first journal event. The fence may be omitted only with explicit proof of no pre-existing dispatch-capable execution system. An existing active/still-dispatchable legacy system requires predecessor-valid serialization/exclusion; otherwise stop/reconcile work and exclude new legacy dispatch, or establish a bounded one-time mechanism under prior authority. Candidate rules cannot authorize their own fence. No historical fences are fabricated. This does not create founder authority for an already initialized project or bypass the parent boundary.
@@ -155,3 +157,41 @@ TA2/AP2 are final and approved over I7 for T1; P1 remains current until valid E2
 | Journal fence ID/scope/baseline mismatches the manifest, or continuity evidence is missing | Fail closed for event validation and lost-wake marker advancement. A current empty inventory cannot repair historical proof. |
 
 All fixture outcomes are documentation-level reasoning. No real fence provider, concurrency implementation, scheduler, journal or lifecycle experiment was run; the adopting system must supply and verify the configured serialized mechanism and durable proof.
+
+## Operational adoption eligibility regression
+
+These symbolic cases apply the current eligibility rule; they do not retroactively label all historical pre-adoption execution invalid. `none` means no autonomous Foreman dispatch, even when an accepted inventory/Foreman binding exists. Commissioning read-only Decision research still creates a package/attempt obligation and needs accepted v1; merely reading the inventory does not.
+
+| Current configuration and proposed action | Required outcome |
+|---|---|
+| `none`, no dispatch-capable execution/affected obligations; publish a planning-only change that keeps `none` | Permitted under valid planning/publication authority and no-impact evidence. Remains no-dispatch. |
+| `none`, inventory exists but is empty; attempt the first managed dispatch | Blocked pending valid v1 adoption and baseline reconciliation. The first attempt cannot create its own eligibility. |
+| `none`, read-only inventory query or status observation | Permitted within accepted coordination authority; it cannot dispatch/rebind/start an executor or manufacture action payloads. |
+| `none`, commission a new read-only research worker or superseding attempt | Blocked: these create execution obligations, despite the proposed work being read-only or labeled replacement. |
+| Legacy T1 is active/outstanding under `none`; propose material E2 scope reduction requiring pause without adoption | Block that execution-changing publication and new dispatch/resume. Do not accept a manifest-free E2 then guess its missing pause request. Use valid prior-authorized reconciliation/adoption or durable stop/reconciliation under valid legacy rules. |
+| Legacy T1 exists, but a planning change provably does not affect its obligations and retains no-dispatch mode | May publish under valid prior authority and impact evidence; T1 is not guessed absent and managed dispatch stays blocked. |
+| Proposed candidate adds v1 but the trusted journal still makes `none` current | No operational eligibility. Candidate existence, approval or merge does not adopt the contract. |
+| Accepted v1 declaration names the wrong carrier path, or manifest/approval/legacy evidence is missing | Fail closed for affected execution; a declaration alone does not satisfy the gate. |
+| Adopting event is validly committed but its carried requests/checks have not been indexed/verified | New PlanRef is current, but managed dispatch remains blocked. Finish exact baseline replay/reconciliation first. |
+| Baseline is complete, but publication reconciliation has a failure blocking the proposed action | That action remains blocked. A past successful adoption is not permission to ignore a later failure. |
+| All adoption/reconciliation checks pass, but a carried T1 pause is not applied | The general mode gate may pass; T1/dependent work still cannot resume or bypass outstanding material-stop rules. Indexed is not applied. |
+| Legacy evidence cannot identify the full active/outstanding set or exact carry/stop/exclusion payloads | Adoption/enablement fails closed. Do not fabricate historical manifests, fences, recipients or pause requests. |
+| First root/child accepted bootstrap chooses `none` | Valid no-dispatch bootstrap within its authority. Parent grant, Foreman binding or empty inventory does not authorize first execution. |
+| First root/child intends execution and adopts v1 with valid empty/baseline manifest | First dispatch waits for accepted publication, valid baseline indexing/reconciliation and verified required checks, as well as ordinary authority/prerequisite/fence guards. |
+| A provider or project labels an undefined contract "equivalent" | Not operationally supported. A future alternative needs explicit versioned journal-binding/completeness/fence/replay/adoption/failure semantics; a v1-compatible fence representation does not replace v1 adoption. |
+
+## Lost adoption wake with carried legacy T1
+
+This is a separate fixture from the already-adopted TA2 above. Assume E1/P1 is accepted under valid legacy rules with `transition_action_contract: none`, and T1 is a real outstanding legacy attempt. No new managed attempt is eligible under the current template. The existing authority can reconcile T1 and approve adoption; these symbolic references do not supply that authority.
+
+| Order | Durable state / permitted action |
+|---|---|
+| 1. Form the baseline under predecessor governance | Exclude new obligation-creating dispatch/start/resume/revisions/attempts/rebindings. Reconcile legacy through E1 and identify T1's exact grant/scope/recipient, required pause action, original outstanding requests and bounded deadlines/recovery data. Account for every other obligation by carry, durable stop or explicit prior-authorized exclusion. Unknown scope blocks progress. |
+| 2. Prepare P2 adoption and TA2 baseline | P2 explicitly adopts v1 at the configured path. TA2 records `legacy_reconciled_through_event_id: E1`, exact analyzed baseline, complete T1/Q2 payload and preallocated fence ID/scope. Prior authority approves exact candidate/manifest; acquire/hold the fence under existing section 9 rules. No candidate self-authorization. |
+| 3. Publish valid E2 | Retain candidate and carrier/manifest, commit trusted event with exact identities/fence proof, then durably release as permitted. P2 is accepted. Dispatch remains blocked until baseline reconciliation; release alone does not enable it. |
+| 4. Adoption wake is lost | The verified scheduled publication-reconciliation check discovers E2 after marker E1. It validates E1 legacy coverage and E2's exact retained TA2, authority/approval/fence proof, and complete carried T1 obligations. No PR history or invented E1 manifest is needed. |
+| 5. Reconstruct/index T1/Q2 and checks | Reuse TA2's stable request/recipient/attempt/check identities and anchored deadlines. Preserve any pre-existing evidence; create only missing records, verify actual checks and retain partial progress after a crash. Failed checks leave enablement blocked. |
+| 6. Complete adopting-event reconciliation | Only after every carried/adoption obligation is indexed/reconciled with required checks verified may the marker advance and the general operational eligibility gate pass. T1 is still not confirmed stopped without application evidence. |
+| 7. Consider new work or T1 resumption | Independently validate current configuration/path, authority, target/ancestor prerequisites, fence and outstanding publication actions. Unaffected authorized work may proceed; T1/dependents remain blocked while its material pause is unapplied. No duplicate T1 dispatch is created to populate the new inventory. |
+
+These cases add eligibility to the existing manifest/fence/receipt design. They demonstrate source-level ordering only, not a running adoption, scheduler or publication system.

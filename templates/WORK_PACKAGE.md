@@ -2,6 +2,8 @@
 
 Use with `planning/EXECUTION.md`. An issued package revision is immutable; changes require a linked new revision and authorization. This form is for an instantiated plan, not a requirement to invent planning identity for external template-source maintenance.
 
+Before creating execution obligations through a new revision/attempt, rebind or supersession, or dispatching/starting/resuming this package, record current eligibility evidence under `planning/EXECUTION.md` -> **Operational eligibility**: accepted `plan-publication-v1` state; accepted `transition-action-v1` configuration and exact carrier path; valid indexed/reconciled adoption/legacy baseline and verified checks; no reconciliation failure blocking this action. Recheck at use, not merely at package preparation. `none`, an empty inventory or an existing grant cannot enable execution.
+
 ## Identity and target
 
 ```text

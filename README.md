@@ -194,11 +194,14 @@ exact semantic candidate exists
     -> while fenced, trusted journal commits the exact ref-update event and fence evidence
     -> only then is candidate the current accepted PlanRef
     -> durably release fence; later dispatch validates the newly accepted state
+    -> adoption enables managed execution only after baseline obligations are indexed/reconciled and checks verified
 ```
 
 ### Why both Git carriers and a journal?
 
-`transition-action-v1` is an explicitly adopted adjunct for reconstructible execution impact. Every governed planning carrier contains an immutable manifest, including a checked empty one. It binds the candidate/predecessor, exact inventory baseline/obligation set, preallocated fence ID/scope and explicit per-attempt actions/recipients/routes/deadline/recovery rules. The journal binds its carrier path/blob/record ID and durable fence acquisition/held-through-commit evidence; existing retention preserves them. The same serialized inventory/dispatch mechanism blocks affected obligation-creating mutations while fenced, including potential new attempts. Changed baseline requires rebuilding/reapproving before ref movement; a reread alone is insufficient. No-impact fencing, verified abort/recovery/release and narrow bootstrap/legacy rules follow section 9; timeout cannot erase a fence. No second journal, new currentness protocol or retention trust root is introduced. See `templates/TRANSITION_ACTION.md` and `planning/PUBLICATION_TRANSITIONS.md` section 9 for approval, legacy adoption and cold validation.
+`transition-action-v1` is explicitly adopted and mandatory for autonomous/Foreman-managed execution. `transition_action_contract: none` is planning/pre-execution no-dispatch mode: inventory/read-only coordination may exist, but even a first dispatch into an empty inventory is blocked. Only v1 currently supplies the supported operational reconstruction contract; an undefined alternative is insufficient. A material publication staying in `none` must affect no active/outstanding execution obligation and preserve no-dispatch mode. Legacy obligations require valid reconciliation/stop or predecessor-authorized adoption, not guessed pause requests.
+
+The adjunct provides reconstructible execution impact. Every governed planning carrier contains an immutable manifest, including a checked empty one. It binds the candidate/predecessor, exact inventory baseline/obligation set, preallocated fence ID/scope and explicit per-attempt actions/recipients/routes/deadline/recovery rules. The journal binds its carrier path/blob/record ID and durable fence acquisition/held-through-commit evidence; existing retention preserves them. The same serialized inventory/dispatch mechanism blocks affected obligation-creating mutations while fenced, including potential new attempts. Changed baseline requires rebuilding/reapproving before ref movement; a reread alone is insufficient. No-impact fencing, verified abort/recovery/release and narrow bootstrap/legacy rules follow section 9; timeout cannot erase a fence. No second journal, new currentness protocol or retention trust root is introduced. See `templates/TRANSITION_ACTION.md` and `planning/PUBLICATION_TRANSITIONS.md` section 9 for approval, legacy adoption and cold validation.
 
 Git ancestry proves content relationships, but a fresh clone cannot prove that a mutable ref was never previously advanced and later reset. NPT therefore requires a bootstrap-configured trusted publication journal that preserves committed publication events independently of the mutable ref.
 
@@ -286,7 +289,7 @@ Every notification binds the exact committed publication event/carrier. Foreman 
 
 Material requests are durable before a wake is attempted. Sent, delivered, acknowledged, and applied are separate facts. A pause is **not confirmed stopped** until exact cessation/enforcement evidence accounts for in-flight work. Actual publication-reconciliation and receipt-recovery schedules catch lost wakes; bounded executor checkpoints restrict further execution when authority cannot be validated. Stronger lease/fencing behavior is a project policy.
 
-Publication reconciliation uses the exact journal-bound retained transition-action manifest after adjunct adoption. Foreman validates and indexes every missing stable request/recipient receipt/check before advancing its marker; explicit `continue` differs from checked no impact. An initial lost wake needs no PR/history lookup. Historical events remain valid and unresolved legacy obligations are explicitly reconciled/carried into the predecessor-approved adoption baseline.
+Operational publication reconciliation uses the exact journal-bound retained transition-action manifest under the required accepted adoption. Foreman validates and indexes every missing stable request/recipient receipt/check before advancing its marker; explicit `continue` differs from checked no impact. An initial lost wake needs no PR/history lookup. Historical events remain valid and unresolved legacy obligations are explicitly reconciled/carried into the predecessor-approved adoption baseline.
 
 Use `templates/EXECUTION_RECEIPT.md`. Direct messages, webhooks or polling can carry wakes; bare completion is not guaranteed notification. Verify schedule ownership/liveness on the actual substrate instead of inferring archive/delete cascades. See the bounded examples and recorded dogfooding qualifications in `examples/execution/CASES.md`.
 
@@ -297,13 +300,13 @@ Use `templates/EXECUTION_RECEIPT.md`. Direct messages, webhooks or polling can c
 3. Decide root vs child bootstrap.
 4. Configure founding/parent authority plus publication ref, trusted journal, PlanRef-retention mechanism, and carrier-evidence-retention mechanism.
 5. Configure execution inventory location/serialization, reconciliation/receipt deadlines, escalation routes and bounded executor checkpoints under `planning/EXECUTION.md`; create the empty inventory and prepare the exact first candidate.
-6. Approve the exact candidate and trust configuration under bounded founding/parent authority. For reconstructible execution recovery, include explicit `transition-action-v1` adoption in that candidate, prepare its empty/baseline carrier manifest before approval, and bind both exact identities in the approval.
+6. If managed execution is intended from first publication, include explicit `transition-action-v1` adoption and its empty/baseline carrier manifest; approve both exact identities and trust configuration under bounded founding/parent authority. A candidate choosing `none` instead remains no-dispatch until later valid adoption.
 7. Retain the exact candidate under the configured semantic snapshot contract.
-8. Create and install the first publication carrier with CURRENT and the approved manifest, after the required inventory completeness check.
+8. Create and install the first publication carrier with CURRENT and the required approved manifest, following section 9's completeness/fence rules when adopting v1. A planning-only `none` publication follows its no-dispatch/no-affected-obligation boundary.
 9. Retain the exact first carrier evidence under the configured carrier contract.
 10. Commit the first trusted journal event.
-11. Only then are the initial Roles—including Foreman—operational.
-12. Use `templates/PLAN_CHANGE.md` for later semantic changes and the publication protocol to make them current.
+11. Only then are the initial Role bindings accepted. Before the first managed dispatch, additionally validate current v1 adoption and durably index/reconcile its complete empty/carried baseline with required checks verified. Foreman under `none` remains limited to authorized inventory/read-only coordination.
+12. Use `templates/PLAN_CHANGE.md` for later semantic changes. To enable execution from `none`, prevent new obligation creation under predecessor governance, reconcile legacy through its high-water, publish a conforming approved adoption manifest/fence and complete baseline reconciliation/checks before dispatch. Unknown legacy obligations block enablement; historical manifests/fences are never fabricated.
 
 ## Authority rule that overrides convenience
 
