@@ -1,18 +1,20 @@
-## Plan publication
+## Plan publication transition
 
-Use this only for the mechanical publication step defined by `planning/PUBLICATION.md`.
+Use this checklist to review one proposed successor carrier for `plan-publication-v1`.
 
-This PR must not introduce new semantic planning content. If semantic content changed after approval, stop and create/review a new candidate instead.
+A normal semantic PR/merge is **not** the publication event. Publication occurs only when the configured publication ref advances non-force from the exact incumbent carrier to the reviewed successor carrier under `planning/PUBLICATION.md` and `planning/PUBLICATION_TRANSITIONS.md`.
 
-## Current publication baseline
+## Validated predecessor
 
 ```text
-prior_publication_id:
+publication_ref: refs/heads/plan-publications
 prior_publication_commit:
+prior_publication_id:
 prior_plan_ref:
+predecessor_governance_ref: <normally prior_plan_ref>
 ```
 
-These values must match the valid `planning/CURRENT.md` immediately before publication.
+These values must come from validated publication-ref history, not an unpublished default-branch copy of `CURRENT` or governance files.
 
 ## Candidate being published
 
@@ -28,7 +30,17 @@ founding_record: <locator or none>
 parent_authority_source: <locator or none>
 ```
 
-The approval event must cover the exact `candidate_plan_ref`.
+The approval event must cover the exact candidate SHA.
+
+## Successor carrier
+
+```text
+successor_carrier_commit:
+successor_carrier_parent: <must equal prior_publication_commit after first publication>
+CURRENT.prior_publication_commit:
+CURRENT.prior_publication_id:
+CURRENT.prior_plan_ref:
+```
 
 ## Publication actor
 
@@ -41,17 +53,19 @@ Repository write access alone is not publication authority.
 
 ## Validation checklist
 
-- [ ] `candidate_plan_ref` exists and contains the exact planning state that was approved.
-- [ ] The approval event names that exact candidate SHA.
-- [ ] Approval authority existed before the candidate's new authority/scope would become current, except for the one-time root founding or parent bootstrap explicitly allowed by `planning/PUBLICATION.md`.
-- [ ] `planning/CURRENT.md` still matches `prior_publication_id` and `prior_plan_ref`.
-- [ ] The publication chains to the prior record with the correct `prior_publication_commit`.
-- [ ] This publication change does not add or alter semantic plan/Role content beyond the already-approved candidate.
-- [ ] `publisher_identity` is attributable and `publication_authority_source` permits the publication action.
-- [ ] If the baseline changed, this PR is treated as stale and is reconciled/re-approved as needed rather than merged by timestamp/order.
+- [ ] `candidate_plan_ref` exists and contains the exact approved planning state.
+- [ ] Approval authority was valid before the candidate's new authority/scope would become current, except for the bounded founding/parent bootstrap path.
+- [ ] Transition validation uses the predecessor accepted PlanRef's publication/governance rules; candidate governance changes do not validate themselves.
+- [ ] Successor carrier Git parent equals the actual incumbent carrier after the first publication.
+- [ ] `CURRENT.prior_*` exactly matches the validated predecessor record.
+- [ ] The carrier changes publication state only; it does not smuggle new semantic planning content into the candidate.
+- [ ] Publisher identity is attributable and publication authority permits this action.
+- [ ] Publication ref advancement is non-force from the exact incumbent carrier. A stale sibling carrier must be rejected rather than winning by timestamp/order.
+- [ ] Replay of old `CURRENT` contents is rejected unless represented as a new authorized transition from the actual incumbent.
+- [ ] The propagation payload binds `publication_id`, `publication_commit`, `new_plan_ref`, `prior_publication_id`, and `prior_plan_ref` to this exact transition.
 
-## After publication
+## After successful ref advancement
 
-Once this publication is durably accepted/written, the `plan_ref` named by the new `planning/CURRENT.md` becomes the current accepted PlanRef.
+The `plan_ref` named by the validated publication-ref tip becomes current accepted planning state.
 
-Then send Foreman the publication ID, new PlanRef, semantic delta, affected scopes, and active-work impact. Publication is the trigger for operational propagation; candidate merge/staging alone is not.
+Only then send Foreman the transition-bound semantic delta and active-work impact. Candidate merge/staging alone is not a propagation trigger.

@@ -4,15 +4,16 @@ Describe the planning meaning that changes. Do not merely describe the file diff
 
 ## Current publication baseline
 
-Resolve this from the valid `planning/CURRENT.md` before proposing the change:
+Resolve from validated publication-ref history:
 
 ```text
-prior_publication_id:
+publication_ref:
 prior_publication_commit:
+prior_publication_id:
 prior_plan_ref:
 ```
 
-Do not use the newest branch head as a substitute for `prior_plan_ref`.
+Do not use newest default-branch content as accepted state or use candidate governance to validate its own transition.
 
 ## Affected milestones
 
@@ -24,8 +25,6 @@ Do not use the newest branch head as a substitute for `prior_plan_ref`.
 
 ## Active work impact
 
-Choose one per affected package/scope:
-
 ```text
 none | continue | pause | redirect | supersede
 ```
@@ -36,7 +35,7 @@ none | continue | pause | redirect | supersede
 none | binding change | scope change
 ```
 
-If authority changes, cite the authority that existed before this PR and permits the change.
+If authority changes, cite authority valid before this candidate.
 
 ## Foreman dispatch required
 
@@ -44,7 +43,7 @@ If authority changes, cite the authority that existed before this PR and permits
 yes | no
 ```
 
-Do not dispatch/propagate this candidate as current merely because the semantic PR merges. Foreman receives the operational delta only after the exact resulting candidate is approved and published through `planning/CURRENT.md` under `planning/PUBLICATION.md`.
+Do not propagate the candidate merely because it merges. Propagation begins only after a valid successor publication carrier becomes the publication-ref tip.
 
 ## Parent/child impact
 
@@ -58,27 +57,25 @@ parent_notification_required: yes | no
 
 Link the accepted decision, delegation, or evidence that justifies the change.
 
-## Post-merge/staging publication handoff
-
-After the semantic change has a stable exact resulting commit, record:
+## Candidate and publication handoff
 
 ```text
 candidate_plan_ref:
 approval_event:
 approved_by_role:
 approval_authority_source:
+successor_publication_id:
+successor_carrier_commit:
 publication_required: yes
 ```
 
-The candidate does not become current until a valid publication record points to that exact SHA.
-
-If `planning/CURRENT.md` changes before publication, the publication proposal is stale and must be reconciled under `planning/PUBLICATION.md`.
+The approval binds the exact candidate. Publication must be validated under predecessor accepted governance and must advance the configured publication ref non-force from the exact incumbent carrier.
 
 ## Validation checklist
 
-- [ ] The baseline `prior_publication_id` / `prior_plan_ref` came from the valid current publication.
-- [ ] This semantic candidate does not modify `planning/CURRENT.md`; publication is a separate step.
-- [ ] The plan declares the intended grammar version, and any parent/child grammar compatibility or migration impact is explicit.
+- [ ] Baseline publication identities come from validated publication-ref history.
+- [ ] Candidate does not use its own new governance/authority to validate or authorize its transition.
+- [ ] Plan declares intended grammar and nesting compatibility/migration impact.
 - [ ] Every node uses a defined class.
 - [ ] Every solid dependency is a true hard prerequisite.
 - [ ] Every dotted scheduling edge is labeled exactly `preferred before`.
@@ -86,13 +83,14 @@ If `planning/CURRENT.md` changes before publication, the publication proposal is
 - [ ] Every Decision has exactly one deciding Role.
 - [ ] Every active Milestone has exactly one primary assigned Role.
 - [ ] Every Milestone has exactly one status class.
-- [ ] Every Milestone newly projected as `MILESTONE_DONE` indexes a valid prior acceptance receipt.
-- [ ] Each receipt used for a DONE projection binds the exact pre-acceptance `contract_plan_ref`, accepted evidence, and independently valid acceptance authority for that milestone/scope.
-- [ ] A materially changed milestone outcome, acceptance criteria, or authority contract does not silently inherit an older acceptance receipt.
-- [ ] Issued acceptance receipts are preserved as immutable history; correction, revocation, or replacement is represented by later durable records rather than in-place rewriting.
-- [ ] Non-DONE status changes cite the appropriate execution/pause/resume evidence and do not fabricate milestone acceptance.
-- [ ] No proposed edit bootstraps its own authority, except the one-time root founding procedure explicitly allowed by `planning/PUBLICATION.md`.
-- [ ] Child changes stay within the parent contract or parent authority is included.
+- [ ] Every newly projected DONE Milestone indexes a valid prior acceptance receipt.
+- [ ] DONE receipt binds exact pre-acceptance contract PlanRef, evidence, and valid acceptance authority.
+- [ ] Materially changed Milestone contracts do not silently inherit old acceptance.
+- [ ] Issued acceptance receipts remain immutable history.
+- [ ] Non-DONE status changes use appropriate execution/pause/resume evidence without fabricated acceptance.
+- [ ] Child changes remain within parent authority/contract.
 - [ ] Active-work impact is explicit.
-- [ ] Candidate approval will bind the exact resulting `candidate_plan_ref`.
-- [ ] Foreman propagation is defined if needed, and occurs only after valid publication.
+- [ ] Candidate approval binds exact candidate SHA.
+- [ ] Successor carrier parent and `CURRENT.prior_*` match the actual incumbent carrier.
+- [ ] Publication ref advancement is non-force from that exact incumbent; stale sibling/replay is rejected.
+- [ ] Propagation payload binds exact publication transition identities and occurs only after valid publication.

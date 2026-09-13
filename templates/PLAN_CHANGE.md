@@ -2,7 +2,7 @@
 
 Use this for every semantic planning or Role change.
 
-A semantic candidate and the publication that makes it current are separate events. Follow `planning/PUBLICATION.md`.
+Candidate creation/approval and publication are separate events. Follow `planning/PUBLICATION.md` and `planning/PUBLICATION_TRANSITIONS.md`.
 
 ```text
 Semantic delta:
@@ -16,42 +16,34 @@ Controlling decision/evidence:
 
 ## Before the change
 
-Resolve the current publication first.
+Resolve the validated publication-ref tip first:
 
 ```text
-prior_publication_id:
+publication_ref:
 prior_publication_commit:
+prior_publication_id:
 prior_plan_ref:
 acting_role:
 authority_source:
 ```
 
-`prior_plan_ref` must come from the valid `planning/CURRENT.md`, not from the newest branch head.
+Do not use the newest default-branch head as a substitute for accepted state.
 
-A proposed change cannot use its own new authority to approve itself.
+A proposed change cannot use its own new authority or governance to approve/publish itself.
 
-## Exact roadmap/role effect
+## Exact semantic effect
 
-Describe the semantic change, not merely the text diff.
-
-Examples:
-
-- `M2 no longer depends on M1C`;
-- `IntegrationLead now decides D3`;
-- `GlassesLead holder changes from X to Y; scope unchanged`;
-- `M1B becomes a child plan owned by GlassesLead`.
+Describe planning meaning, not merely the text diff.
 
 ## Candidate PlanRef
 
-After the semantic change has been merged/staged, record the exact resulting commit:
+After the semantic change has a stable exact commit, record:
 
 ```text
 candidate_plan_ref:
 ```
 
-This commit is not yet the current accepted PlanRef merely because it exists or was merged.
-
-The approval event must name this exact candidate. If candidate content changes, obtain a new approval.
+The candidate is not current merely because it exists or merges.
 
 ## Candidate approval
 
@@ -62,20 +54,17 @@ approval_authority_source:
 approved_scope:
 ```
 
-The approving authority must already be valid under `prior_plan_ref` or another already-valid authority source. The candidate cannot create the authority used to approve itself.
+Approval must bind the exact candidate. If content changes, obtain new approval.
 
 ## Active work handling
 
-For every affected active package, state one:
+For every affected active package state one:
 
 ```text
-continue
-pause
-redirect
-supersede
+continue | pause | redirect | supersede
 ```
 
-Do not assume a candidate merge silently cancels or redirects work. Until publication, operational work remains governed by the prior current PlanRef.
+Until publication succeeds, operational work remains governed by the prior accepted PlanRef.
 
 ## Parent/child impact
 
@@ -85,41 +74,33 @@ child_plan_changed: yes | no
 parent_notification_required: yes | no
 ```
 
-If a parent-facing boundary changes, update/notify the parent under `planning/NESTING.md`.
+## Publication handoff
 
-## Publication
-
-After candidate approval, publish the candidate through `planning/CURRENT.md` under `planning/PUBLICATION.md`.
-
-Immediately before publication verify:
+Prepare/review a successor publication carrier under the **predecessor accepted governance**.
 
 ```text
-CURRENT.publication_id == prior_publication_id
-CURRENT.plan_ref == prior_plan_ref
-```
-
-If either check fails, stop. Reconcile the candidate against the newer accepted state and determine whether re-review/re-approval is required.
-
-The publication record must identify:
-
-```text
-publication_id:
-plan_ref: <candidate_plan_ref>
-prior_plan_ref:
-prior_publication_id:
+successor_publication_id:
+successor_carrier_commit:
+publication_ref:
 prior_publication_commit:
-approval_event:
-publisher_identity:
-publication_authority_source:
+prior_publication_id:
+prior_plan_ref:
+plan_ref: <candidate_plan_ref>
 ```
+
+After the first publication, the successor carrier Git parent and all `CURRENT.prior_*` values must match the validated incumbent carrier.
+
+Advance the publication ref non-force from that exact incumbent. If another publisher advances first, the stale carrier must fail/reconcile rather than win by timestamp/order.
 
 ## Foreman propagation payload
 
-Only after a valid publication makes the candidate current should Foreman receive the operational propagation payload:
+Only after successful publication send:
 
 ```text
 publication_id:
+publication_commit:
 new_plan_ref:
+prior_publication_id:
 prior_plan_ref:
 semantic_delta:
 affected_roles:
@@ -129,6 +110,6 @@ authority_change:
 controlling_links:
 ```
 
-This notification is coordination, not a new approval request.
+Foreman must match this payload to the exact validated publication transition and reconcile stale/duplicate/out-of-order notifications before applying transition-specific actions.
 
-A merged/staged but unpublished candidate must not be propagated as current planning state.
+This notification is coordination, not approval or publication authority.
