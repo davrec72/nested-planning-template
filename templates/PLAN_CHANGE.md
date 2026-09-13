@@ -2,6 +2,8 @@
 
 Use this for every semantic planning or Role change.
 
+Record the current and proposed `transition_action_contract` and apply `planning/PUBLICATION.md` -> **Operational execution eligibility**. `none` permits planning/no-dispatch mode only; a material change staying in `none` must affect no active/outstanding execution obligation. Legacy work requires valid prior-authorized stop/reconciliation or a conforming adopting transition, never a guessed pause request. Managed execution requires current accepted v1 configuration/path, valid adoption/legacy reconciliation and verified checks before dispatch, including a first attempt in an empty inventory.
+
 After explicit `qualified-reference-v1` adoption, fix this change record's repository/PlanID context and fully qualify every affected cross-plan object, Role or source under `planning/REFERENCES.md`. Bind external authority PlanRefs separately from the candidate's own baseline/candidate refs. Reference adoption/migration itself is an explicit semantic change; a proposed field does not activate it.
 
 Candidate creation/approval, snapshot retention, publication-ref movement, trusted journal commit, and propagation are separate events. Follow `planning/PUBLICATION.md` and `planning/PUBLICATION_TRANSITIONS.md`.
@@ -13,8 +15,12 @@ Affected roles:
 Active work impact: none | continue | pause | redirect | supersede
 Authority impact: none | binding change | scope change
 Foreman dispatch required: yes | no
+Current / proposed transition_action_contract:
+Adoption / legacy-baseline and operational-eligibility evidence:
 Controlling decision/evidence:
 ```
+
+For `none` -> operational adoption, predecessor governance first prevents new obligation creation and reconciles the complete legacy set through its high-water. Prepare/approve the conforming baseline manifest/fence, journal-publish it, then index/reconcile the adopting event and all carried obligations with required checks verified before enabling dispatch. Choosing v1 in this form or approving the candidate alone does not enable execution.
 
 ## Before the change
 
@@ -43,6 +49,23 @@ approved_scope:
 ```
 
 Approval binds the exact candidate. If content changes, obtain new approval.
+
+For adopted `transition-action-v1` (or its predecessor-approved adoption baseline), complete the active-work analysis and prepare `templates/TRANSITION_ACTION.md` **before** approval. It belongs in the successor carrier, not necessarily the semantic candidate, and contains no own carrier SHA. Record:
+
+```text
+transition_action_contract: transition-action-v1
+transition_action_path:
+transition_action_record_id:
+transition_action_blob_id:
+execution_inventory_revision_or_snapshot:
+publication_fence_id:
+publication_fence_scope:
+publication_fence_acquisition_and_held_through_commit_evidence:
+legacy_reconciled_through_event_id: none | <predecessor high-water for adoption>
+transition_action_approval_event:
+```
+
+Approval must bind the exact candidate and manifest blob/record identity under predecessor-valid authority. The same approval may cover both only if explicit; otherwise obtain a separate manifest approval. Rebuild/reapprove on changed candidate, manifest or affected inventory state under `planning/PUBLICATION_TRANSITIONS.md` section 9. A PR form is a review surface, not durable manifest storage.
 
 ## Candidate retention
 
@@ -90,6 +113,10 @@ For every affected active package state one:
 continue | pause | redirect | supersede
 ```
 
+Identify exact package revisions/attempts from the configured execution inventory, affected typed targets, requested actions, recipient routes, and acknowledgement/application deadlines. Prepare recovery obligations under `planning/EXECUTION.md`; do not treat a missing worker as stopped.
+
+The adopted manifest retains this exact impact baseline and a complete action/recipient/deadline/recovery payload for every affected attempt, including explicit `continue`. A checked no-impact publication still carries `active_work_impact: none` and `affected_attempts: []` plus a protected inventory baseline. Only first root/child publication with no pre-existing dispatch-capable system may use explicit no-active-execution evidence without a fence; legacy execution follows the predecessor-valid exclusion rules in section 9. Missing analysis is not no impact.
+
 Until trusted publication succeeds, operational work remains governed by the prior accepted PlanRef.
 
 ## Parent/child impact
@@ -118,6 +145,10 @@ invalid_suffix_tip: none | <commit>
 ```
 
 For normal publication, actual carrier parent and accepted predecessor are the same. Recovery preserves an invalid/uncommitted actual suffix while using the last valid accepted predecessor for governance.
+
+After applicable approvals and candidate retention, create the carrier containing CURRENT and the exact approved manifest/inputs. Conditionally acquire its preallocated durable fence against the exact analyzed inventory baseline using the same serialized mechanism as dispatch claims; mismatch requires rebuild/reapproval. Fence all affected obligation-creating/broadening mutations through ref movement, carrier/manifest retention and valid trusted journal commit. The event binds exact manifest and fence ID/scope/baseline/acquisition/continuity evidence; normal release follows commit. A plain reread is insufficient.
+
+Before-ref abort must be durably verified before predecessor release. After ref movement, retention/journal failure leaves an uncommitted suffix and durable fence: keep it held through explicit recovery, or durably abort/reconcile the suffix before release. Any later publication after release needs fresh baseline/manifest/approval/fence. If commit succeeds but release fails, a successor validates the event and releases; timeout alone never clears it. Follow `planning/PUBLICATION_TRANSITIONS.md` section 9, including observation, no-impact, bootstrap and legacy rules.
 
 ## Publication evidence
 
@@ -149,3 +180,7 @@ controlling_links:
 ```
 
 Foreman matches this payload to the exact trusted publication event and reconciles stale/duplicate/out-of-order events before applying transition-specific actions.
+
+After journal commit, verify the exact journal-bound retained manifest and reconstruct/index each affected recipient/attempt request and receipt before its wake, using `templates/EXECUTION_RECEIPT.md`. Reuse its stable request/check identities and retain route history within the same receipt key. Record actual verified check IDs/owners for acknowledgement and application recovery. The publication reconciliation check must reconstruct every missing obligation from the manifest even if the initial Foreman notification is lost; only then may its marker advance. Historical pre-adoption obligations use the explicit reconciled adoption baseline, not invented manifests.
+
+Track recorded, sent/wake attempted, delivered, acknowledged, applied, and closed separately. A sent/acknowledged pause remains **not confirmed stopped** until application/enforcement evidence covers its in-flight work. Preserve old receipts when a later change supersedes them; a new `continue` does not silently erase an unresolved stop.

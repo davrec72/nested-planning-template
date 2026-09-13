@@ -173,6 +173,8 @@ Create a durable subordinate Role only when stable authority/responsibility is n
 
 Temporary implementers, reviewers, researchers, and test agents normally remain workers coordinated by Foreman and do not require durable RoleIDs.
 
+They validate a bounded executor authorization under `EXECUTION.md`; they do not impersonate the serving Role or receive Role delegation capabilities through assignment.
+
 ## Internal path convention
 
 For child plans inside the same repository, use:
@@ -313,15 +315,19 @@ Every nested substantive work package must bind:
 ```text
 repository_identity=<scheme + provider authority + stable machine ID>
 plan_id=<PlanID>
-plan_ref=<exact PlanRef>
+plan_ref=<exact accepted package authorization/target-binding PlanRef>
 role=<RoleID>
-milestone=<MilestoneID>
+target_type=<milestone | decision | data | plan-maintenance>
+target_id=<stable local node/scope ID>
+target_record=<exact definition at the immutable package plan_ref>
 parent_plan_ref=<exact parent PlanRef>
 ```
 
 Local Role/target IDs require this unambiguous plan context. Cross-plan objects use full qualified references and their own separately bound exact authority/contract revisions. `parent_plan_ref` is the relationship pin; separately validate current parent state under `REFERENCES.md`.
 
 Foreman must refuse or escalate materially missing/contradictory bindings.
+
+Include the complete package/authorization/attempt binding required by `EXECUTION.md`, its separate current accepted PlanRef/event validation record before dispatch/resume, and the actual parent identity/Milestone/contract required above. A local Decision target does not invent a local Milestone or replace the real parent boundary.
 
 ## Nested plan change propagation
 
@@ -330,6 +336,8 @@ Child-plan changes notify Foreman event-first just like root-plan changes, but p
 Foreman sends the delta only to affected child Role holders/work packages. Parent plans are not churned by internal child edits unless the parent-facing boundary changes.
 
 If the parent boundary changes, notify the parent Foreman/coordination route as required by that parent plan.
+
+Use the durable per-recipient receipts, bounded execution checks, and recovery procedure in `EXECUTION.md`. An offline child or unacknowledged pause remains outstanding; sending the delta does not prove it stopped.
 
 ## Authority cycles are invalid
 

@@ -91,7 +91,7 @@ Before binding a holder to `Foreman`, verify that the holder's environment can:
 2. schedule future follow-up tasks/checks;
 3. read the canonical plan/role records and exact PlanRefs;
 4. discover and validate the current accepted PlanRef under `PUBLICATION.md`;
-5. track multiple concurrent work packages without silently losing their bindings;
+5. maintain/recover the configured execution inventory, exact package/authorization/attempt bindings, receipts, routes/results, and verified scheduler state under `EXECUTION.md`;
 6. surface inability to continue rather than pretending asynchronous work will complete without a scheduled mechanism.
 
 If any required capability is absent, do not bind that holder to `Foreman`.

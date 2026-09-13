@@ -27,6 +27,8 @@ This repository defines a planning and delegation system for AI-heavy projects. 
 21. **Invalid publication suffixes are preserved, not adopted.** Recovery may fast-forward over an invalid/uncommitted actual tip while naming the last valid accepted carrier separately; invalid suffix content does not become accepted governance.
 22. **Root bootstrap is one bounded external exception.** A root project may use an explicitly designated Founding Authority only to establish its first accepted state and initial publication/journal/PlanRef-retention/carrier-retention trust contract. The exception expires after first valid journaled publication.
 
+23. **Operational Foreman execution requires accepted `transition-action-v1` adoption.** `transition_action_contract: none` is no-autonomous-dispatch mode. Valid adoption/legacy-baseline reconciliation and verified required checks must precede dispatch/start/resume or any revision/attempt/rebind/supersession that creates execution obligations.
+
 ## Before any substantive planning or execution action
 
 Resolve from accepted records:
@@ -38,9 +40,12 @@ Resolve from accepted records:
 - latest valid `publication_event_id`, `publication_commit`, `publication_id`, and current `plan_ref`;
 - exact retained snapshot locator/evidence for that PlanRef;
 - exact retained carrier evidence locator/evidence for the accepted publication carrier and any recovery suffix evidence required by its event;
+- before using operational inventory state: fixed logical inventory locator/identity, serialization mechanism, coordination domain and history-retention contract with continuity from adoption under `planning/EXECUTION.md`; validate current writer/Foreman holder and claim separately. A same-version configuration move fails before publication; unavailable/contradictory state is not permission for a fallback store;
+- before managed execution: current accepted `transition-action-v1` configuration and exact carrier path, valid adopting/legacy baseline with complete indexed/reconciled obligations and verified checks, and no publication-reconciliation failure blocking the affected action; an empty inventory under `none` does not authorize dispatch;
+- when `transition-action-v1` applies: exact journal-bound carrier manifest, predecessor-valid approval, protected inventory-impact baseline and durable publication/dispatch fence evidence under `planning/PUBLICATION_TRANSITIONS.md` section 9;
 - declared grammar;
-- acting Role and current holder binding;
-- target Milestone/Decision/scope;
+- for Role authority: acting Role and its own current holder binding; for temporary execution: exact bounded authorization, authorizing Role/current binding, and executor identity under `planning/EXECUTION.md`;
+- typed target and its own prerequisites/authority under `planning/EXECUTION.md`;
 - authority source;
 - exact authority revisions separately for external Role/source references; do not confuse a subject contract's PlanRef with an external accepting/delegating Role's PlanRef;
 - when accepting a Milestone: exact `contract_plan_ref`, accepting Role, attributable `issued_by_holder`, exact current issuance-time `authority_state_ref`/holder binding, authority source, and durable issuance/evidence records under `planning/CONVENTIONS.md`;
@@ -66,6 +71,8 @@ Read together as applicable:
 - `planning/ROLES.md` — Role scopes/holders/capabilities.
 - `planning/PUBLICATION.md` — bootstrap/publication model.
 - `planning/PUBLICATION_TRANSITIONS.md` — normative journal, retention, recovery, and notification validation.
+- `planning/EXECUTION.md` — typed targets, executor authorization, receipts, configured inventory, and succession.
+- configured execution inventory (default `planning/EXECUTION_INVENTORY.md`) — package/attempt/route/result/check state; create from its template in an instantiated project.
 - `planning/CURRENT.md` — carrier record on the publication ref.
 - `planning/FOUNDING.md` — root founding record when applicable.
 - `planning/PARENT.md` — parent relationship when nested.
@@ -78,9 +85,11 @@ Use only the accepted grammar. State semantic delta, affected milestones/Roles, 
 
 A semantic candidate does not become current merely because it exists or merges. Approval binds the exact candidate; the candidate is durably retained; the publication ref moves under accepted governance; the exact carrier evidence is durably retained; and a trusted journal event commits that exact transition before operational propagation begins.
 
+For adopted `transition-action-v1`, prepare the complete immutable transition-action manifest before approval; predecessor-valid approval binds its exact blob/record ID as well as the candidate. Put it in the successor carrier and bind it in the trusted journal, using existing carrier retention. Every governed publication has explicit impact/no-impact evidence. Conditionally acquire its preallocated durable fence against the exact analyzed baseline in the same mechanism as dispatch claims; changed baseline requires rebuild/reapproval. Hold through valid journal commit and durably release afterward. Follow the canonical failure/recovery, no-impact/bootstrap and legacy rules; neither a reread nor timeout bypasses the fence, and a candidate cannot authorize its own manifest/fence.
+
 ## Foreman
 
-`Foreman` is execution-orchestration infrastructure, not automatic substantive authority.
+`Foreman` is execution-orchestration infrastructure, not automatic substantive authority. Under `transition_action_contract: none`, it may maintain inventory/read-only coordination under valid authority but cannot dispatch/start/resume or create execution obligations. Material publication affecting active/outstanding legacy obligations requires prior-authorized reconciliation/adoption or durable stop under valid legacy rules; do not invent missing action payloads. See `planning/PUBLICATION.md` for the sole supported operational reconstruction contract and eligibility boundary.
 
 The holder must be able to delegate work, schedule follow-ups, read canonical records, validate trusted publication history/retained PlanRefs/retained carrier evidence, and preserve/recover concurrent package state. One holder may occupy Foreman bindings for several projects, but every action/state item remains project/plan-qualified; cross-project reach does not merge authority.
 
@@ -88,9 +97,11 @@ See `prompts/FOREMAN.md`.
 
 ## Work packages
 
-Every substantive package must bind at least project/plan identity, exact current PlanRef, serving Role, typed target, bounded objective/scope, expected evidence, and return authority. Nested work includes required parent bindings.
+Every substantive package must bind project/plan identity, immutable accepted package authorization/target-binding `plan_ref`, immutable package revision, serving Role, `target_type`/`target_id`/`target_record`, bounded objective/actions, explicit executor authorization, expected evidence, and return authority/route. Before first dispatch, every resume or other obligation-creating action, separately record the exact current accepted PlanRef/event and full current-sensitive validation in the attempt/inventory under `planning/EXECUTION.md`. An unrelated later PlanRef does not rewrite a still-valid package baseline; it never excuses current checks. Nested work includes required parent bindings. Use `planning/EXECUTION.md` and `templates/WORK_PACKAGE.md`.
 
-Temporary executors do not become Role holders merely by assignment. Completion/evidence does not itself accept a Milestone.
+Temporary executors validate their own bounded authorization and its authorizer's current accepted authority, not a fictional claim to hold the serving Role. Assignment grants no acceptance, reserved Decision, Role-binding, or re-delegation authority. Rebinding/revocation and bounded execution checkpoints follow `planning/EXECUTION.md`. Completion/evidence does not itself accept a Milestone or decide a Decision.
+
+Before dispatch/start/resume or any obligation-creating/broadening coordination mutation, validate operational eligibility under `planning/EXECUTION.md`, then check current publication fences through the same serialized inventory mechanism and block within held scope. Durably claim/index the exact attempt and verify required follow-ups. On succession or uncertain delivery/execution, reconcile the existing attempt, routes, results, receipts, and actual scheduler state before retrying/replacing it. Missing state never permits speculative redispatch.
 
 ## Publication notifications
 
@@ -108,6 +119,10 @@ active_work_impact
 ```
 
 Before transition-specific actions, match the payload to validated journal state and retained carrier evidence plus durable last-applied state. Ignore duplicates; do not let stale/superseded messages reapply older actions. Reconcile skipped/out-of-order events in trusted journal order.
+
+Under `transition-action-v1`, reconstruct lost-wake actions from that event's exact retained manifest, not PR history or notification prose. Index/reconcile every missing request/recipient receipt/check before advancing `last_reconciled_publication_event`; a validated empty manifest creates no receipts, while an affected `continue` is explicit. Apply the separate legacy-baseline rules rather than fabricating historical manifests.
+
+Material changes require durable per-attempt receipts: recorded, sent/wake attempted, delivered, acknowledged, applied, and closed are separate facts. A sent or acknowledged pause is **not confirmed stopped** without application/enforcement evidence. Foreman maintains a verified publication reconciliation check and receipt timeout/recovery checks; affected executors follow bounded revalidation/stop rules in `planning/EXECUTION.md`.
 
 ## Cross-repository nesting
 
