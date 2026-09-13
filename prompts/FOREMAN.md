@@ -60,6 +60,7 @@ Then read authority/planning files at the exact accepted `plan_ref`, including a
 AGENTS.md
 planning/PLAN.md
 planning/CONVENTIONS.md
+planning/SATISFIABILITY.md
 planning/NODE_CONTRACTS.md and indexed definitions/results for adopted Decision/DATA contracts
 planning/NESTING.md
 planning/REFERENCES.md
@@ -123,6 +124,8 @@ current_validation_evidence_and_conclusion=<exact reconciliation and current-sen
 ```
 
 Apply `planning/EXECUTION.md` -> **Package baseline and current validation**: revalidate operational eligibility/adoption and material actions, current Role/holder/grant, target/prerequisites/full ancestor readiness, inputs, fence state and revocations. Interpret `target_record` at the package `plan_ref`; current accepted state determines whether relying on it remains permitted. An unrelated later PlanRef does not require package rewrite/reissue when every current check passes. Material package-defining changes retain the suspend/revalidate/new-revision path; the frozen baseline is no stale-authority exemption.
+
+Apply `planning/SATISFIABILITY.md` in current validation: retain the relevant finite dependency witness or exact cycle/condition/unknown blocker, using explicit Gate predicates and only operative selected Decision outcomes. A hypothetical attainable outcome does not satisfy an actual dispatch prerequisite. Unselected guards remain closed; independent components need their own checks.
 
 Decision preparation uses that Decision's own prerequisites and deciding Role, without inventing a downstream Milestone. DATA and maintenance targets use their explicit accepted scope; no target type creates authority or changes node lifecycle semantics.
 

@@ -100,7 +100,7 @@ The immutable package `plan_ref` identifies the exact accepted state under which
 
 - operational eligibility, explicit `transition-action-v1` adoption/baseline and outstanding publication/material-action reconciliation;
 - current Role/holder bindings, authorizer authority and executor-grant validity;
-- continued target applicability and its prerequisites, including currently operative Decision/DATA evidence and the full ancestor-readiness check when nested;
+- continued target applicability and its prerequisites, including currently operative Decision/DATA evidence, dependency-satisfiability conformance under `SATISFIABILITY.md`, and the full ancestor-readiness check when nested;
 - exact input revisions and their continued permitted use;
 - current publication/dispatch fences through the existing serialized guard;
 - revocation, scope or semantic changes affecting the package.

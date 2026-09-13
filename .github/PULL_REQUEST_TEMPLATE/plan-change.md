@@ -131,6 +131,10 @@ remaining_unstopped_scope_and_recovery:
 
 Track recorded, sent/wake attempted, delivered, acknowledged, applied and closed separately. **Sent, delivered or acknowledged does not establish paused / confirmed stopped.** Require cessation/application or verified enforcement evidence covering the exact scope and in-flight work; keep unresolved or partially stopped scope outstanding with recovery checks. Follow the [canonical propagation requirements](../../templates/PLAN_CHANGE.md#foreman-propagation-payload), including verified publication reconciliation when the initial notification is lost.
 
+## Dependency conformance
+
+Link the [bounded satisfiability analysis](../../planning/SATISFIABILITY.md) for the exact candidate and affected prerequisite/consumer scope: current PlanRefs/events, actual seeds, operative Decision selections, explicit Gate sufficient-input sets, finite witness or residual cycle/condition/unknown blockers, deferred scope and next-action readiness. Candidate feasibility does not open current prerequisites or supply approval. Retain the full analysis with normal change evidence under [PLAN_CHANGE](../../templates/PLAN_CHANGE.md#dependency-conformance).
+
 ## Validation checklist
 
 - [ ] Baseline identities come from the trusted publication journal.
@@ -138,6 +142,8 @@ Track recorded, sent/wake attempted, delivered, acknowledged, applied and closed
 - [ ] Candidate does not use its own new governance/authority to validate or authorize its transition.
 - [ ] Plan declares intended grammar and nesting compatibility/migration impact.
 - [ ] Every node/edge obeys the accepted planning grammar.
+- [ ] Dependency conformance rejects self-dependencies/unavoidable unmet cycles, respects Gate predicates and operative Decision branches, and excludes assignment/authority/preferences; no blocked/unknown scope is claimed dispatchable.
+- [ ] Actual next-action prerequisites and full ancestor readiness are checked separately from hypothetical feasibility; changes to relevant state/selections revalidate the analysis.
 - [ ] Every active Milestone has one primary assigned Role and one status class.
 - [ ] DONE projections index valid prior acceptance; non-DONE status changes use appropriate execution evidence.
 - [ ] Child changes remain within parent authority/contract.
