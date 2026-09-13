@@ -34,18 +34,21 @@ flowchart TD
   %% MILESTONES / GATES / DECISIONS
   M1["M1: First foundation validated"]
   M2["M2: Second foundation validated"]
+  M4["M4: Third foundation validated"]
   G1{"At least 2 validated"}
   D1{"Select integration strategy"}
   M3["M3: Integrated system validated"]
 
   M1 --> G1
   M2 --> G1
+  M4 --> G1
   G1 --> D1
   ProjectLead -- "decides" --> D1
   D1 -- "integrate" --> M3
 
   ProjectLead -- "assigned to" --> M1
   SubsystemLead -- "assigned to" --> M2
+  SubsystemLead -- "assigned to" --> M4
   ProjectLead -- "assigned to" --> M3
 
   %% VISUAL LANGUAGE
@@ -60,7 +63,7 @@ flowchart TD
   class G1 GATE
   class D1 DECISION
   class M1 MILESTONE_INPROGRESS
-  class M2,M3 MILESTONE_PENDING
+  class M2,M3,M4 MILESTONE_PENDING
 
   linkStyle default stroke:slategray,stroke-width:3.5px,fill:none;
 ```
