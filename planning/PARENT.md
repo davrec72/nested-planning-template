@@ -37,5 +37,6 @@ Use the full qualified tuples from `REFERENCES.md`. Readable names/paths only lo
 - Update this file when the parent boundary changes materially: parent identity, parent MilestoneID, parent contract, delegated scope/authority, or other parent-visible semantics.
 - A new parent commit does not automatically invalidate the child. Foreman/child Lead should inspect the intervening parent planning diff and update only if this child boundary is affected.
 - Resolve the current parent PlanRef from its trusted journal before dependent use and verify that the pinned relationship/authority still applies. A historical pin is not a bypass around current scope/revocation. Unrelated parent snapshots may carry the same relationship without requiring the child to repin.
+- For substantive child dispatch/resumption, also resolve every applicable ancestor prerequisite and selected Decision-branch constraint under `NESTING.md`. The relationship pin alone does not prove readiness; retain current boundary checks or the explicit accepted opaque-boundary readiness evidence required there.
 - A child repository may not change this file to grant itself authority. The corresponding parent record must already authorize the relationship.
 - Git repository ownership, forks, submodules, branch relationships, or shared commits are not parent authority.
