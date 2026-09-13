@@ -321,7 +321,7 @@ Discover active fences and uncertain acquisition/release outcomes from durable i
 | Any later publication after an abort/release | Obtain a fresh inventory baseline, manifest/approval and fence. Newly permitted predecessor-governed work may have appeared; the old analysis is not reusable by assertion. |
 | Journal commit succeeds but release fails | Successor PlanRef is current; retain the conservative execution block until a successor validates that exact event and durably releases the fence. Do not guess it away. |
 
-Recovery while held preserves continuous scope coverage. Its required recovery manifest/approval and event bind the protected baseline and retained acquisition/continuity evidence; if they differ from the failed attempt, durably bind the recovery identities under prior authority without opening the scope. Do not mutate the failed immutable manifest. The journal cannot adopt an uncommitted suffix manifest as authority merely because it exists. Existing PR24 suffix classification, predecessor authority and retention rules remain in force.
+Recovery while held preserves continuous scope coverage. Its required recovery manifest/approval and event bind the protected baseline and retained acquisition/continuity evidence; if they differ from the failed attempt, durably bind the recovery identities under prior authority without opening the scope. Do not mutate the failed immutable manifest. The journal cannot adopt an uncommitted suffix manifest as authority merely because it exists. The suffix classification, predecessor authority and retention rules in sections 1–3 and 5–6 of this file remain in force.
 
 ### 9.3 Cold validation and adoption
 
