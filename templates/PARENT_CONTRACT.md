@@ -40,6 +40,14 @@ State what the child may plan/decide/execute without returning to the parent.
 
 State what remains outside child authority, including shared contracts, spending, release, data/device access, cross-project scope, or other retained parent decisions.
 
+## Dispatch readiness boundary
+
+Use `planning/NESTING.md`'s inherited dispatch procedure. The child inherits this parent outcome's hard prerequisites and governing selected Decision outcomes, and the applicable constraints of every ancestor. The contract cannot waive a closed prerequisite or require parents to mirror child internals.
+
+State the boundary's supported reference/grammar/node-contract semantics and how current prerequisite/branch evidence is resolved. For an opaque portion, explicitly define the readiness evidence, independently authorized source, covered child scope/actions, upstream coverage, currentness check and validity/revalidation conditions. Operational evidence binds exact qualified objects and accepted revisions; do not embed this contract's own future SHA here.
+
+If any preparation is permitted while an ancestor is closed, identify its independent authority, exact bounded actions/resources, excluded substantive effects and applicable ancestor conditions. Otherwise state `none`; a general scope grant or `read-only` label does not establish this exception.
+
 ## Delegation capabilities
 
 List only capabilities actually granted:
