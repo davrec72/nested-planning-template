@@ -249,6 +249,8 @@ Node IDs are durable identifiers. Display labels may change without changing nod
 
 Do not reuse a retired stable ID for a different semantic object.
 
+An accepted plan may explicitly adopt the adjunct `qualified-reference-v1` contract in `REFERENCES.md` without changing `plan-grammar-v2` Mermaid syntax. It scopes PlanIDs to a stable repository identity and object IDs to their plan/kind; local human names remain reusable in other plans. Every durable cross-plan reference is qualified, while exact authority/contract PlanRefs remain separate. Existing plans migrate explicitly; old bare cross-plan strings are not silently reinterpreted. A single Mermaid node identifier still denotes one node/type.
+
 ## Visual class definitions
 
 Use these class definitions unless the grammar itself is intentionally versioned:

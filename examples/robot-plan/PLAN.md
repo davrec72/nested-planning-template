@@ -2,9 +2,14 @@
 
 This is an example only. It demonstrates a parent repository treating another repository as one milestone.
 
+The repository IDs 1001/1002 and readable names are fictional examples, not verified live bindings. Operational adoption requires accepted publication and verified provider identities under `planning/REFERENCES.md`.
+
 ```text
 plan_id: ROBOT
 grammar: plan-grammar-v2
+reference_contract: qualified-reference-v1
+repository_identity: {"scheme": "github-repository-id-v1", "authority": "github.com", "id": "1001"}
+repository_locator: example-owner/robot-plan
 ```
 
 ```mermaid
@@ -40,11 +45,14 @@ flowchart TD
 ## Child implementation binding for R2
 
 ```text
-repository: example-owner/learning-project
+child_plan: {"repository_identity": {"scheme": "github-repository-id-v1", "authority": "github.com", "id": "1002"}, "plan_id": "LEARNING", "object_kind": "plan"}
+repository_locator: example-owner/learning-project
 plan_path: planning/PLAN.md
-plan_id: LEARNING
-scope_owner_role: LearningLead
-parent_contract: examples/robot-plan/PARENT_CONTRACT.md
+scope_owner_role: {"repository_identity": {"scheme": "github-repository-id-v1", "authority": "github.com", "id": "1002"}, "plan_id": "LEARNING", "object_kind": "role", "object_id": "LearningLead"}
+parent_contract: {"repository_identity": {"scheme": "github-repository-id-v1", "authority": "github.com", "id": "1001"}, "plan_id": "ROBOT", "object_kind": "contract", "object_id": "ROBOT-R2-LEARNING-v1"}
+parent_contract_locator: examples/robot-plan/PARENT_CONTRACT.md
 ```
 
 The parent does not need to mirror the child's internal milestones. It cares only whether R2's contract is met.
+
+The local parent `LearningLead` node and the child boundary `LearningLead` Role are distinct qualified objects (ROBOT/1001 versus LEARNING/1002). The matching human name does not transfer authority.

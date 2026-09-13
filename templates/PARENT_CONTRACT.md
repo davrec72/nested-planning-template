@@ -4,14 +4,21 @@ This contract defines what a parent plan expects from one child milestone and wh
 
 ```text
 contract_id: <stable ID>
-parent_plan_id: <PlanID>
-parent_plan_ref: <exact accepted parent PlanRef>
-parent_milestone: <MilestoneID>
-child_repository: <owner/repo or same-repo path>
-child_plan_id: <PlanID>
+reference_contract: qualified-reference-v1
+parent_plan: <qualified plan reference>
+authority_baseline_plan_ref: <exact prior accepted parent PlanRef authorizing this relationship change>
+parent_authority_role: <qualified role reference>
+parent_authority_source: <exact pre-existing authority/delegation source at that baseline>
+parent_milestone: <qualified milestone reference in parent_plan>
+child_plan: <qualified plan reference>
+child_repository_locator: <readable owner/repo or URL; locator only>
 child_plan_path: <path>
-child_scope_owner_role: <RoleID>
+child_scope_owner_role: <qualified role reference in child_plan>
 ```
+
+This parent-side contract does not contain its own accepted relationship SHA. After the exact candidate is approved and published, its accepted `parent_relationship_plan_ref` is learned from publication evidence; the child records that SHA as `parent_plan_ref`. The baseline may not yet contain this new contract. Follow the finite creation/update sequence in `planning/REFERENCES.md`.
+
+The qualified contract identity is `parent_plan` plus `object_kind: contract` and this `contract_id`. `parent_plan` fixes the context of any short local parent ID; child objects still use full qualified references. Repository/plan paths are locators. A reference or named intended child Role does not establish accepted child state or grant authority.
 
 ## Required outcome
 
@@ -50,10 +57,13 @@ Omitted capability = not granted.
 ## Parent acceptance authority
 
 ```text
-parent_acceptance_role: <RoleID>
+parent_acceptance_role: <local parent RoleID or qualified role reference>
+parent_acceptance_authority_source: <independently accepted source; qualify and bind its own exact PlanRef if external>
 ```
 
 Unless explicitly delegated elsewhere, this Role accepts the parent milestone after reviewing child evidence.
+
+Resolve that Role's exact accepted authority revision separately when issuing acceptance; the contract cannot grant authority merely by naming the Role. Do not embed an unknown future containing SHA here.
 
 ## Escalation triggers
 

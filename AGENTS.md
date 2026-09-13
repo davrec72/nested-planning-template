@@ -32,6 +32,7 @@ This repository defines a planning and delegation system for AI-heavy projects. 
 Resolve from accepted records:
 
 - project/plan identity;
+- adopted reference contract when cross-plan references are used; verified machine repository identity, repository-local PlanID and expected object kind/ID under `planning/REFERENCES.md`;
 - bootstrap-configured publication ref;
 - trusted publication journal kind/locator/trust basis;
 - latest valid `publication_event_id`, `publication_commit`, `publication_id`, and current `plan_ref`;
@@ -41,6 +42,7 @@ Resolve from accepted records:
 - acting Role and current holder binding;
 - target Milestone/Decision/scope;
 - authority source;
+- exact authority revisions separately for external Role/source references; do not confuse a subject contract's PlanRef with an external accepting/delegating Role's PlanRef;
 - when accepting a Milestone: exact `contract_plan_ref`, accepting Role, authority source, and evidence;
 - when dispatch depends on DONE: current PlanRef must actually project DONE and index acceptance;
 - when dispatch depends on an adopted Decision/DATA contract: current accepted PlanRef must index the exact operative result/resolution, and its contract/input/authority or objective usability checks must pass under `planning/NODE_CONTRACTS.md`;
@@ -59,6 +61,7 @@ Read together as applicable:
 - `planning/CONVENTIONS.md` — node/edge grammar.
 - `planning/NODE_CONTRACTS.md` — explicitly adopted Decision results and DATA resolutions, current indices, replacement/withdrawal and migration.
 - `planning/NESTING.md` — recursive delegation.
+- `planning/REFERENCES.md` — cross-plan reference and parent revision roles.
 - `planning/ROLES.md` — Role scopes/holders/capabilities.
 - `planning/PUBLICATION.md` — bootstrap/publication model.
 - `planning/PUBLICATION_TRANSITIONS.md` — normative journal, retention, recovery, and notification validation.
@@ -110,6 +113,8 @@ Before transition-specific actions, match the payload to validated journal state
 Repositories keep independent Git histories. Parent/child authority comes from explicit contracts/delegations and exact accepted publication state, not forks/submodules/copied trees/repository ownership.
 
 A child may bootstrap from accepted parent authority; it does not need an unrelated root founder.
+
+The parent contract's prior authority baseline, the accepted relationship revision pinned by the child, and current parent authority are distinct. Resolve them under `planning/REFERENCES.md`; do not manufacture self-containing commit references or treat a historical pin as permanent authority.
 
 ## Domain-specific projects
 
