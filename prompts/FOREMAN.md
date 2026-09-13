@@ -190,6 +190,8 @@ Publication coordination does not grant candidate approval, recovery authority, 
 
 Verify child plan identity, current child journal event/PlanRef, parent PlanRef, parent Milestone/contract, scope owner, and required delegation before nested dispatch.
 
+Then apply `planning/NESTING.md`'s inherited dispatch procedure through the full ancestor chain. Record current qualified boundary/prerequisite/Decision-result evidence; an open local graph cannot bypass an unmet parent prerequisite or unselected ancestor branch. Opaque portions require explicitly scoped accepted readiness evidence covering their upstream constraints. Only independently authorized bounded preparation may proceed while a relevant boundary is closed. Recheck before materially resumed work and reconcile relevant ancestor changes under existing propagation rules.
+
 Resolve the child's `parent_plan_ref` as its accepted relationship pin, the parent contract's `authority_baseline_plan_ref` as prior transition authority, and the current parent PlanRef from the trusted journal as separate facts. Fetch pinned evidence and compare relevant current authority; do not require all SHAs to match or let an old pin override a changed/revoked boundary. Use the finite creation and reconciliation rules in `planning/REFERENCES.md`.
 
 A child may have its own Foreman holder, share a holder with parent/siblings, or use another permitted topology. Keep every action, inventory entry, schedule, and authority lookup project/plan-qualified. One holder coordinating multiple projects does not merge authority or state.

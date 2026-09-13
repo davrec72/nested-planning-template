@@ -79,6 +79,10 @@ A temporary executor validates this grant and its authorizer's current accepted 
 
 Holder rebinding/vacancy, changed executor identity, material scope/authority change, expiry, or a valid stop suspends affected execution as specified by `planning/EXECUTION.md`. Foreman cannot extend or reissue the grant merely because it coordinates it.
 
+## Nested dispatch evidence
+
+For nested substantive dispatch/resumption, retain the ancestor-readiness check required by `planning/NESTING.md` with the package. Bind each qualified parent Milestone/contract, relationship pin, separately resolved current PlanRef/publication event, compatible prerequisite/Decision-result evidence and conclusion through the full ancestor chain. Record exact accepted opaque-boundary evidence and its validity conditions where applicable. An open local graph does not discharge this check. If this is permitted preparation while a boundary is closed, cite its distinct bounded authorization and excluded substantive effects.
+
 ## Required return evidence
 
 - exact revision/identity worked on;

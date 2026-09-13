@@ -48,6 +48,7 @@ Resolve from accepted records:
 - when dispatch depends on DONE: current PlanRef must actually project DONE and index acceptance;
 - when dispatch depends on an adopted Decision/DATA contract: current accepted PlanRef must index the exact operative result/resolution, and its contract/input/authority or objective usability checks must pass under `planning/NODE_CONTRACTS.md`;
 - when nested: parent plan/ref/milestone/contract and grammar compatibility;
+- before nested substantive dispatch/resumption: local readiness plus every applicable ancestor hard prerequisite and selected Decision branch, with current accepted state or explicit accepted opaque-boundary readiness evidence under `planning/NESTING.md`;
 - when delegating: exact delegation capability.
 
 Do not use unpublished default-branch governance, mutable ref freshness, local reflogs, or message arrival order as substitutes for trusted publication state. Follow `planning/PUBLICATION.md` and `planning/PUBLICATION_TRANSITIONS.md`.
