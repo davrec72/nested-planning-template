@@ -60,6 +60,7 @@ Then read authority/planning files at the exact accepted `plan_ref`, including a
 AGENTS.md
 planning/PLAN.md
 planning/CONVENTIONS.md
+planning/NODE_CONTRACTS.md and indexed definitions/results for adopted Decision/DATA contracts
 planning/NESTING.md
 planning/ROLES.md
 planning/PARENT.md when applicable
@@ -97,6 +98,8 @@ return_to=<RoleID with final substantive authority>
 ```
 
 For nested work include required parent identity/PlanRef/contract bindings.
+
+For an adopted `decision-result-v1` or `data-dependency-v1`, resolve the definition through the current accepted plan's node-contract index. Only its exact active result/resolution may open the dependency; validate the Decision's outcome/cardinality and other prerequisites, or DATA's exact artifact/subject/inputs and objective usability. Unindexed replacements and unsupported contracts cannot authorize dispatch. Published replacement/revocation/withdrawal includes explicit disposition for affected branch/consumer work under `planning/NODE_CONTRACTS.md`.
 
 Temporary executors do not become Role holders or acquire acceptance/decision/delegation authority merely by receiving a package.
 

@@ -43,6 +43,7 @@ Resolve from accepted records:
 - authority source;
 - when accepting a Milestone: exact `contract_plan_ref`, accepting Role, authority source, and evidence;
 - when dispatch depends on DONE: current PlanRef must actually project DONE and index acceptance;
+- when dispatch depends on an adopted Decision/DATA contract: current accepted PlanRef must index the exact operative result/resolution, and its contract/input/authority or objective usability checks must pass under `planning/NODE_CONTRACTS.md`;
 - when nested: parent plan/ref/milestone/contract and grammar compatibility;
 - when delegating: exact delegation capability.
 
@@ -56,6 +57,7 @@ Read together as applicable:
 
 - `planning/PLAN.md` — roadmap.
 - `planning/CONVENTIONS.md` — node/edge grammar.
+- `planning/NODE_CONTRACTS.md` — explicitly adopted Decision results and DATA resolutions, current indices, replacement/withdrawal and migration.
 - `planning/NESTING.md` — recursive delegation.
 - `planning/ROLES.md` — Role scopes/holders/capabilities.
 - `planning/PUBLICATION.md` — bootstrap/publication model.

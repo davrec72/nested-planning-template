@@ -13,6 +13,8 @@ This file defines the exact current planning grammar: `plan-grammar-v2`. Agents 
 
 A historical v1 plan remains valid under v1. Do not silently reinterpret a v1 plan as v2 merely because it uses the same node names. Cross-version nesting and migration are defined in `NESTING.md`.
 
+Decision and DATA nodes may explicitly adopt `decision-result-v1` and `data-dependency-v1` under `NODE_CONTRACTS.md`. These are separately versioned planning semantics, not a new roadmap grammar. The current accepted published PlanRef indexes their operative records; historical v2 nodes with other explicit contracts are not silently migrated.
+
 ## Canonical node classes
 
 ### ROLE
@@ -54,7 +56,10 @@ Activation is node-type-specific:
 
 - **Milestone source:** the prerequisite is operative only when the current accepted PlanRef projects that Milestone as `MILESTONE_DONE` and indexes the valid acceptance record that supports the projection. A visible external acceptance record alone does not open downstream dispatch while the current accepted roadmap still shows the Milestone unfinished.
 - **Gate source:** the prerequisite is operative when the Gate's objective predicate is demonstrably true. No separate Gate-status or Gate-projection commit is required. If the Gate counts Milestones, it counts only Milestones operative as `MILESTONE_DONE` in the current accepted PlanRef.
-- **Decision or DATA source:** use the satisfaction/activation semantics explicitly defined for that node and its incoming/outgoing records. Do not infer a Milestone-style status/projection lifecycle merely from the hard-prerequisite edge.
+- **Decision source:** under an explicitly adopted `decision-result-v1`, only the exact valid selection indexed by the current accepted PlanRef opens its selected outcome edges; no indexed result means no branch. Other prerequisites still apply. See `NODE_CONTRACTS.md`.
+- **DATA source:** under an explicitly adopted `data-dependency-v1`, the current accepted PlanRef must index the exact resolution, and its artifact identity/subject/inputs/objective usability must match this use. Missing, wrong-revision or unusable evidence does not satisfy the dependency. See `NODE_CONTRACTS.md`.
+
+For historical nodes with other explicitly accepted contracts, use their declared semantics until an accepted migration. Missing/unsupported contract semantics fail closed for the affected dependency. Neither Decision nor DATA acquires a Milestone DONE class or acceptance receipt.
 
 For ordinary nodes, multiple hard incoming edges mean **AND**.
 
@@ -130,6 +135,14 @@ flowchart TD
 - Exactly one Role decides it.
 - Consultation may be recorded elsewhere; do not add several `decides` edges.
 - If two accepted records appear to grant final authority over the same decision scope, stop that decision and escalate to the nearest common parent authority.
+
+For `decision-result-v1`, maintain a discoverable Decision definition and immutable results using `NODE_CONTRACTS.md`, `templates/DECISION.md` and `templates/DECISION_RESULT.md`. The accepted published PlanRef is the sole operative result-selection boundary. Replacement/revocation retains the old result and explicitly disposes affected branch work; record existence alone cannot switch branches.
+
+## DATA rules
+
+For `data-dependency-v1`, maintain a discoverable DATA definition and immutable resolutions using `NODE_CONTRACTS.md`, `templates/DATA.md` and `templates/DATA_RESOLUTION.md`. Distinguish the artifact's exact identity from the subject/input revisions it describes. The accepted published PlanRef selects the usable resolution; its objective conditions must also hold at consumption. Replacement/withdrawal changes that accepted index and preserves history.
+
+Availability alone suffices only when the definition explicitly makes availability of the required exact artifact for the required subject/inputs the entire predicate. A subjective adequacy judgment belongs in a Decision; an outcome requiring acceptance belongs in a Milestone. No Role decides a DATA predicate merely because it is a dependency.
 
 ## Milestone acceptance
 
@@ -291,9 +304,24 @@ Activity detail belongs in the milestone record or child plan.
 - `PENDING` means the current accepted roadmap projects the Milestone as neither done nor currently active.
 - During the intentionally permitted interval after a durable acceptance record is issued but before its status/index projection is accepted, the displayed class remains whatever the current accepted PlanRef already says. No fourth status exists for this interval.
 - A diagram edit cannot make a milestone complete without the required acceptance evidence and accepting authority.
-- A status-only roadmap update must link the acceptance record that justifies the projection.
-- The PlanRef created by that status/index update does not replace the acceptance record's `contract_plan_ref`.
+- A status-only roadmap update must link the evidence appropriate to its transition, as defined below. Non-DONE execution changes do not require or create acceptance receipts.
+- The PlanRef created by a DONE status/index update does not replace the acceptance record's `contract_plan_ref`.
 - Until the status/index projection itself is accepted as the current PlanRef, downstream Milestone hard-prerequisite dispatch remains governed by the prior current roadmap state.
+
+### Evidence by Milestone transition
+
+| Transition | Required evidence and resulting projection |
+|---|---|
+| Any state -> `DONE` | Valid durable acceptance of the exact applicable contract, independently authorized acceptance Role/source, and populated acceptance record index. Passing tests, delivery, or a class edit alone are insufficient. |
+| `PENDING` -> `INPROGRESS` (start/resume) | An authorized execution/work-package event supporting active execution of this Milestone and its exact scope/revision. No acceptance receipt is required. |
+| `INPROGRESS` -> `PENDING` (pause/stop) | An authorized pause/stop decision or execution-state event supporting the inactive projection, with affected work and remaining effects stated. An unconfirmed stop must not be represented as proven cessation. No acceptance receipt is required. |
+| `DONE` -> `PENDING` or `INPROGRESS` (reopen) | An authorized reopening/revocation/correction decision naming the prior acceptance and affected contract/scope. `INPROGRESS` additionally needs the authorized start/resume evidence. Retain the historical acceptance unchanged. |
+
+All transitions still require ordinary plan-change approval/publication under preceding accepted authority. An execution event cannot approve its own status projection or grant new scope. Record the exact prior PlanRef, Milestone, before/after class, controlling event/decision, active-work impact and authority source.
+
+An initially created PENDING Milestone cites its authorized plan/contract creation as its inactive-state basis; do not invent a prior execution or pause event for work that has never started.
+
+On reopening, remove the old receipt from the **current operative** acceptance index (`none` until a valid current acceptance is projected), retain a durable history link to it and the reopening decision, and preserve the old issued receipt and historical PlanRefs. A later DONE projection needs acceptance valid for the current contract/current evidence and the reopening decision's requirements; do not silently reactivate a revoked receipt. None of this creates a fourth status class.
 
 ## Plan changes
 
@@ -309,7 +337,7 @@ Foreman dispatch required:
 Controlling decision/evidence:
 ```
 
-A status-only update may be shorter but must link the acceptance evidence.
+A status-only update may be shorter but must link the transition-specific evidence above: acceptance/index for DONE, execution evidence for start/pause/resume, or the authorized reopening/revocation/correction decision for DONE -> non-DONE.
 
 The exact accepted Git commit containing the change becomes the new PlanRef.
 

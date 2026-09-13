@@ -53,7 +53,9 @@ Assignment authority source:
 Acceptance authority:
 Acceptance authority source:
 Evidence location:
+Execution/status evidence: <initial PENDING basis or authorized execution/reopening event>
 Acceptance record index: none | <durable locator>
+Acceptance history: <prior receipts and reopening decisions or none>
 Child plan: none | <internal path> | <external repository locator>
 ```
 
@@ -63,4 +65,17 @@ The primary assigned Role delivers the milestone; it is not automatically the au
 
 `MILESTONE_DONE` is only a projection of a durable acceptance record. Use `templates/MILESTONE_ACCEPTANCE.md`.
 
+Use the transition-specific evidence in `planning/CONVENTIONS.md`: start/pause/resume cite authorized execution events without fabricated acceptance; reopening DONE cites an authorized reopening/revocation/correction decision, clears the current operative index, and preserves the old receipt/history. Direct reopening to INPROGRESS also needs authorized start/resume evidence.
+
 Do not add custom edge semantics without first updating `planning/CONVENTIONS.md`.
+
+## Decision and DATA contract index
+
+Index every Decision/DATA definition used by this plan. Explicitly adopt its version under `planning/NODE_CONTRACTS.md`; do not infer it from `plan-grammar-v2` alone.
+
+| Node ID | Kind | Declared node contract | Definition locator in this PlanRef |
+|---|---|---|---|
+| `<DecisionID>` | `DECISION` | `decision-result-v1` | `<definition path>` |
+| `<DataID>` | `DATA` | `data-dependency-v1` | `<definition path>` |
+
+Create definitions/results with `templates/DECISION.md` and `templates/DECISION_RESULT.md`; create DATA definitions/resolutions with `templates/DATA.md` and `templates/DATA_RESOLUTION.md`. The definition's current index selects the exact immutable operative record. Publication changes selection; record/artifact existence alone cannot. Preserve history and explicit branch/consumer work disposition on replacement/revocation/withdrawal.

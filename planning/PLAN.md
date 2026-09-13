@@ -73,7 +73,9 @@ Assignment authority source:
 Acceptance authority:
 Acceptance authority source:
 Evidence location:
+Execution/status evidence: <initial PENDING basis or authorized execution/reopening event>
 Acceptance record index: none | <durable locator>
+Acceptance history: <prior receipts and reopening decisions or none>
 Child plan: none | <internal path> | <external repository locator>
 ```
 
@@ -85,4 +87,17 @@ The milestone's `Acceptance authority` field only references authority; it does 
 
 `MILESTONE_DONE` is a roadmap projection of a durable milestone acceptance record. The class does not itself create acceptance. Use `templates/MILESTONE_ACCEPTANCE.md` for the acceptance record.
 
+Starting, pausing and resuming use the transition-specific execution evidence in `CONVENTIONS.md`, without fabricated acceptance. Reopening DONE requires an authorized reopening/revocation/correction decision; clear the current operative index while preserving the old receipt in history. A direct reopening to INPROGRESS also cites the authorized start/resume event.
+
 The Mermaid overview should remain terse. Put detailed acceptance criteria, evidence, and acceptance records in durable records rather than inside nodes.
+
+## Decision and DATA contract index
+
+For each Decision/DATA node, index its exact accepted definition here. New plans should explicitly adopt the versioned contracts in `NODE_CONTRACTS.md`; legacy nodes retain their own explicit semantics until accepted migration.
+
+| Node ID | Kind | Declared node contract | Definition locator in this PlanRef |
+|---|---|---|---|
+| `<DecisionID>` | `DECISION` | `decision-result-v1` | `<definition path>` |
+| `<DataID>` | `DATA` | `data-dependency-v1` | `<definition path>` |
+
+Use `templates/DECISION.md` / `templates/DECISION_RESULT.md` and `templates/DATA.md` / `templates/DATA_RESOLUTION.md`. Each definition carries its sole current result/resolution index and retained history. An immutable record existing outside that accepted index does not open a branch or satisfy DATA. These placeholders are not operative node records.
