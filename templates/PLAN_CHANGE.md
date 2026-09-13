@@ -2,7 +2,7 @@
 
 Use this for every semantic planning or Role change.
 
-Candidate creation/approval and publication are separate events. Follow `planning/PUBLICATION.md` and `planning/PUBLICATION_TRANSITIONS.md`.
+Candidate creation/approval, snapshot retention, publication-ref movement, trusted journal commit, and propagation are separate events. Follow `planning/PUBLICATION.md` and `planning/PUBLICATION_TRANSITIONS.md`.
 
 ```text
 Semantic delta:
@@ -16,45 +16,40 @@ Controlling decision/evidence:
 
 ## Before the change
 
-Resolve the validated publication-ref tip first:
+Resolve accepted state from the trusted publication journal:
 
 ```text
 publication_ref:
-prior_publication_commit:
+publication_journal_high_water_event_id:
+accepted_predecessor_commit:
 prior_publication_id:
 prior_plan_ref:
 acting_role:
 authority_source:
 ```
 
-Do not use the newest default-branch head as a substitute for accepted state.
+Do not use newest branch/ref content or candidate governance as accepted state.
 
-A proposed change cannot use its own new authority or governance to approve/publish itself.
-
-## Exact semantic effect
-
-Describe planning meaning, not merely the text diff.
-
-## Candidate PlanRef
-
-After the semantic change has a stable exact commit, record:
+## Candidate and approval
 
 ```text
 candidate_plan_ref:
-```
-
-The candidate is not current merely because it exists or merges.
-
-## Candidate approval
-
-```text
 approval_event:
 approved_by_role:
 approval_authority_source:
 approved_scope:
 ```
 
-Approval must bind the exact candidate. If content changes, obtain new approval.
+Approval binds the exact candidate. If content changes, obtain new approval.
+
+## Candidate retention
+
+```text
+plan_snapshot_locator:
+plan_snapshot_retention_evidence:
+```
+
+The exact candidate must be durably cold-fetchable independently of ordinary branch cleanup before publication.
 
 ## Active work handling
 
@@ -64,7 +59,7 @@ For every affected active package state one:
 continue | pause | redirect | supersede
 ```
 
-Until publication succeeds, operational work remains governed by the prior accepted PlanRef.
+Until trusted publication succeeds, operational work remains governed by the prior accepted PlanRef.
 
 ## Parent/child impact
 
@@ -76,27 +71,39 @@ parent_notification_required: yes | no
 
 ## Publication handoff
 
-Prepare/review a successor publication carrier under the **predecessor accepted governance**.
-
 ```text
+transition_kind: bootstrap | normal | recovery
+publication_ref:
+accepted_predecessor_event_id:
+accepted_predecessor_commit:
+carrier_parent_commit:
 successor_publication_id:
 successor_carrier_commit:
-publication_ref:
-prior_publication_commit:
 prior_publication_id:
 prior_plan_ref:
 plan_ref: <candidate_plan_ref>
+invalid_suffix_start: none | <commit>
+invalid_suffix_tip: none | <commit>
 ```
 
-After the first publication, the successor carrier Git parent and all `CURRENT.prior_*` values must match the validated incumbent carrier.
+For normal publication, actual carrier parent and accepted predecessor are the same. Recovery preserves an invalid/uncommitted actual suffix while using the last valid accepted predecessor for governance.
 
-Advance the publication ref non-force from that exact incumbent. If another publisher advances first, the stale carrier must fail/reconcile rather than win by timestamp/order.
+## Publication evidence
+
+```text
+ref_update_receipt:
+publication_journal_event_id:
+journal_sequence:
+```
+
+The exact PlanRef becomes current only after the conditional ref movement succeeds **and** the trusted append-only/tamper-evident journal event commits.
 
 ## Foreman propagation payload
 
-Only after successful publication send:
+Only after journal commit send:
 
 ```text
+publication_event_id:
 publication_id:
 publication_commit:
 new_plan_ref:
@@ -110,6 +117,4 @@ authority_change:
 controlling_links:
 ```
 
-Foreman must match this payload to the exact validated publication transition and reconcile stale/duplicate/out-of-order notifications before applying transition-specific actions.
-
-This notification is coordination, not approval or publication authority.
+Foreman matches this payload to the exact trusted publication event and reconciles stale/duplicate/out-of-order events before applying transition-specific actions.

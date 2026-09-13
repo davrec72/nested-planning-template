@@ -1,260 +1,233 @@
 # Plan publication and root bootstrap
 
-This file defines how a project discovers its **current accepted PlanRef**, how a new planning revision becomes operative, and how a root project creates its first authority state without inventing a pre-existing Role.
+This file defines root bootstrap and how exact planning snapshots become current under `plan-publication-v1`.
 
-The publication protocol is separate from the plan grammar. The current publication protocol is:
-
-```text
-plan-publication-v1
-```
-
-`planning/PUBLICATION_TRANSITIONS.md` is normative for validator source, serialized carrier history, cold reconstruction, recovery, and notification matching. Where older prose is less specific, that file controls.
+`planning/PUBLICATION_TRANSITIONS.md` is normative for validator source, publication-journal evidence, recovery, retained snapshots, and notification matching.
 
 ## Core distinction
 
-Keep four facts separate:
+Keep these facts separate:
 
-1. **candidate content exists** — an exact commit contains proposed planning state;
-2. **candidate content is approved** — valid pre-existing authority approves that exact commit;
-3. **the approval is published** — the authoritative publication ref advances to a valid carrier naming that exact candidate;
-4. **the planning state is current** — the candidate named by the validated publication-ref tip is the current accepted PlanRef.
+1. an exact candidate planning commit exists;
+2. valid pre-existing authority approves that exact candidate;
+3. the candidate has a durable retained snapshot;
+4. the publication ref advances to a carrier naming the candidate;
+5. a trusted publication-journal event commits evidence of that exact ref update;
+6. only then is the candidate the current accepted PlanRef.
 
-A merge, default-branch head, timestamp, notification, or repository write does not by itself establish facts 2–4.
+A merge, branch head, timestamp, repository write, or message does not establish current planning state by itself.
 
-## Authoritative publication history
+## Bootstrap configuration
 
-`plan-publication-v1` uses one serialized publication ref:
-
-```text
-refs/heads/plan-publications
-```
-
-An instantiated project may choose a different ref only if that exact locator is fixed by its founding/parent bootstrap record before the first publication. Changing the publication ref later requires an explicit protocol migration under already-current authority; do not silently switch locators.
-
-Each publication carrier on that ref contains:
-
-```text
-planning/CURRENT.md
-```
-
-The **publication-ref tip**, after validation of its carrier history, is the authoritative locator for current accepted planning state.
-
-The semantic/default branch may contain newer staged or merged planning content. Such content is not operative until a valid publication carrier names it.
-
-## Which rules validate publication
-
-Do not use unpublished governance text to decide whether incumbent accepted state is valid.
-
-For every transition after the first:
-
-```text
-predecessor accepted PlanRef governance
-    validates
-successor publication transition
-```
-
-If candidate `Pn+1` changes `AGENTS.md`, `planning/PUBLICATION.md`, `planning/PUBLICATION_TRANSITIONS.md`, or related governance, those changed rules do **not** validate the transition that makes `Pn+1` current. After `Pn+1` is validly published, its rules may govern the next transition.
-
-The first root publication has no predecessor. Its Founding Authority must explicitly approve both the exact first candidate and the exact initial publication protocol/locator being used. A first child publication may instead derive that bootstrap authority from an accepted parent contract/delegation.
-
-## Publication record
-
-Every carrier's `planning/CURRENT.md` identifies at least:
+Every instantiated project fixes during root/parent bootstrap:
 
 ```text
 publication_protocol: plan-publication-v1
-publication_id: <stable unique ID>
-plan_id: <PlanID>
-grammar: <grammar declared by plan_ref>
-plan_ref: <exact accepted planning commit SHA>
-prior_plan_ref: <previous accepted PlanRef or none>
-prior_publication_id: <previous publication ID or none>
-prior_publication_commit: <exact predecessor publication carrier or none>
+publication_ref: refs/heads/plan-publications | <explicit alternative>
+publication_journal_kind:
+publication_journal_locator:
+publication_journal_trust_basis:
+plan_snapshot_retention_kind:
+plan_snapshot_retention_locator_or_pattern:
+```
+
+The publication journal must be durable and append-only/tamper-evident under its configured trust basis and readable by a cold successor. Bare Git ancestry or a local reflog alone is not sufficient evidence of historical ref movements.
+
+The retention mechanism must keep every published exact PlanRef fetchable independently of ordinary work branches.
+
+## Publication carrier
+
+Each carrier on the configured publication ref contains `planning/CURRENT.md`.
+
+A carrier records the accepted transition state, but the **trusted publication journal** establishes which ref updates actually became accepted transitions.
+
+The latest valid committed journal event is the accepted publication high-water mark. The live publication ref must agree with that mark unless there is an invalid/uncommitted suffix being recovered.
+
+## CURRENT fields
+
+Every carrier records at least:
+
+```text
+publication_protocol: plan-publication-v1
+transition_kind: bootstrap | normal | recovery
+publication_id
+plan_id
+grammar
+plan_ref
+plan_snapshot_locator
+plan_snapshot_retention_evidence
+carrier_parent_commit
+accepted_predecessor_commit
+accepted_predecessor_event_id
+prior_publication_id
+prior_plan_ref
+invalid_suffix_start: none | <commit>
+invalid_suffix_tip: none | <commit>
 approval_basis: role | founding | parent
-approval_event: <durable locator proving approval of plan_ref>
-approved_by_role: <RoleID or none>
-approval_authority_source: <accepted source or none>
-founding_record: <durable locator or none>
-parent_authority_source: <durable locator or none>
-publisher_identity: <attributable identity>
-publication_authority_source: <source authorizing publication>
-published_at: <timestamp or durable event time>
+approval_event
+approved_by_role
+approval_authority_source
+founding_record
+parent_authority_source
+publisher_identity
+publication_authority_source
+publication_journal_event_id
+published_at
 ```
 
 Fields that do not apply use `none`.
 
-`plan_ref` is the accepted planning snapshot. The carrier commit is publication-history evidence and is not automatically the PlanRef.
+`plan_ref` is the accepted semantic planning snapshot. The carrier commit is publication-history evidence and is not itself automatically the PlanRef.
+
+## Which rules validate a transition
+
+For every publication after bootstrap, the **last accepted predecessor PlanRef's governance** validates the next transition.
+
+A candidate may change publication/governance rules, but those new rules cannot validate the transition that makes themselves current. Once accepted, they may govern a later transition.
 
 ## Normal publication sequence
 
-### 1. Resolve current state
+### 1. Resolve accepted state
 
-Read and validate the configured publication-ref history under `planning/PUBLICATION_TRANSITIONS.md`.
+Read the configured trusted publication journal and validate its high-water event under `planning/PUBLICATION_TRANSITIONS.md`.
 
-Record from the validated tip:
+Record:
 
 ```text
-prior_publication_commit
+accepted_predecessor_event_id
+accepted_predecessor_commit
 prior_publication_id
 prior_plan_ref
 ```
 
-All ordinary approval/publication authority for the proposed change must already be valid under `prior_plan_ref` or another authority source already valid there.
+Validate that the retained snapshot for `prior_plan_ref` is fetchable.
 
-### 2. Produce the candidate
+### 2. Prepare the semantic candidate
 
-Prepare/review the semantic planning or Role change normally and identify the exact resulting commit:
+Create/review the plan or Role change and identify:
 
 ```text
 candidate_plan_ref=<exact commit SHA>
 ```
 
-The candidate may live on or be merged into a normal branch. It is not current merely because it exists.
-
-A semantic candidate must not rely on editing publication history in place.
+The candidate is not current merely because it exists or merges.
 
 ### 3. Approve the exact candidate
 
-The applicable Role approves the exact `candidate_plan_ref` and records at least:
+The applicable authority approves that exact candidate under governance already valid before the change.
+
+If candidate content changes, approval does not follow it.
+
+### 4. Retain the candidate
+
+Before publication, create/verify the configured durable snapshot for `candidate_plan_ref` and record its locator/evidence.
+
+If the exact commit is not guaranteed cold-fetchable under the retention contract, publication must not proceed.
+
+### 5. Prepare the successor carrier
+
+For a normal transition:
 
 ```text
-candidate_plan_ref
-approving Role
-approval authority source
-semantic scope approved
+transition_kind: normal
+carrier_parent_commit == accepted_predecessor_commit
+accepted_predecessor_commit == latest accepted journal carrier
+accepted_predecessor_event_id == latest accepted journal event
+prior_publication_id == predecessor publication_id
+prior_plan_ref == predecessor plan_ref
+invalid_suffix_start: none
+invalid_suffix_tip: none
 ```
 
-If candidate content changes, the old approval does not follow it.
+### 6. Conditionally advance the publication ref
 
-### 4. Prepare the successor carrier
+Advance the configured publication ref non-force from the exact actual incumbent carrier to the prepared successor carrier.
 
-Create a carrier whose `planning/CURRENT.md` points to `candidate_plan_ref` and names the exact validated predecessor values.
+A stale sibling must fail rather than win by timestamp or merge order.
 
-For every publication after the first:
+### 7. Commit the publication-journal event
+
+After the successful conditional ref update, durably append the exact transition event and its `ref_update_receipt` to the configured trusted journal.
+
+The transition becomes accepted only when that event is committed. If the ref moved but no journal event committed, the new carrier is an uncommitted suffix and ordinary execution remains governed by the latest valid journal event pending recovery.
+
+### 8. Operate and propagate
+
+Only after the journal event commits does the named `plan_ref` become current accepted planning state. Foreman may then apply the transition-bound semantic delta.
+
+## Recovery from an invalid or uncommitted tip
+
+Do not rewrite or reset publication history to hide a bad tip.
+
+Let:
 
 ```text
-carrier Git parent == prior_publication_commit
-CURRENT.prior_publication_commit == prior_publication_commit
-CURRENT.prior_publication_id == predecessor CURRENT.publication_id
-CURRENT.prior_plan_ref == predecessor CURRENT.plan_ref
+Rvalid = successor carrier in latest valid journal event
+X      = actual publication-ref tip
 ```
 
-Validate the transition using the predecessor accepted PlanRef's publication/governance rules.
-
-### 5. Serialize the publication
-
-Advance the configured publication ref **non-force** from the exact incumbent carrier to the prepared successor carrier.
-
-A pre-write read is not sufficient serialization. The ref update itself must fail/reject if another publisher advanced first.
-
-If another publication wins first, reconcile the candidate against the new current state and determine whether renewed review/approval is required.
-
-### 6. Publication becomes operative
-
-Once the successor carrier is the validated publication-ref tip, the `plan_ref` named there is current accepted planning state.
-
-Only then may Foreman or other agents propagate and act on transition-specific planning changes.
-
-## Concurrency, replay, and recovery
-
-Two publishers may prepare from the same predecessor, but only one can advance the publication ref from that exact carrier. A stale sibling carrier cannot become current by timestamp, merge order, notification order, or a self-reported predecessor field.
-
-Replaying old `CURRENT` contents after a later publication does not restore old state. Reversion requires a new authorized successor carrier whose predecessor is the actual incumbent carrier.
-
-If the publication-ref tip is malformed or unauthorized:
-
-1. do not use it as current authority;
-2. inspect the actual carrier ancestry on the publication ref;
-3. validate transitions in order under predecessor accepted governance;
-4. recover the most recent valid predecessor carrier;
-5. stop affected new dispatch/decisions until the invalid tip is corrected under valid authority.
-
-Do not use a suspect record's own predecessor pointer as the sole recovery route and do not rewrite old carrier history in place.
-
-## Notification and propagation
-
-Notifications are wake/coordination messages, not authority.
-
-Every published-change payload must bind to one publication transition:
+A recovery transition is validated under `Rvalid`'s accepted PlanRef and may create `Y` with:
 
 ```text
-publication_id
-publication_commit
-new_plan_ref
-prior_publication_id
-prior_plan_ref
-semantic_delta
-active_work_impact
+transition_kind: recovery
+carrier_parent_commit: X
+accepted_predecessor_commit: Rvalid
+accepted_predecessor_event_id: <latest valid journal event>
+prior_publication_id: <from Rvalid>
+prior_plan_ref: <from Rvalid>
+invalid_suffix_start: <first quarantined commit>
+invalid_suffix_tip: X
 ```
 
-Before applying actions, Foreman validates those identities against publication history and compares them to durable last-applied publication state for the relevant scope/package.
+`Y` is a child of the actual tip so ref advancement remains non-force and the invalid suffix remains preserved. The invalid suffix is not treated as accepted governance or authority.
 
-Duplicate notifications are idempotent. Stale notifications must not reapply superseded pause/redirect instructions. If notifications are missed or arrive out of order, reconcile validated transitions from the last applied publication through current state in order.
+The recovery requires explicit authority valid under `prior_plan_ref`, a retained exact target PlanRef, a successful conditional ref update, and a committed recovery journal event recording both the actual Git predecessor and last accepted predecessor.
 
-See `planning/PUBLICATION_TRANSITIONS.md` for the normative procedure.
+Cold reconstruction then treats the quarantined suffix as historical but non-accepted and resumes accepted publication history at the recovery event.
+
+If the live ref is merely behind the journal high-water mark and can be restored by a verified non-force movement to the already-accepted carrier, record that infrastructure repair in the journal; do not create a fictional new planning acceptance.
 
 ## Root-project bootstrap
 
-A root project has no prior Role. The template therefore permits one narrow external exception: a **Founding Authority** external to the Role ontology may establish exactly the first accepted authority state.
+A root project has no prior Role. One narrow external **Founding Authority** may establish the first accepted plan/Role/governance state.
 
-Repository ownership/write access alone is not the Founding Authority.
+Repository ownership or write access alone is not the Founding Authority.
 
-Create `planning/FOUNDING.md` from `templates/FOUNDING.md`. The record must identify:
+The founding record must identify:
 
 ```text
-founding_record_id
-project/repository identity
-founding authority identity
-external trust basis/evidence
+founding authority identity and trust basis
 bounded founding scope
-initial plan scope
-initial Role/binding records
-initial publication protocol/locator
+initial plan/Role state
+initial publication protocol/ref
+initial publication journal kind/locator/trust basis
+initial PlanRef retention kind/locator pattern
 ```
 
 Bootstrap sequence:
 
-1. external sponsor/owner/charter explicitly designates the Founding Authority and bounded founding scope;
-2. prepare the exact first candidate containing PLAN, ROLES, FOUNDING, grammar, and required governance files;
-3. Founding Authority approves that exact candidate and the exact initial publication protocol/locator;
-4. create the first publication carrier with `prior_*: none` and `approval_basis: founding`;
-5. establish the configured publication ref at that carrier;
-6. validate the first carrier under the approved founding protocol;
-7. the named `plan_ref` becomes the first current accepted PlanRef;
-8. the founding exception expires.
+1. designate the Founding Authority and bounded scope;
+2. prepare the exact first candidate including required governance files;
+3. Founding Authority approves the exact candidate plus initial publication/journal/retention contract;
+4. retain the first candidate under the configured snapshot contract;
+5. create the first carrier with `transition_kind: bootstrap` and no accepted predecessor;
+6. establish the configured publication ref at that carrier;
+7. commit the first trusted journal event, including the bootstrap ref-update/creation evidence;
+8. the named `plan_ref` becomes the first current accepted PlanRef;
+9. the founding exception expires.
 
-Any continuing founder authority must appear as an ordinary Role/binding in the first accepted state. Do not reuse founding authority for later ordinary changes.
+Any continuing founder authority must appear as an ordinary Role/binding in the first accepted state.
 
-## Child-project bootstrap
+## Child bootstrap
 
-A child repository need not create an unrelated root Founding Authority when an accepted parent contract/delegation supplies its boundary authority.
+A child repository may bootstrap from accepted parent authority instead of an unrelated root founder. That parent authority must cover the child scope, initial Role state, initial publication protocol/ref, publication-journal trust contract, and snapshot-retention contract.
 
-Its first publication may use:
+## Notification and Foreman recovery
 
-```text
-approval_basis: parent
-parent_authority_source: <accepted parent contract/delegation>
-```
+Published-change messages are wake mechanisms, not authority. They must bind to the exact committed publication journal event and carrier. Stale/duplicate/out-of-order notifications are reconciled against journal order, not message arrival order.
 
-The parent source must authorize the child scope, initial authority state, and initial publication protocol/locator. After bootstrap, child Roles govern only within the delegated boundary.
-
-## Bootstrap limitation
-
-Before the first valid publication, substantive project execution is not initialized by this protocol. Permitted pre-publication activity is limited to preparing, reviewing, approving, and publishing the founding/parent-authorized initial state.
-
-Foreman cannot be operationally bound before the state creating that Role/binding is current.
-
-## Publication versus Milestone acceptance
-
-These are separate protocols:
-
-- Milestone acceptance decides whether a Milestone contract is satisfied.
-- Plan publication decides which planning/authority snapshot is current.
-
-Neither protocol manufactures the other.
+If journal evidence, retained PlanRefs, or publication state is missing/contradictory, ordinary dependent execution fails closed.
 
 ## Security boundary
 
-This documentation does not provide cryptographic identity/signatures or external identity verification. Projects needing those guarantees must add them.
-
-It does require attributable identities and durable evidence locators so later reviewers can reconstruct the authority claim actually relied upon.
+This template does not provide cryptographic identity/signature infrastructure. It does require an explicit trust basis for the publication journal and snapshot-retention mechanism so a cold reader knows what external durability assumptions it is relying on.

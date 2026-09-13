@@ -1,19 +1,20 @@
 ## Semantic delta
 
-Describe the planning meaning that changes. Do not merely describe the file diff.
+Describe planning meaning, not merely file diff.
 
-## Current publication baseline
+## Accepted baseline
 
-Resolve from validated publication-ref history:
+Resolve from trusted publication-journal state:
 
 ```text
 publication_ref:
-prior_publication_commit:
+publication_journal_high_water_event_id:
+accepted_predecessor_commit:
 prior_publication_id:
 prior_plan_ref:
 ```
 
-Do not use newest default-branch content as accepted state or use candidate governance to validate its own transition.
+Do not use newest branch/ref content as accepted state.
 
 ## Affected milestones
 
@@ -43,7 +44,7 @@ If authority changes, cite authority valid before this candidate.
 yes | no
 ```
 
-Do not propagate the candidate merely because it merges. Propagation begins only after a valid successor publication carrier becomes the publication-ref tip.
+Do not propagate the candidate merely because it merges or the publication ref moves. Propagation begins only after the trusted publication-journal event commits.
 
 ## Parent/child impact
 
@@ -57,40 +58,41 @@ parent_notification_required: yes | no
 
 Link the accepted decision, delegation, or evidence that justifies the change.
 
-## Candidate and publication handoff
+## Candidate / retention / publication handoff
 
 ```text
 candidate_plan_ref:
 approval_event:
 approved_by_role:
 approval_authority_source:
+plan_snapshot_locator:
+plan_snapshot_retention_evidence:
+transition_kind: bootstrap | normal | recovery
+accepted_predecessor_event_id:
+accepted_predecessor_commit:
+carrier_parent_commit:
 successor_publication_id:
 successor_carrier_commit:
+ref_update_receipt:
+publication_journal_event_id:
 publication_required: yes
 ```
 
-The approval binds the exact candidate. Publication must be validated under predecessor accepted governance and must advance the configured publication ref non-force from the exact incumbent carrier.
-
 ## Validation checklist
 
-- [ ] Baseline publication identities come from validated publication-ref history.
+- [ ] Baseline identities come from the trusted publication journal.
 - [ ] Candidate does not use its own new governance/authority to validate or authorize its transition.
 - [ ] Plan declares intended grammar and nesting compatibility/migration impact.
-- [ ] Every node uses a defined class.
-- [ ] Every solid dependency is a true hard prerequisite.
-- [ ] Every dotted scheduling edge is labeled exactly `preferred before`.
-- [ ] OR/N-of-M logic uses an explicit Gate.
-- [ ] Every Decision has exactly one deciding Role.
-- [ ] Every active Milestone has exactly one primary assigned Role.
-- [ ] Every Milestone has exactly one status class.
-- [ ] Every newly projected DONE Milestone indexes a valid prior acceptance receipt.
-- [ ] DONE receipt binds exact pre-acceptance contract PlanRef, evidence, and valid acceptance authority.
-- [ ] Materially changed Milestone contracts do not silently inherit old acceptance.
-- [ ] Issued acceptance receipts remain immutable history.
-- [ ] Non-DONE status changes use appropriate execution/pause/resume evidence without fabricated acceptance.
+- [ ] Every node/edge obeys the accepted planning grammar.
+- [ ] Every active Milestone has one primary assigned Role and one status class.
+- [ ] DONE projections index valid prior acceptance; non-DONE status changes use appropriate execution evidence.
 - [ ] Child changes remain within parent authority/contract.
 - [ ] Active-work impact is explicit.
 - [ ] Candidate approval binds exact candidate SHA.
-- [ ] Successor carrier parent and `CURRENT.prior_*` match the actual incumbent carrier.
-- [ ] Publication ref advancement is non-force from that exact incumbent; stale sibling/replay is rejected.
-- [ ] Propagation payload binds exact publication transition identities and occurs only after valid publication.
+- [ ] Exact candidate is durably retained and cold-fetchable independently of ordinary branches.
+- [ ] For normal publication, actual carrier parent equals the last accepted carrier.
+- [ ] For recovery, actual carrier parent and accepted predecessor are separately recorded; invalid suffix remains preserved/non-accepted.
+- [ ] Publication ref movement is conditional/non-force from the exact actual tip.
+- [ ] Trusted journal receives durable `ref_update_receipt` and exact transition identities.
+- [ ] Publication is not current until trusted journal event commits.
+- [ ] Propagation payload binds the committed publication event and occurs only afterward.

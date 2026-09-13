@@ -1,18 +1,25 @@
 # Current accepted plan publication
 
-Instantiate this file as `planning/CURRENT.md` on the configured publication ref (portable default `refs/heads/plan-publications`).
+Instantiate this file as `planning/CURRENT.md` on the configured publication ref.
 
 Do not leave placeholders in an operational project.
 
 ```text
 publication_protocol: plan-publication-v1
+transition_kind: bootstrap | normal | recovery
 publication_id: <stable unique ID>
 plan_id: <PlanID>
 grammar: <grammar declared by plan_ref>
 plan_ref: <exact accepted planning commit SHA>
+plan_snapshot_locator: <durable cold-fetchable locator>
+plan_snapshot_retention_evidence: <durable evidence under configured retention contract>
+carrier_parent_commit: <actual Git parent of this carrier or none>
+accepted_predecessor_commit: <last accepted publication carrier or none>
+accepted_predecessor_event_id: <trusted journal event ID or none>
+prior_publication_id: <previous accepted publication ID or none>
 prior_plan_ref: <previous accepted PlanRef or none>
-prior_publication_id: <previous publication ID or none>
-prior_publication_commit: <exact predecessor publication carrier commit or none>
+invalid_suffix_start: none | <first quarantined commit>
+invalid_suffix_tip: none | <actual invalid/uncommitted tip>
 approval_basis: role | founding | parent
 approval_event: <durable locator proving approval of plan_ref>
 approved_by_role: <RoleID or none>
@@ -20,20 +27,20 @@ approval_authority_source: <accepted source or none>
 founding_record: <durable locator or none>
 parent_authority_source: <durable locator or none>
 publisher_identity: <attributable identity>
-publication_authority_source: <source authorizing publication>
+publication_authority_source: <source authorizing publication/recovery>
+publication_journal_event_id: <trusted journal event ID>
 published_at: <timestamp or durable event time>
 ```
 
 ## Interpretation
 
-- `plan_ref` is the accepted planning snapshot named by this publication; the carrier commit is not automatically the PlanRef.
-- After the first publication, this carrier's Git parent MUST equal `prior_publication_commit`.
-- `prior_publication_id` and `prior_plan_ref` MUST equal the validated predecessor carrier's values.
-- The publication ref MUST advance non-force from the exact predecessor carrier. A pre-write check without conditional ref advancement is insufficient.
-- Transition validation uses the predecessor accepted PlanRef's governance rules. Candidate changes to publication/governance rules become eligible only for later transitions after the candidate is accepted.
-- `approval_basis=founding` is valid only for first root publication; `approval_basis=parent` only for authorized child bootstrap.
+- `plan_ref` is the accepted semantic planning snapshot; the carrier commit is not automatically the PlanRef.
+- Every published `plan_ref` must remain cold-fetchable through `plan_snapshot_locator` independently of ordinary branch cleanup/rebase/squash.
+- `publication_journal_event_id` must resolve in the configured trusted append-only/tamper-evident publication journal.
+- For `normal`, `carrier_parent_commit == accepted_predecessor_commit`, and the accepted predecessor fields match the latest valid journal event.
+- For `recovery`, `carrier_parent_commit` is the actual bad/uncommitted Git tip while `accepted_predecessor_commit` remains the last valid accepted carrier. The invalid suffix is preserved but not accepted.
+- `bootstrap` has no accepted predecessor and is valid only under the explicit founding/parent bootstrap contract.
+- Candidate governance changes do not validate the transition that makes themselves current; predecessor accepted governance controls.
 - Fields that do not apply use `none`.
 
-Cold validation and recovery MUST use the actual configured publication-ref carrier history under `planning/PUBLICATION_TRANSITIONS.md`, not this record's self-reported predecessor fields alone.
-
-Replaying old CURRENT contents at a later carrier does not restore old state. Reversion requires a new authorized transition from the actual incumbent carrier.
+Cold validation starts from the configured trusted publication journal and verifies carrier/ref state and retained snapshots under `planning/PUBLICATION_TRANSITIONS.md`. Git ancestry or CURRENT predecessor claims alone are not enough to establish historical ref movements.

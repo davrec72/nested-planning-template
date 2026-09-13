@@ -2,13 +2,7 @@
 
 Use this template only for a **root project** with no accepted parent authority.
 
-Instantiate it as:
-
-```text
-planning/FOUNDING.md
-```
-
-before the first accepted PlanRef is published.
+Instantiate as `planning/FOUNDING.md` before first publication.
 
 ```text
 founding_record_id: <stable unique ID>
@@ -23,21 +17,27 @@ initial_role_registry: planning/ROLES.md
 initial_role_bindings: <summary or durable locator>
 initial_publication_protocol: plan-publication-v1
 initial_publication_ref: refs/heads/plan-publications | <explicit alternative locator>
+publication_journal_kind: <append-only/tamper-evident mechanism>
+publication_journal_locator: <cold-reader locator>
+publication_journal_trust_basis: <why committed events are durable/non-rewritable or detectably invalid>
+plan_snapshot_retention_kind: <protected immutable ref | permanent archive | equivalent>
+plan_snapshot_retention_locator_or_pattern: <cold-reader locator/pattern>
+plan_snapshot_retention_trust_basis: <why historical published PlanRefs remain fetchable or deletion is detectable>
 continuing_external_authority: none
 ```
 
 ## Rules
 
-- The Founding Authority exists **outside** the Role ontology solely to solve the first-authority bootstrap problem.
-- Repository ownership, write access, seniority, tool access, or the presence of this file do not by themselves make someone the Founding Authority.
-- The external trust basis must be explicit and attributable.
-- The founding scope must be bounded to establishing the first accepted planning/authority state.
-- The Founding Authority must approve the exact first candidate **and** the exact initial publication protocol/ref used to publish it.
-- The first publication must identify and approve the exact candidate commit being founded.
-- After the first valid publication carrier is established and validated, this founding exception expires.
-- Any authority the founder should retain after bootstrap must appear as an ordinary Role/binding in the first accepted Role registry.
-- Do not reuse this founding record as authority for later plan changes.
-- Do not silently change the configured publication ref after bootstrap. A later locator/protocol change requires an explicit authorized migration under already-current authority.
-- Do not rewrite the historical founding act in place after first publication. Later corrections/amendments use ordinary accepted authority and preserve the original record.
+- The Founding Authority exists outside the Role ontology solely to solve the first-authority bootstrap problem.
+- Repository ownership/write access, seniority, tool access, or this file do not by themselves make someone the Founding Authority.
+- The founding scope is bounded to establishing the first accepted planning/authority/governance state and its initial publication trust contract.
+- The Founding Authority approves the exact first candidate plus the exact initial publication ref, trusted journal contract, and PlanRef retention contract.
+- Bare Git ancestry or a local reflog alone is not a conforming trusted publication journal for cold reconstruction.
+- First publication must retain the exact candidate independently of ordinary branches before its journal event commits.
+- After the first valid trusted publication-journal event, the founding exception expires.
+- Any continuing authority of the founder must appear as an ordinary Role/binding in the first accepted Role registry.
+- Do not reuse the founding record as later plan-change authority.
+- Do not silently change the publication ref, journal trust source, or retention mechanism after bootstrap. A later change requires an explicit authorized migration under already-current governance.
+- Preserve the original founding record as history.
 
-If the repository is a child of an accepted parent plan, do not create an independent root founding record merely for convenience. Use the accepted parent contract/delegation as the bootstrap authority under `planning/PUBLICATION.md`; that parent authority must also cover the child's initial publication protocol/locator.
+If the repository is a child of an accepted parent plan, use accepted parent authority rather than inventing a root founder. That parent authority must explicitly cover the child's initial publication ref/journal/retention contract as well as its scope and authority state.

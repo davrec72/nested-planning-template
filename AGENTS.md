@@ -18,32 +18,36 @@ This repository defines a planning and delegation system for AI-heavy projects. 
 12. **Issued acceptance records are immutable history.** Corrections/revocations/reopenings are later records and plan changes, not in-place rewrites.
 13. **Grammar versions are semantic contracts.** Do not silently reinterpret incompatible versions.
 14. **Gates are predicates; Decisions are judgments.** Do not hide judgment in a Gate.
-15. **Plan changes propagate by explicit notification plus boundary checks, not constant polling.** Notification is a wake mechanism, not authority.
+15. **Plan-change notifications are wake mechanisms, not authority.** Apply transition-specific actions only after matching them to accepted publication state.
 16. **Exact accepted Git commits are PlanRefs.** Mutable branches are locators only.
-17. **Current planning state is established by validated publication history.** An instantiated project uses the configured publication ref (portable default `refs/heads/plan-publications`) and `planning/CURRENT.md` carrier history under `planning/PUBLICATION.md` plus `planning/PUBLICATION_TRANSITIONS.md`. Default-branch freshness is not acceptance.
-18. **The predecessor accepted rules validate the next publication transition.** Unpublished candidate changes to AGENTS/PUBLICATION cannot govern the transition that makes themselves current. Once accepted, they may govern later transitions.
-19. **Publication history is serialized.** Each publication carrier after the first must descend directly from the actual incumbent carrier, and the publication ref must advance non-force from that exact predecessor. A self-reported predecessor field is not enough.
-20. **Root bootstrap is one bounded external exception.** A root project may use an explicitly designated external Founding Authority only to establish its first accepted state. After first publication, ordinary Role/governance rules apply.
+17. **Current planning state comes from a trusted publication journal.** The latest valid committed journal event, plus its retained exact PlanRef and carrier evidence, establishes the accepted high-water mark. A mutable publication ref or Git ancestry alone is insufficient to prove past ref movements.
+18. **Published PlanRefs must remain durably fetchable.** Every accepted exact PlanRef has a retained snapshot independent of ordinary branch cleanup, squash, or rebase.
+19. **The predecessor accepted rules validate the next publication transition.** Candidate governance cannot validate the transition that makes itself current.
+20. **Normal publication is serialized and externally evidenced.** A normal carrier advances conditionally/non-force from the exact accepted incumbent, and a trusted journal event records the successful old->new ref update.
+21. **Invalid publication suffixes are preserved, not adopted.** Recovery may fast-forward over an invalid/uncommitted actual tip while naming the last valid accepted carrier separately; invalid suffix content does not become accepted governance.
+22. **Root bootstrap is one bounded external exception.** A root project may use an explicitly designated Founding Authority only to establish its first accepted state and initial publication/journal/retention trust contract. The exception expires after first valid journaled publication.
 
 ## Before any substantive planning or execution action
 
 Resolve from accepted records:
 
 - project/plan identity;
-- configured publication ref;
-- validated `publication_commit`, `publication_id`, and current `plan_ref`;
+- bootstrap-configured publication ref;
+- trusted publication journal kind/locator/trust basis;
+- latest valid `publication_event_id`, `publication_commit`, `publication_id`, and current `plan_ref`;
+- exact retained snapshot locator/evidence for that PlanRef;
 - declared grammar;
 - acting Role and current holder binding;
 - target Milestone/Decision/scope;
 - authority source;
 - when accepting a Milestone: exact `contract_plan_ref`, accepting Role, authority source, and evidence;
-- when dispatch depends on DONE: the current PlanRef must actually project DONE and index acceptance;
+- when dispatch depends on DONE: current PlanRef must actually project DONE and index acceptance;
 - when nested: parent plan/ref/milestone/contract and grammar compatibility;
 - when delegating: exact delegation capability.
 
-For publication discovery, do not read governance from an unpublished default-branch candidate and use it to validate incumbent state. Follow `planning/PUBLICATION_TRANSITIONS.md`.
+Do not use unpublished default-branch governance, mutable ref freshness, local reflogs, or message arrival order as substitutes for trusted publication state. Follow `planning/PUBLICATION.md` and `planning/PUBLICATION_TRANSITIONS.md`.
 
-If publication history is absent/invalid, ordinary execution is not initialized. Only the bounded root/parent bootstrap actions defined by the publication protocol may proceed.
+If the trusted journal, required retained snapshots, or accepted authority state is unavailable/invalid, ordinary dependent execution fails closed. Only bounded root/parent bootstrap or explicitly authorized recovery may proceed.
 
 ## Canonical files
 
@@ -53,9 +57,9 @@ Read together as applicable:
 - `planning/CONVENTIONS.md` — node/edge grammar.
 - `planning/NESTING.md` — recursive delegation.
 - `planning/ROLES.md` — Role scopes/holders/capabilities.
-- `planning/PUBLICATION.md` — bootstrap and publication model.
-- `planning/PUBLICATION_TRANSITIONS.md` — normative validator source, serialized carrier history, recovery, and notification matching.
-- `planning/CURRENT.md` — instantiated publication record carried on the publication ref.
+- `planning/PUBLICATION.md` — bootstrap/publication model.
+- `planning/PUBLICATION_TRANSITIONS.md` — normative journal, retention, recovery, and notification validation.
+- `planning/CURRENT.md` — carrier record on the publication ref.
 - `planning/FOUNDING.md` — root founding record when applicable.
 - `planning/PARENT.md` — parent relationship when nested.
 
@@ -65,29 +69,28 @@ The template source may ship templates rather than an instantiated operational p
 
 Use only the accepted grammar. State semantic delta, affected milestones/Roles, active-work impact, authority impact, Foreman dispatch requirement, and controlling evidence/decision.
 
-A semantic candidate does not become current merely because it exists or merges. Approval binds the exact candidate. Publication then advances the serialized publication ref under the predecessor accepted rules. Operational propagation begins only after that transition succeeds.
+A semantic candidate does not become current merely because it exists or merges. Approval binds the exact candidate; the candidate is durably retained; the publication ref moves under accepted governance; and a trusted journal event commits that exact transition before operational propagation begins.
 
 ## Foreman
 
 `Foreman` is execution-orchestration infrastructure, not automatic substantive authority.
 
-The holder must be able to delegate work, schedule follow-ups, read canonical records, validate publication history, and preserve/recover concurrent package state. One holder may occupy Foreman bindings for several projects, but every action/state item remains project/plan-qualified; cross-project reach does not merge authority.
+The holder must be able to delegate work, schedule follow-ups, read canonical records, validate trusted publication history/retained PlanRefs, and preserve/recover concurrent package state. One holder may occupy Foreman bindings for several projects, but every action/state item remains project/plan-qualified; cross-project reach does not merge authority.
 
 See `prompts/FOREMAN.md`.
 
 ## Work packages
 
-Every substantive package must bind at least project/plan identity, exact current PlanRef, serving Role, typed target, bounded objective/scope, expected evidence, and return authority. Nested work must include the required parent bindings.
+Every substantive package must bind at least project/plan identity, exact current PlanRef, serving Role, typed target, bounded objective/scope, expected evidence, and return authority. Nested work includes required parent bindings.
 
-Temporary executors do not become Role holders merely by assignment.
-
-Completion/evidence does not itself accept the Milestone. Acceptance and later roadmap projection remain separate.
+Temporary executors do not become Role holders merely by assignment. Completion/evidence does not itself accept a Milestone.
 
 ## Publication notifications
 
-Every published-change payload must bind to one validated publication transition, including at least:
+Every published-change payload binds to one trusted committed publication event, including at least:
 
 ```text
+publication_event_id
 publication_id
 publication_commit
 new_plan_ref
@@ -97,7 +100,7 @@ semantic_delta
 active_work_impact
 ```
 
-Before applying transition-specific actions, match the payload to validated publication history and durable last-applied state. Ignore duplicates; do not let stale/superseded messages reapply older actions. If notifications were skipped/out of order, reconcile valid transitions in order from last applied through CURRENT.
+Before transition-specific actions, match the payload to validated journal state and durable last-applied state. Ignore duplicates; do not let stale/superseded messages reapply older actions. Reconcile skipped/out-of-order events in trusted journal order.
 
 ## Cross-repository nesting
 
