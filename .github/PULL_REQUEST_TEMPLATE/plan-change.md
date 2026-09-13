@@ -1,6 +1,20 @@
 ## Semantic delta
 
-Describe the planning meaning that changes. Do not merely describe the file diff.
+Describe planning meaning, not merely file diff.
+
+## Accepted baseline
+
+Resolve from trusted publication-journal state:
+
+```text
+publication_ref:
+publication_journal_high_water_event_id:
+accepted_predecessor_commit:
+prior_publication_id:
+prior_plan_ref:
+```
+
+Do not use newest branch/ref content as accepted state.
 
 ## Affected milestones
 
@@ -12,8 +26,6 @@ Describe the planning meaning that changes. Do not merely describe the file diff
 
 ## Active work impact
 
-Choose one per affected package/scope:
-
 ```text
 none | continue | pause | redirect | supersede
 ```
@@ -24,7 +36,7 @@ none | continue | pause | redirect | supersede
 none | binding change | scope change
 ```
 
-If authority changes, cite the authority that existed before this PR and permits the change.
+If authority changes, cite authority valid before this candidate.
 
 ## Foreman dispatch required
 
@@ -32,7 +44,7 @@ If authority changes, cite the authority that existed before this PR and permits
 yes | no
 ```
 
-If yes, provide the propagation payload Foreman should receive after merge.
+Do not propagate the candidate merely because it merges or the publication ref moves. Propagation begins only after the trusted publication-journal event commits.
 
 ## Parent/child impact
 
@@ -46,22 +58,41 @@ parent_notification_required: yes | no
 
 Link the accepted decision, delegation, or evidence that justifies the change.
 
+## Candidate / retention / publication handoff
+
+```text
+candidate_plan_ref:
+approval_event:
+approved_by_role:
+approval_authority_source:
+plan_snapshot_locator:
+plan_snapshot_retention_evidence:
+transition_kind: bootstrap | normal | recovery
+accepted_predecessor_event_id:
+accepted_predecessor_commit:
+carrier_parent_commit:
+successor_publication_id:
+successor_carrier_commit:
+ref_update_receipt:
+publication_journal_event_id:
+publication_required: yes
+```
+
 ## Validation checklist
 
-- [ ] The plan declares the intended grammar version, and any parent/child grammar compatibility or migration impact is explicit.
-- [ ] Every node uses a defined class.
-- [ ] Every solid dependency is a true hard prerequisite.
-- [ ] Every dotted scheduling edge is labeled exactly `preferred before`.
-- [ ] OR/N-of-M logic uses an explicit Gate.
-- [ ] Every Decision has exactly one deciding Role.
-- [ ] Every active Milestone has exactly one primary assigned Role.
-- [ ] Every Milestone has exactly one status class.
-- [ ] Every Milestone newly projected as `MILESTONE_DONE` indexes a valid prior acceptance receipt.
-- [ ] Each receipt used for a DONE projection binds the exact pre-acceptance `contract_plan_ref`, accepted evidence, and independently valid acceptance authority for that milestone/scope.
-- [ ] A materially changed milestone outcome, acceptance criteria, or authority contract does not silently inherit an older acceptance receipt.
-- [ ] Issued acceptance receipts are preserved as immutable history; correction, revocation, or replacement is represented by later durable records rather than in-place rewriting.
-- [ ] Non-DONE status changes cite the appropriate execution/pause/resume evidence and do not fabricate milestone acceptance.
-- [ ] No proposed edit bootstraps its own authority.
-- [ ] Child changes stay within the parent contract or parent authority is included.
+- [ ] Baseline identities come from the trusted publication journal.
+- [ ] Candidate does not use its own new governance/authority to validate or authorize its transition.
+- [ ] Plan declares intended grammar and nesting compatibility/migration impact.
+- [ ] Every node/edge obeys the accepted planning grammar.
+- [ ] Every active Milestone has one primary assigned Role and one status class.
+- [ ] DONE projections index valid prior acceptance; non-DONE status changes use appropriate execution evidence.
+- [ ] Child changes remain within parent authority/contract.
 - [ ] Active-work impact is explicit.
-- [ ] Foreman propagation is defined if needed.
+- [ ] Candidate approval binds exact candidate SHA.
+- [ ] Exact candidate is durably retained and cold-fetchable independently of ordinary branches.
+- [ ] For normal publication, actual carrier parent equals the last accepted carrier.
+- [ ] For recovery, actual carrier parent and accepted predecessor are separately recorded; invalid suffix remains preserved/non-accepted.
+- [ ] Publication ref movement is conditional/non-force from the exact actual tip.
+- [ ] Trusted journal receives durable `ref_update_receipt` and exact transition identities.
+- [ ] Publication is not current until trusted journal event commits.
+- [ ] Propagation payload binds the committed publication event and occurs only afterward.

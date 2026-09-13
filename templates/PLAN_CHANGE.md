@@ -1,6 +1,8 @@
 # Plan change template
 
-Use this for every semantic planning or role change.
+Use this for every semantic planning or Role change.
+
+Candidate creation/approval, snapshot retention, publication-ref movement, trusted journal commit, and propagation are separate events. Follow `planning/PUBLICATION.md` and `planning/PUBLICATION_TRANSITIONS.md`.
 
 ```text
 Semantic delta:
@@ -14,39 +16,50 @@ Controlling decision/evidence:
 
 ## Before the change
 
-State the accepted PlanRef and authority that exists before this proposal.
+Resolve accepted state from the trusted publication journal:
 
 ```text
+publication_ref:
+publication_journal_high_water_event_id:
+accepted_predecessor_commit:
+prior_publication_id:
 prior_plan_ref:
 acting_role:
 authority_source:
 ```
 
-A proposed change cannot use its own new authority to approve itself.
+Do not use newest branch/ref content or candidate governance as accepted state.
 
-## Exact roadmap/role effect
+## Candidate and approval
 
-Describe the semantic change, not merely the text diff.
+```text
+candidate_plan_ref:
+approval_event:
+approved_by_role:
+approval_authority_source:
+approved_scope:
+```
 
-Examples:
+Approval binds the exact candidate. If content changes, obtain new approval.
 
-- `M2 no longer depends on M1C`;
-- `IntegrationLead now decides D3`;
-- `GlassesLead holder changes from X to Y; scope unchanged`;
-- `M1B becomes a child plan owned by GlassesLead`.
+## Candidate retention
+
+```text
+plan_snapshot_locator:
+plan_snapshot_retention_evidence:
+```
+
+The exact candidate must be durably cold-fetchable independently of ordinary branch cleanup before publication.
 
 ## Active work handling
 
-For every affected active package, state one:
+For every affected active package state one:
 
 ```text
-continue
-pause
-redirect
-supersede
+continue | pause | redirect | supersede
 ```
 
-Do not assume a plan merge silently cancels work.
+Until trusted publication succeeds, operational work remains governed by the prior accepted PlanRef.
 
 ## Parent/child impact
 
@@ -56,14 +69,46 @@ child_plan_changed: yes | no
 parent_notification_required: yes | no
 ```
 
-If a parent-facing boundary changes, update/notify the parent under `planning/NESTING.md`.
+## Publication handoff
+
+```text
+transition_kind: bootstrap | normal | recovery
+publication_ref:
+accepted_predecessor_event_id:
+accepted_predecessor_commit:
+carrier_parent_commit:
+successor_publication_id:
+successor_carrier_commit:
+prior_publication_id:
+prior_plan_ref:
+plan_ref: <candidate_plan_ref>
+invalid_suffix_start: none | <commit>
+invalid_suffix_tip: none | <commit>
+```
+
+For normal publication, actual carrier parent and accepted predecessor are the same. Recovery preserves an invalid/uncommitted actual suffix while using the last valid accepted predecessor for governance.
+
+## Publication evidence
+
+```text
+ref_update_receipt:
+publication_journal_event_id:
+journal_sequence:
+```
+
+The exact PlanRef becomes current only after the conditional ref movement succeeds **and** the trusted append-only/tamper-evident journal event commits.
 
 ## Foreman propagation payload
 
-After acceptance/merge, Foreman must receive:
+Only after journal commit send:
 
 ```text
+publication_event_id:
+publication_id:
+publication_commit:
 new_plan_ref:
+prior_publication_id:
+prior_plan_ref:
 semantic_delta:
 affected_roles:
 affected_milestones:
@@ -72,4 +117,4 @@ authority_change:
 controlling_links:
 ```
 
-This notification is coordination, not a new approval request.
+Foreman matches this payload to the exact trusted publication event and reconciles stale/duplicate/out-of-order events before applying transition-specific actions.

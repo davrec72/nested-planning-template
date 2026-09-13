@@ -5,126 +5,110 @@ This repository defines a planning and delegation system for AI-heavy projects. 
 ## Non-negotiable planning invariants
 
 1. **Authority belongs to Roles, not holders.** A person, chat, model, account, or process may hold one or more Roles, but the Role is the authority-bearing object.
-2. **A proposed plan edit cannot authorize its own approval.** Use authority that existed before the change.
-3. **Delegation only narrows.** A child Role or child plan may receive only a subset of authority already held by the delegating Role.
-4. **Parent contracts cannot be weakened from below.** Child plans own internal decomposition only; parent plans own parent-facing outcomes, acceptance criteria, parent-level dependencies, and delegated scope.
-5. **Repository/tool access is not authority.** Write permission, seniority, chat history, prior behavior, or being the most informed agent never substitute for an accepted Role binding.
-6. **Ambiguity means no authority.** If accepted records are missing, contradictory, ambiguous, stale in a material way, or only proposed in an unmerged change, stop the affected decision/dispatch and escalate.
-7. **One final Role per substantive decision scope.** Advisers and reviewers may be many. Final authority for the same decision scope may not be simultaneously assigned to multiple Roles unless the planning grammar explicitly defines a joint mechanism.
-8. **Role separation is not reviewer independence.** Two Roles held by the same underlying agent/context do not count as independent reviewers merely because their RoleIDs differ.
-9. **Milestones are outcomes.** Do not use milestone nodes for activities such as `review X` unless completion of that activity is itself the intended outcome.
-10. **Delivery, evidence, acceptance, and roadmap activation are separate facts.** Completing work or producing evidence does not itself accept a milestone. A durable acceptance record establishes the acceptance decision. When a Milestone is the source of a hard prerequisite, downstream dispatch opens only after an accepted projection PlanRef records that acceptance as current roadmap state (`MILESTONE_DONE` plus its acceptance-record index).
-11. **A milestone contract may reference acceptance authority; it cannot create it.** Naming an `Acceptance authority` Role or an `Acceptance authority source` in the milestone record does not grant that authority. The cited authority source must be independently accepted and must actually cover that milestone/scope; otherwise acceptance authority is absent.
-12. **Issued acceptance records are immutable history.** Do not edit or reinterpret an issued acceptance in place. Corrections/replacements create new durable records; later invalidation/revocation is a separate durable decision and accepted plan change, not a rewrite of the old receipt.
-13. **Grammar versions are semantic contracts.** Read the declared `grammar` before interpreting a plan. Do not silently apply `plan-grammar-v2` milestone/activation semantics to v1 or otherwise incompatible plans. Follow `planning/NESTING.md` for cross-version child boundaries and migration.
-14. **Gates are predicates; Decisions are judgments.** Do not hide human/agent choice inside a Gate.
-15. **Plan changes propagate by explicit notification plus boundary checks, not constant polling.**
-16. **Exact accepted Git commits are PlanRefs.** Mutable branch names are locators only.
+2. **A proposed plan edit cannot authorize its own approval.** Use authority and governance that existed before the change.
+3. **Delegation only narrows.** A child Role or child plan may receive only authority already held by the delegating Role.
+4. **Parent contracts cannot be weakened from below.** Child plans own internal decomposition only; parent plans own parent-facing outcomes, acceptance criteria, parent dependencies, and delegated scope.
+5. **Repository/tool access is not authority.** Write permission, seniority, context, prompt reach, or being the most informed agent never substitute for accepted authority.
+6. **Ambiguity means no authority.** If accepted records are missing, contradictory, materially stale, or merely proposed, stop the affected action and escalate.
+7. **One final Role per substantive decision scope.** Advisers/reviewers may be many; final authority for one scope may not be simultaneously assigned unless an explicit joint mechanism exists.
+8. **Role separation is not reviewer independence.** Two Roles held by the same underlying context do not create independent review.
+9. **Milestones are outcomes.** Do not use Milestone nodes for activities unless completion of that activity is itself the outcome.
+10. **Delivery, evidence, acceptance, and roadmap activation are separate facts.** Work/evidence does not itself accept a Milestone. A Milestone-source prerequisite opens only when the current accepted PlanRef projects DONE and indexes valid acceptance.
+11. **A Milestone contract may reference acceptance authority; it cannot create it.** The authority source must independently grant that scope.
+12. **Issued acceptance records are immutable history.** Corrections/revocations/reopenings are later records and plan changes, not in-place rewrites.
+13. **Grammar versions are semantic contracts.** Do not silently reinterpret incompatible versions.
+14. **Gates are predicates; Decisions are judgments.** Do not hide judgment in a Gate.
+15. **Plan-change notifications are wake mechanisms, not authority.** Apply transition-specific actions only after matching them to accepted publication state.
+16. **Exact accepted Git commits are PlanRefs.** Mutable branches are locators only.
+17. **Current planning state comes from a trusted publication journal.** The latest valid committed journal event, plus its retained exact PlanRef and retained carrier evidence, establishes the accepted high-water mark. A mutable publication ref or Git ancestry alone is insufficient to prove past ref movements.
+18. **Published PlanRefs and accepted carrier evidence must remain durably fetchable.** Every accepted exact PlanRef and every accepted publication carrier has retained evidence independent of ordinary branch cleanup, squash, rebase, live-ref reachability, and garbage collection. Recovery also retains the invalid suffix evidence required for cold validation.
+19. **The predecessor accepted rules validate the next publication transition.** Candidate governance cannot validate the transition that makes itself current.
+20. **Normal publication is serialized and externally evidenced.** A normal carrier advances conditionally/non-force from the exact accepted incumbent, and a trusted journal event records the successful old->new ref update.
+21. **Invalid publication suffixes are preserved, not adopted.** Recovery may fast-forward over an invalid/uncommitted actual tip while naming the last valid accepted carrier separately; invalid suffix content does not become accepted governance.
+22. **Root bootstrap is one bounded external exception.** A root project may use an explicitly designated Founding Authority only to establish its first accepted state and initial publication/journal/PlanRef-retention/carrier-retention trust contract. The exception expires after first valid journaled publication.
 
 ## Before any substantive planning or execution action
 
-An AI must identify from accepted records:
+Resolve from accepted records:
 
-- `plan_id`;
-- declared `grammar`;
-- exact `plan_ref`;
-- acting `role`;
-- current holder binding for that Role;
-- milestone or decision scope;
-- authority source for the action;
-- if accepting a milestone: the exact `contract_plan_ref`, the accepting Role, an independently accepted authority source covering that milestone/scope, and the evidence being accepted;
-- if dispatch depends on a completed milestone: the current accepted projection PlanRef must actually project that milestone as `MILESTONE_DONE` and index its acceptance record;
-- if nested: parent plan, parent PlanRef, parent milestone, parent contract, and child/parent grammar compatibility;
-- if delegating: the exact delegation capability that permits the action.
+- project/plan identity;
+- bootstrap-configured publication ref;
+- trusted publication journal kind/locator/trust basis;
+- latest valid `publication_event_id`, `publication_commit`, `publication_id`, and current `plan_ref`;
+- exact retained snapshot locator/evidence for that PlanRef;
+- exact retained carrier evidence locator/evidence for the accepted publication carrier and any recovery suffix evidence required by its event;
+- declared grammar;
+- acting Role and current holder binding;
+- target Milestone/Decision/scope;
+- authority source;
+- when accepting a Milestone: exact `contract_plan_ref`, accepting Role, authority source, and evidence;
+- when dispatch depends on DONE: current PlanRef must actually project DONE and index acceptance;
+- when nested: parent plan/ref/milestone/contract and grammar compatibility;
+- when delegating: exact delegation capability.
 
-If any required item is unavailable or contradictory, do not infer it. Escalate to the nearest Role that has accepted authority over the disputed scope.
+Do not use unpublished default-branch governance, mutable ref freshness, local reflogs, or message arrival order as substitutes for trusted publication state. Follow `planning/PUBLICATION.md` and `planning/PUBLICATION_TRANSITIONS.md`.
 
-If a nested plan declares an incompatible grammar, do not natively interpret its internal milestone/status semantics. Use the boundary rules in `planning/NESTING.md`.
+If the trusted journal, required retained PlanRef snapshots, required retained carrier/suffix evidence, or accepted authority state is unavailable/invalid, ordinary dependent execution fails closed. Only bounded root/parent bootstrap or explicitly authorized recovery may proceed.
 
 ## Canonical files
 
-Read these together:
+Read together as applicable:
 
-- `planning/PLAN.md` — at-a-glance roadmap.
-- `planning/CONVENTIONS.md` — exact node and edge grammar.
-- `planning/ROLES.md` — current Role holders and authority/delegation capabilities.
-- `planning/NESTING.md` — downward and upward nesting rules.
-- `planning/PARENT.md` — parent relationship if this repository is itself nested.
+- `planning/PLAN.md` — roadmap.
+- `planning/CONVENTIONS.md` — node/edge grammar.
+- `planning/NESTING.md` — recursive delegation.
+- `planning/ROLES.md` — Role scopes/holders/capabilities.
+- `planning/PUBLICATION.md` — bootstrap/publication model.
+- `planning/PUBLICATION_TRANSITIONS.md` — normative journal, retention, recovery, and notification validation.
+- `planning/CURRENT.md` — carrier record on the publication ref.
+- `planning/FOUNDING.md` — root founding record when applicable.
+- `planning/PARENT.md` — parent relationship when nested.
+
+The template source may ship templates rather than an instantiated operational plan.
 
 ## Creating or changing a plan
 
-Use only the grammar in `planning/CONVENTIONS.md`.
+Use only the accepted grammar. State semantic delta, affected milestones/Roles, active-work impact, authority impact, Foreman dispatch requirement, and controlling evidence/decision.
 
-A planning change must state:
-
-```text
-Semantic delta:
-Affected milestones:
-Affected roles:
-Active work impact: none | continue | pause | redirect | supersede
-Authority impact: none | binding change | scope change
-Foreman dispatch required:
-Controlling decision/evidence:
-```
-
-Do not add a new arrow label or node semantic without first changing the grammar.
-
-## Creating child plans or subordinate Roles
-
-Do not create them merely because another worker would be convenient.
-
-A Role may create durable child planning structures only when its accepted Role record grants the required capability. The supported capability IDs are defined in `planning/NESTING.md`.
-
-A child plan may reorganize internal work only inside its accepted parent contract. Any change to the parent-facing outcome, parent acceptance criteria, parent dependencies, shared contracts owned above the child, spending, repository permissions, device/data access, or scope must return to the appropriate parent authority.
+A semantic candidate does not become current merely because it exists or merges. Approval binds the exact candidate; the candidate is durably retained; the publication ref moves under accepted governance; the exact carrier evidence is durably retained; and a trusted journal event commits that exact transition before operational propagation begins.
 
 ## Foreman
 
-`Foreman` is a shared execution-orchestration Role, not automatically a substantive technical decision-maker.
+`Foreman` is execution-orchestration infrastructure, not automatic substantive authority.
 
-The Foreman holder MUST be an environment that can:
+The holder must be able to delegate work, schedule follow-ups, read canonical records, validate trusted publication history/retained PlanRefs/retained carrier evidence, and preserve/recover concurrent package state. One holder may occupy Foreman bindings for several projects, but every action/state item remains project/plan-qualified; cross-project reach does not merge authority.
 
-- delegate work to other agents/contexts; and
-- schedule future follow-up tasks/checks.
-
-A plain chat that cannot do both MUST NOT be bound to the Foreman Role.
-
-Foreman coordinates authorized work packages, reviewer routing, status follow-up, and plan-change propagation. Foreman acquires no Lead authority merely by coordinating a Lead's work.
-
-See `prompts/FOREMAN.md` for the complete Role prompt.
+See `prompts/FOREMAN.md`.
 
 ## Work packages
 
-Every substantive work package must bind to accepted planning state using at least:
+Every substantive package must bind at least project/plan identity, exact current PlanRef, serving Role, typed target, bounded objective/scope, expected evidence, and return authority. Nested work includes required parent bindings.
+
+Temporary executors do not become Role holders merely by assignment. Completion/evidence does not itself accept a Milestone.
+
+## Publication notifications
+
+Every published-change payload binds to one trusted committed publication event, including at least:
 
 ```text
-plan_id=<PlanID>
-plan_ref=<exact accepted commit SHA>
-role=<RoleID>
-milestone=<MilestoneID>
+publication_event_id
+publication_id
+publication_commit
+new_plan_ref
+prior_publication_id
+prior_plan_ref
+semantic_delta
+active_work_impact
 ```
 
-For nested work also include:
-
-```text
-parent_plan_ref=<exact parent PlanRef>
-```
-
-Foreman and executing agents must refuse or escalate materially contradictory bindings rather than silently choosing one.
-
-Work-package completion may return evidence for a milestone but does not itself accept that milestone. Milestone acceptance must be recorded separately by a Role whose acceptance authority is established independently of the milestone contract; use `templates/MILESTONE_ACCEPTANCE.md`.
-
-The acceptance record binds the exact pre-acceptance `contract_plan_ref`. A later plan commit that projects `MILESTONE_DONE` or indexes the acceptance record is a different PlanRef and does not retroactively become the contract revision that was judged.
-
-An acceptance record may exist before that projection commit, but it does not by itself authorize Foreman to treat a downstream **Milestone-source** hard prerequisite as open. Operational dispatch follows the current accepted PlanRef. Only after the accepted projection records `MILESTONE_DONE` and indexes the acceptance may that Milestone prerequisite be treated as satisfied for dispatch.
-
-Do not mutate an issued acceptance record to reflect later planning state. Preserve it as history; record later correction/revocation/reopening separately and propagate the resulting current state through an accepted plan change.
+Before transition-specific actions, match the payload to validated journal state and retained carrier evidence plus durable last-applied state. Ignore duplicates; do not let stale/superseded messages reapply older actions. Reconcile skipped/out-of-order events in trusted journal order.
 
 ## Cross-repository nesting
 
-Repositories keep independent Git histories. Parent/child authority is established through explicit parent contracts, Role delegations, and exact PlanRefs.
+Repositories keep independent Git histories. Parent/child authority comes from explicit contracts/delegations and exact accepted publication state, not forks/submodules/copied trees/repository ownership.
 
-Do not treat Git submodules, forks, copied trees, branch ancestry, or repository ownership as authority relationships.
+A child may bootstrap from accepted parent authority; it does not need an unrelated root founder.
 
 ## Domain-specific projects
 
-Projects created from this template must add their own safety, privacy, release, data-integrity, hardware, legal, and technical invariants. This template does not override them.
+Projects add their own safety, privacy, release, data-integrity, hardware, legal, and technical invariants. This template does not override them.
