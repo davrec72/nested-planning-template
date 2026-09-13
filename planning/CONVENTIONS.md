@@ -292,7 +292,7 @@ An accepted plan may explicitly adopt the adjunct `qualified-reference-v1` contr
 
 Use these class definitions unless the grammar itself is intentionally versioned:
 
-```mermaid
+```text
 classDef ROLE fill:whitesmoke,stroke:slategray,stroke-width:15px,color:black,font-weight:600,font-size:16px,rx:8,ry:8;
 classDef GATE fill:aliceblue,stroke:deepskyblue,stroke-width:1.5px,color:navy,font-weight:700,font-size:14px,rx:12,ry:12;
 classDef DECISION fill:lightyellow,stroke:darkorange,stroke-width:1.5px,color:darkgoldenrod,font-weight:700,font-size:14px,rx:12,ry:12;
