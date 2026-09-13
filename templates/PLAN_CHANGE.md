@@ -38,6 +38,22 @@ authority_source:
 
 Do not use newest branch/ref content or candidate governance as accepted state.
 
+## Dependency conformance
+
+Apply `planning/SATISFIABILITY.md` to the exact candidate and affected dependency/consumer closure. Distinguish candidate feasibility from actual current dispatch readiness; hypothetical future acceptance, projection or Decision selection is not an open prerequisite.
+
+```text
+checked_plan_refs_and_publication_events:
+checked_candidate_and_affected_scope:
+operative_decision_results_and_gate_predicates:
+actual_satisfaction_evidence_and_hypothetical_assumptions:
+ordered_witness_or_unavoidable_cycle_and_other_blockers:
+required_deferred_scopes_and_next_action_readiness:
+conformance_evidence_and_limits:
+```
+
+Reject self-dependencies and unavoidable unmet cycles; evaluate explicit Gate sufficient-input sets, retain closed Decision guards, and exclude authority/assignment/preferences from cycle analysis. Recheck relevant state/selection changes. Deferred/blocked scope is not dispatchable, and its active-work consequences retain the normal manifest/fence/receipt requirements.
+
 ## Candidate and approval
 
 ```text

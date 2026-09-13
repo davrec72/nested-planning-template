@@ -65,6 +65,12 @@ For ordinary nodes, multiple hard incoming edges mean **AND**.
 
 Any OR, N-of-M, threshold, or other non-AND condition requires an explicit GATE.
 
+### Execution satisfiability
+
+Before treating a scope as dispatchable, apply `SATISFIABILITY.md`: reject hard-prerequisite self-dependencies and unavoidable cycles among unmet prerequisites. Use explicit Gate predicates and the operative Decision selection; exclude assignment, `decides`, authority and dotted preference edges from dependency analysis. A visual cycle with a sufficient independent OR/threshold input can be feasible.
+
+Keep a finite dependency-feasibility witness separate from actual current readiness. Hypothetical completion/acceptance/publication never opens a prerequisite. Record the conformance result in plan-change evidence and current dispatch validation; legitimate rework uses a new accepted iteration/replan or explicit lifecycle transition with retained history.
+
 ### Scheduling preference
 
 ```text

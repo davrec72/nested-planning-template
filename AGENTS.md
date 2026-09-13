@@ -46,6 +46,7 @@ Resolve from accepted records:
 - declared grammar;
 - for Role authority: acting Role and its own current holder binding; for temporary execution: exact bounded authorization, authorizing Role/current binding, and executor identity under `planning/EXECUTION.md`;
 - typed target and its own prerequisites/authority under `planning/EXECUTION.md`;
+- before dependent dispatch/resumption: execution-satisfiability conformance under `planning/SATISFIABILITY.md`, with self-dependencies/unavoidable unmet cycles rejected and actual current readiness kept separate from hypothetical feasibility;
 - authority source;
 - exact authority revisions separately for external Role/source references; do not confuse a subject contract's PlanRef with an external accepting/delegating Role's PlanRef;
 - when accepting a Milestone: exact `contract_plan_ref`, accepting Role, attributable `issued_by_holder`, exact current issuance-time `authority_state_ref`/holder binding, authority source, and durable issuance/evidence records under `planning/CONVENTIONS.md`;
@@ -65,6 +66,7 @@ Read together as applicable:
 
 - `planning/PLAN.md` — roadmap.
 - `planning/CONVENTIONS.md` — node/edge grammar.
+- `planning/SATISFIABILITY.md` — bounded dependency conformance, Gate/Decision-aware witnesses, and dispatch readiness.
 - `planning/NODE_CONTRACTS.md` — explicitly adopted Decision results and DATA resolutions, current indices, replacement/withdrawal and migration.
 - `planning/NESTING.md` — recursive delegation.
 - `planning/REFERENCES.md` — cross-plan reference and parent revision roles.
