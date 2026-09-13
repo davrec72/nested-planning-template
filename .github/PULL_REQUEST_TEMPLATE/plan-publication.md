@@ -52,10 +52,15 @@ transition_action_record_id:
 transition_action_approval_event:
 execution_inventory_revision_or_snapshot:
 transition_action_inventory_validation_evidence:
+publication_fence_id:
+publication_fence_scope:
+publication_fence_baseline:
+publication_fence_acquisition_evidence:
+publication_fence_held_through_commit_evidence:
 legacy_reconciled_through_event_id:
 ```
 
-Approval binds candidate plus exact manifest, or separate predecessor-valid approval binds the manifest. Every adopted bootstrap/normal/recovery publication has one, including checked empty impact; affected `continue` is explicit. No own carrier SHA belongs in the manifest. It and its reconstruction inputs are included in the carrier below and retained under the existing carrier contract. Complete serialization or immediate inventory revalidation before ref movement; changed affected state requires rebuild/reapproval.
+Approval binds candidate plus exact manifest, or separate predecessor-valid approval binds the manifest. Every adopted bootstrap/normal/recovery publication has one, including checked empty impact; affected `continue` is explicit. No own carrier SHA belongs in the manifest. It and its reconstruction inputs are included in the carrier below and retained under the existing carrier contract. After approval, conditionally acquire the named durable fence against the exact analyzed baseline through the same serialized inventory/dispatch mechanism before ref movement. Changed baseline requires rebuild/reapproval. Block affected obligation-creating/broadening mutations through valid journal commit, including no-impact transitions with adopted inventory; a plain reread is insufficient. Use section 9's explicit bootstrap/legacy basis where applicable.
 
 ```text
 transition_kind: bootstrap | normal | recovery
@@ -112,6 +117,8 @@ The event must satisfy `templates/PUBLICATION_EVENT.md` and be durably committed
 
 - [ ] Candidate approval binds the exact `candidate_plan_ref` under already-valid governance.
 - [ ] An applicable manifest has predecessor-valid approval binding its exact blob/record ID and complete serialized inventory analysis; no-impact and legacy baseline claims are evidenced.
+- [ ] Manifest ID/scope/baseline match the durable conditional fence acquisition and held-through-valid-commit evidence; every affected dispatch/mutation path uses the same serialization.
+- [ ] Abort/recovery/release disposition is durable under section 9; no timeout or holder loss clears a fence.
 - [ ] The exact candidate is durably retained and cold-fetchable independently of ordinary branches.
 - [ ] Bootstrap trust configuration includes publication ref, journal, PlanRef-retention, and carrier-evidence-retention contracts.
 - [ ] Transition validation uses predecessor accepted governance; candidate governance does not validate itself.
@@ -132,6 +139,8 @@ The event must satisfy `templates/PUBLICATION_EVENT.md` and be durably committed
 ## After successful journal commit
 
 Only after the trusted event commits does the event's `plan_ref` become current accepted planning state.
+
+Normal fence release occurs durably after valid commit; subsequent dispatch validates successor current state and outstanding obligations. Commit success with release failure keeps the scope blocked until successor verification/release. Before-ref failure requires verified abort before release; post-ref retention/journal failure keeps the fence through explicit recovery or durable abort/suffix reconciliation before predecessor release. Later publication after release needs fresh baseline/manifest/approval/fence. See `planning/PUBLICATION_TRANSITIONS.md` section 9.
 
 Then Foreman may apply the transition-bound semantic delta. Candidate merge/staging, ref movement alone, or message arrival is not sufficient.
 

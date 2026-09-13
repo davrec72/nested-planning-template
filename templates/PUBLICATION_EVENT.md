@@ -42,10 +42,17 @@ transition_action_contract: transition-action-v1
 transition_action_path: <configured path in exact successor carrier tree>
 transition_action_blob_id: <exact Git blob identity at that path>
 transition_action_record_id: <manifest record ID>
-transition_action_inventory_validation_evidence: <serialized baseline/final revalidation evidence bound to this manifest>
+transition_action_inventory_validation_evidence: <exact analyzed baseline/obligation set and fence proof bound to this manifest>
+publication_fence_id: <preallocated stable ID or none only under the permitted bootstrap exception>
+publication_fence_scope: <exact protected coordination domain/scope or explicit bootstrap no-active basis>
+publication_fence_baseline: <same exact analyzed inventory revision/snapshot as the manifest; or permitted none>
+publication_fence_acquisition_evidence: <durable conditional acquisition against that baseline; or permitted bootstrap basis>
+publication_fence_held_through_commit_evidence: <durable cold-verifiable continuity through this valid journal commit; or permitted bootstrap basis>
 ```
 
 Validate these against the retained carrier and exact approved manifest under `planning/PUBLICATION_TRANSITIONS.md` section 9. Every adopted bootstrap/normal/recovery planning event includes them, even for explicit no impact. Pre-adoption historical events retain their original requirements; do not invent bindings for them.
+
+Acquisition/continuity proof comes from the same configured serialized inventory/dispatch mechanism under existing trust rules, not a last-second reread. The event binds the preallocated fence identity and actual durable evidence; it does not require post-commit evidence inside the approved manifest or its own event hash. Normal release follows valid commit. Crash, failed retention/journal or failed release follows section 9's durable recovery rules; a lease/timeout cannot erase a fence.
 
 - The journal itself is append-only/tamper-evident under the trust basis fixed at bootstrap or an authorized later migration.
 - A cold reader can enumerate committed events in order and identify the high-water event.

@@ -117,7 +117,7 @@ prior_plan_ref
 
 Validate that both the retained semantic snapshot for `prior_plan_ref` and the retained carrier evidence for `accepted_predecessor_commit` are cold-fetchable.
 
-When `transition-action-v1` applies, also resolve the serialized execution inventory and retain the exact impact-analysis baseline. Hold the configured mechanism through publication or perform the required immediate pre-publication revision revalidation; changed affected state requires rebuilding/reapproving the manifest and carrier.
+When `transition-action-v1` applies, also resolve the serialized execution inventory and retain the exact impact-analysis baseline/obligation set. Prepare the preallocated fence ID and exact scope/domain for approval. Later conditional acquisition must match that baseline and exclude affected obligation-creating mutations through valid journal commit; a reread is insufficient. Changed baseline requires rebuilding/reapproving the manifest and carrier under section 9.
 
 ### 2. Prepare the semantic candidate
 
@@ -129,7 +129,7 @@ candidate_plan_ref=<exact commit SHA>
 
 The candidate is not current merely because it exists or merges.
 
-For `transition-action-v1`, now prepare the exact carrier-resident manifest binding this candidate, preallocated event/publication IDs, inventory baseline and explicit affected-attempt obligations (or checked empty impact). Preallocate an approval-event ID if needed; the manifest contains neither its own blob hash nor its future carrier SHA.
+For `transition-action-v1`, now prepare the exact carrier-resident manifest binding this candidate, preallocated event/publication/fence IDs, exact inventory baseline/obligation set, fence scope/domain and explicit affected-attempt obligations (or checked empty impact). Preallocate an approval-event ID if needed; the manifest contains neither its own blob hash nor its future carrier SHA. Fence scope covers potential affected attempts as well as those already listed.
 
 ### 3. Approve the exact candidate
 
@@ -162,7 +162,7 @@ invalid_suffix_tip: none
 
 Prepare the exact successor carrier and advance the configured publication ref non-force/conditionally from the exact actual incumbent accepted carrier to that successor carrier.
 
-For `transition-action-v1`, the carrier contains CURRENT plus the exact approved manifest and reconstruction inputs. Complete/retain the configured inventory serialization or immediate revision revalidation before ref movement; a changed affected baseline requires rebuild/reapproval before retrying publication.
+For `transition-action-v1`, the carrier contains CURRENT plus the exact approved manifest and reconstruction inputs. After approval and before ref movement, conditionally acquire the preallocated durable publication/dispatch fence against the exact analyzed baseline in the same mechanism as inventory/dispatch claims. A changed baseline requires rebuild/reapproval. Hold through valid trusted journal commit; every affected obligation-creating/broadening dispatch/start/resume/rebinding/revision/attempt mutation checks the current fence through the same serialization and blocks while held. A plain reread is insufficient. Follow `PUBLICATION_TRANSITIONS.md` section 9 for scope, permitted observations and durable proof.
 
 A stale sibling must fail rather than win by timestamp or merge order.
 
@@ -182,7 +182,7 @@ Durably append the exact transition event to the configured trusted journal, inc
 - PlanRef snapshot locator/evidence;
 - carrier evidence locator/evidence;
 - accepted predecessor identities and evidence linkage.
-- when `transition-action-v1` applies, the exact manifest contract/path/blob/record ID and inventory-validation evidence required by `PUBLICATION_TRANSITIONS.md`.
+- when `transition-action-v1` applies, the exact manifest contract/path/blob/record ID, analyzed baseline and fence ID/scope/acquisition/held-through-commit evidence required by `PUBLICATION_TRANSITIONS.md`.
 
 The transition becomes accepted only when that event is committed. If the ref moved but no conforming journal event committed, the new carrier is an uncommitted suffix and ordinary execution remains governed by the latest valid journal event pending recovery.
 
@@ -191,6 +191,8 @@ The transition becomes accepted only when that event is committed. If the ref mo
 Only after the journal event commits does the named `plan_ref` become current accepted planning state. Foreman may then apply the transition-bound semantic delta.
 
 For `transition-action-v1`, Foreman reconstructs all missing request/receipt/check obligations from the exact retained manifest even if the initial wake is lost, and only then advances its publication-reconciliation marker. A valid explicit empty manifest creates no receipts; an affected `continue` is not empty.
+
+Normal fence release occurs durably only after the valid journal commit; subsequent dispatch validates newly accepted state and outstanding transition obligations. If release fails, keep execution conservatively blocked until a successor verifies that exact event and releases it. The existing journal is still the sole accepted-publication/currentness boundary.
 
 ## Recovery from an invalid or uncommitted tip
 
@@ -233,6 +235,8 @@ Cold reconstruction treats the quarantined suffix as historical but non-accepted
 
 An adopted recovery publication also carries its own approved transition-action manifest under the last accepted predecessor authority, even if it republishes the same PlanRef. Preserve earlier accepted manifests with their retained carriers. A manifest in an uncommitted suffix is not accepted action authority; carrier/manifest-retention or journal failure follows the same recovery rules above.
 
+Publication fences survive these failures. Before-ref failure permits release only after verified durable abort. After ref movement, keep the fence held through explicitly authorized recovery, or durably abort/reconcile/classify the uncommitted suffix before releasing to predecessor-governed execution. Any later publication after release requires a fresh baseline/manifest/approval/fence. Crash/succession discovers active fences in durable inventory; timeout/lease expiry is not a safe release. Section 9 defines the required proof and continuous coverage during recovery.
+
 If the live ref is merely behind the journal high-water mark and can be restored by a verified non-force movement to the already-accepted carrier, record that infrastructure repair in the journal; do not create a fictional new planning acceptance.
 
 ## Root-project bootstrap
@@ -269,6 +273,8 @@ Bootstrap sequence:
 Any continuing founder authority must appear as an ordinary Role/binding in the first accepted state.
 
 When adopting `transition-action-v1` at bootstrap, prepare the empty/baseline manifest after the exact first candidate and before approval. Founding Authority approves both exact objects and configuration; include the manifest in the first carrier, retain it with that carrier, and bind it in the first journal event. Predecessor/legacy fields are `none`. Do not infer no active execution without an explicit basis.
+
+Only a first root/child publication with no pre-existing dispatch-capable execution system may omit the inventory fence with that explicit basis. An adopted inventory requires fencing even for no-impact publication. Legacy active/still-dispatchable execution requires predecessor-valid exclusion: stop/reconcile it and exclude further dispatch, or establish a bounded one-time fence under prior authority. Candidate rules cannot authorize their own adoption fence; follow section 9 rather than fabricating historical fences.
 
 ## Child bootstrap
 

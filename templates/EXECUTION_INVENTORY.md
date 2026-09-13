@@ -19,7 +19,30 @@ recovery_escalation_route: <configured authority and fallback route>
 
 Do not advance the reconciliation marker merely because a message was sent. Per-attempt application remains separate below. Use the configured serialization mechanism for claims and updates; retain uncertain mutation outcomes for reconciliation.
 
-For `transition-action-v1`, retain per-event reconciliation evidence: exact journal-bound carrier manifest path/blob/record ID, validated inventory baseline/approval, every manifest request/recipient obligation and logical check, partial reconstruction progress and actual verification evidence. Advance only after the complete set is indexed/reconciled with required checks verified. Preserve a validated explicit empty manifest as the no-receipt reason; affected `continue` entries are not empty. Follow `planning/EXECUTION.md` for replay and the predecessor-reconciled legacy adoption baseline.
+For `transition-action-v1`, retain per-event reconciliation evidence: exact journal-bound carrier manifest path/blob/record ID, validated inventory baseline/approval and fence acquisition/continuity proof, every manifest request/recipient obligation and logical check, partial reconstruction progress and actual verification evidence. Advance only after the complete set is indexed/reconciled with required checks verified. Preserve a validated explicit empty manifest and its protected baseline as the no-receipt reason; affected `continue` entries are not empty. Follow `planning/EXECUTION.md` for replay and the predecessor-reconciled legacy adoption baseline.
+
+## Durable publication fences
+
+Index every active/uncertain fence and retain its history in the **same serialized mechanism** as inventory/dispatch claims. Succession must discover these without knowing the prior publisher/context. Each record retains:
+
+```text
+publication_fence_id:
+publication_fence_scope_and_coordination_domain:
+analyzed_inventory_revision_or_snapshot_and_exact_obligation_set:
+candidate_manifest_blob_record_and_publication_event_identities:
+accepted_predecessor_and_configured_mechanism_authority:
+conditional_acquisition_outcome_and_evidence:
+current_fence_state: acquisition-unknown | acquisition-failed | held | release-unknown | released
+held_through_commit_evidence_and_allowed_nonbroadening_mutation_history:
+ref_update_outcome_and_retention_journal_state:
+abort_or_recovery_authority_and_exact_transition_associations:
+release_basis_outcome_and_evidence:
+recovery_owner_route_and_next_check:
+```
+
+Acquisition is conditional against the manifest's exact approved baseline; mismatch stops publication and requires rebuild/reapproval. All affected dispatch/start/resume/new revisions/attempts/executor or recipient rebindings and other obligation-creating/broadening mutations check this current fence within the same serialization. A pre-read, old claim or scheduler wake cannot bypass it. Observations/obligation-reducing evidence may be recorded only if they cannot broaden obligations; retain that classification.
+
+Hold through valid trusted journal commit. Record normal release afterward and validate successor state for new dispatch. Pre-ref abort needs verified non-publication before release. Post-ref retention/journal failure keeps the fence durable until explicit recovery while held, or durable abort and suffix reconciliation before predecessor release; any later publication after release needs fresh baseline/manifest/approval/fence. Successful journal commit plus failed release remains conservatively blocked until a successor validates and releases. Unknown outcomes, timeout/lease expiry and holder loss cannot erase fences. See `planning/PUBLICATION_TRANSITIONS.md` section 9; this index is neither a second currentness journal nor proof that in-flight work stopped.
 
 ## Package index
 
@@ -76,4 +99,4 @@ Track context reachability and schedule existence separately. Archive, unarchive
 
 ## Succession/reconciliation log
 
-Record the recovering Foreman binding, inventory/claim revision, current publication evidence, packages queried, schedules verified/recreated, results recovered, unresolved attempts/receipts, and next real checks. Follow the ordered procedure in `planning/EXECUTION.md` before resuming coordination or authorizing any replacement dispatch.
+Record the recovering Foreman binding, inventory/claim revision, current publication evidence, active/uncertain fence reconstruction and disposition, packages queried, schedules verified/recreated, results recovered, unresolved attempts/receipts, and next real checks. Follow the ordered procedure in `planning/EXECUTION.md` before resuming coordination or authorizing any replacement dispatch.

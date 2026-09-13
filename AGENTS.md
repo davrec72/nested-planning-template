@@ -38,7 +38,7 @@ Resolve from accepted records:
 - latest valid `publication_event_id`, `publication_commit`, `publication_id`, and current `plan_ref`;
 - exact retained snapshot locator/evidence for that PlanRef;
 - exact retained carrier evidence locator/evidence for the accepted publication carrier and any recovery suffix evidence required by its event;
-- when `transition-action-v1` applies: exact journal-bound carrier manifest, predecessor-valid approval and serialized inventory-impact baseline under `planning/PUBLICATION_TRANSITIONS.md` section 9;
+- when `transition-action-v1` applies: exact journal-bound carrier manifest, predecessor-valid approval, protected inventory-impact baseline and durable publication/dispatch fence evidence under `planning/PUBLICATION_TRANSITIONS.md` section 9;
 - declared grammar;
 - for Role authority: acting Role and its own current holder binding; for temporary execution: exact bounded authorization, authorizing Role/current binding, and executor identity under `planning/EXECUTION.md`;
 - typed target and its own prerequisites/authority under `planning/EXECUTION.md`;
@@ -81,7 +81,7 @@ Use only the accepted grammar. State semantic delta, affected milestones/Roles, 
 
 A semantic candidate does not become current merely because it exists or merges. Approval binds the exact candidate; the candidate is durably retained; the publication ref moves under accepted governance; the exact carrier evidence is durably retained; and a trusted journal event commits that exact transition before operational propagation begins.
 
-For adopted `transition-action-v1`, prepare the complete immutable transition-action manifest before approval; predecessor-valid approval binds its exact blob/record ID as well as the candidate. Put it in the successor carrier and bind it in the trusted journal, using existing carrier retention. Every governed publication has explicit impact/no-impact evidence. Follow the canonical inventory serialization/revalidation, legacy adoption and ordering requirements; a candidate cannot authorize its own manifest.
+For adopted `transition-action-v1`, prepare the complete immutable transition-action manifest before approval; predecessor-valid approval binds its exact blob/record ID as well as the candidate. Put it in the successor carrier and bind it in the trusted journal, using existing carrier retention. Every governed publication has explicit impact/no-impact evidence. Conditionally acquire its preallocated durable fence against the exact analyzed baseline in the same mechanism as dispatch claims; changed baseline requires rebuild/reapproval. Hold through valid journal commit and durably release afterward. Follow the canonical failure/recovery, no-impact/bootstrap and legacy rules; neither a reread nor timeout bypasses the fence, and a candidate cannot authorize its own manifest/fence.
 
 ## Foreman
 
@@ -97,7 +97,7 @@ Every substantive package must bind project/plan identity, exact accepted PlanRe
 
 Temporary executors validate their own bounded authorization and its authorizer's current accepted authority, not a fictional claim to hold the serving Role. Assignment grants no acceptance, reserved Decision, Role-binding, or re-delegation authority. Rebinding/revocation and bounded execution checkpoints follow `planning/EXECUTION.md`. Completion/evidence does not itself accept a Milestone or decide a Decision.
 
-Before dispatch, durably claim/index the exact attempt and verify required follow-ups. On succession or uncertain delivery/execution, reconcile the existing attempt, routes, results, receipts, and actual scheduler state before retrying/replacing it. Missing state never permits speculative redispatch.
+Before dispatch/start/resume or any obligation-creating/broadening coordination mutation, check current publication fences through the same serialized inventory mechanism and block within held scope. Durably claim/index the exact attempt and verify required follow-ups. On succession or uncertain delivery/execution, reconcile the existing attempt, routes, results, receipts, and actual scheduler state before retrying/replacing it. Missing state never permits speculative redispatch.
 
 ## Publication notifications
 

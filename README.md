@@ -183,21 +183,22 @@ A child repository may instead bootstrap from accepted parent authority covering
 
 ```text
 exact semantic candidate exists
-    -> when transition-action-v1 applies, prepare exact carrier manifest and inventory impact baseline
+    -> when transition-action-v1 applies, prepare exact carrier manifest, inventory baseline and fence ID/scope
     -> valid pre-existing authority approves that exact SHA
        and explicitly binds the exact applicable manifest identity
     -> exact candidate is durably retained for cold fetch
     -> successor publication carrier is prepared with CURRENT and the applicable manifest
-    -> complete configured inventory serialization or immediate revision revalidation
+    -> conditionally acquire durable publication/dispatch fence against that exact analyzed baseline
     -> configured publication ref conditionally/non-force advances
     -> exact carrier and required recovery evidence are durably retained
-    -> trusted append-only/tamper-evident journal commits the exact ref-update event
+    -> while fenced, trusted journal commits the exact ref-update event and fence evidence
     -> only then is candidate the current accepted PlanRef
+    -> durably release fence; later dispatch validates the newly accepted state
 ```
 
 ### Why both Git carriers and a journal?
 
-`transition-action-v1` is an explicitly adopted adjunct for reconstructible execution impact. Every governed planning carrier contains an immutable manifest, including a checked empty one. It binds the candidate/predecessor, exact inventory baseline and explicit per-attempt actions/recipients/routes/deadline/recovery rules. The journal binds its carrier path/blob/record ID; existing carrier retention preserves it. Changed affected inventory state requires rebuilding/reapproving before ref movement. No second journal, new currentness protocol or retention trust root is introduced. See `templates/TRANSITION_ACTION.md` and `planning/PUBLICATION_TRANSITIONS.md` section 9 for approval, legacy adoption and cold validation.
+`transition-action-v1` is an explicitly adopted adjunct for reconstructible execution impact. Every governed planning carrier contains an immutable manifest, including a checked empty one. It binds the candidate/predecessor, exact inventory baseline/obligation set, preallocated fence ID/scope and explicit per-attempt actions/recipients/routes/deadline/recovery rules. The journal binds its carrier path/blob/record ID and durable fence acquisition/held-through-commit evidence; existing retention preserves them. The same serialized inventory/dispatch mechanism blocks affected obligation-creating mutations while fenced, including potential new attempts. Changed baseline requires rebuilding/reapproving before ref movement; a reread alone is insufficient. No-impact fencing, verified abort/recovery/release and narrow bootstrap/legacy rules follow section 9; timeout cannot erase a fence. No second journal, new currentness protocol or retention trust root is introduced. See `templates/TRANSITION_ACTION.md` and `planning/PUBLICATION_TRANSITIONS.md` section 9 for approval, legacy adoption and cold validation.
 
 Git ancestry proves content relationships, but a fresh clone cannot prove that a mutable ref was never previously advanced and later reset. NPT therefore requires a bootstrap-configured trusted publication journal that preserves committed publication events independently of the mutable ref.
 

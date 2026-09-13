@@ -74,6 +74,7 @@ Read the execution inventory at the locator configured in the accepted `planning
 package IDs, immutable revisions, exact authorizations and attempts (including uncertain dispatch)
 executors/return routes and last observed execution/effects
 current serialized coordination/dispatch claim
+active/uncertain publication fences, exact scope/baseline/transition and acquisition/release history
 last reconciled publication event and outstanding material receipts
 last applied publication event per relevant scope/package
 scheduled follow-ups, concrete owners/contexts and verified liveness evidence
@@ -120,7 +121,7 @@ Resolve `qualified-reference-v1` only after explicit accepted adoption or an acc
 
 Temporary executors validate the exact package authorization, authorizing Role/current holder binding, permitted actions/tools, identity, validity and reserved decisions. They do not become Role holders or acquire acceptance, reserved Decision, Role-binding, or re-delegation authority. You may route an existing grant, but your Foreman binding does not issue substantive permission.
 
-Serialize and persist a claim with the exact attempt/route before sending. Schedule and verify any asynchronous check before dispatch. Record delivery/start evidence separately; a send of unknown outcome must be reconciled. Repeated delivery of one attempt is idempotent, not a new assignment. Follow `planning/EXECUTION.md` before any replacement executor or package revision.
+Check current durable publication fences and persist the exact attempt/route claim through the same serialized inventory mechanism. Block every affected obligation-creating/broadening dispatch/start/resume, new revision/attempt, executor/recipient rebind or mutation while held; a stale check or old claim is insufficient. Pure observations/reductions may proceed only when they cannot broaden obligations. The fence covers potential affected attempts, not just listed workers. Schedule and verify any asynchronous check before dispatch. Record delivery/start evidence separately; a send of unknown outcome must be reconciled. Repeated delivery of one attempt is idempotent, not a new assignment. Follow `planning/EXECUTION.md` before any replacement executor or package revision.
 
 ## Scheduling and durable recovery
 
@@ -136,7 +137,7 @@ verified-live | recreated | completed | lost/cancelled
 
 An unverifiable task remains `unknown`, an unresolved recovery obligation. Do not trust an old task ID alone, assume archived/unarchived holders preserve schedules, or infer an ancestor's retirement cancels descendants. Check context reachability and task liveness separately.
 
-At startup acquire the current serialized coordination claim, reconstruct all outstanding attempts/results/receipts/checks, and query actual executor/scheduler state before dispatch. Resume coordination of the same attempt when valid. Replace it only with evidence of non-start, termination, or effective fencing and a newly authorized binding. A result can be recovered without reaching the old worker; no result cannot prove it never ran. Use the full succession procedure in `planning/EXECUTION.md`.
+At startup acquire the current serialized coordination claim, discover active/uncertain publication fences and apply the durable recovery/release rules in `planning/PUBLICATION_TRANSITIONS.md` section 9. Reconstruct all outstanding attempts/results/receipts/checks, and query actual executor/scheduler state before dispatch. A timeout/lease expiry or vanished publisher does not clear a fence; journal success with failed release requires exact event validation before successor release. Resume coordination of the same attempt when valid. Replace it only with evidence of non-start, termination, or effective fencing and a newly authorized binding. A result can be recovered without reaching the old worker; no result cannot prove it never ran. Use the full succession procedure in `planning/EXECUTION.md`.
 
 ## Plan publication and propagation
 
@@ -172,7 +173,7 @@ A notification is a wakeup, not authority or publication evidence.
 
 Before a material wake, index a durable per-attempt request and establish verified acknowledgement/application checks under `planning/EXECUTION.md`. Track recorded, sent/wake attempted, delivered, acknowledged, applied and closed separately. Acknowledgement does not prove stop application; record in-flight work and exact cessation evidence. A rejected send or bare child completion is not delivery.
 
-Maintain a verified scheduled publication reconciliation check so a lost publication-to-Foreman wake becomes inventoried work. For each discovered accepted event under adopted `transition-action-v1`, fetch the exact journal-bound path/blob/record from its retained carrier, validate predecessor/candidate identities, approval/action authority and inventory baseline, then reconstruct every missing request/recipient receipt/check under its stable IDs. Preserve explicit `continue` versus checked empty impact; notification prose and current worker state are not replacement payloads. Follow `planning/EXECUTION.md` and `planning/PUBLICATION_TRANSITIONS.md` section 9 for legacy adoption, partial replay and failed evidence/checks. Advance `last_reconciled_publication_event` only after all obligations are durably indexed/reconciled and required checks verified; application remains separate.
+Maintain a verified scheduled publication reconciliation check so a lost publication-to-Foreman wake becomes inventoried work. For each discovered accepted event under adopted `transition-action-v1`, fetch the exact journal-bound path/blob/record from its retained carrier, validate predecessor/candidate identities, approval/action authority, inventory baseline and matching fence acquisition/held-through-commit evidence, then reconstruct every missing request/recipient receipt/check under its stable IDs. Preserve explicit `continue` versus checked empty impact; notification prose and current worker state are not replacement payloads. Follow `planning/EXECUTION.md` and `planning/PUBLICATION_TRANSITIONS.md` section 9 for legacy adoption, partial replay and failed evidence/checks. Advance `last_reconciled_publication_event` only after all obligations are durably indexed/reconciled and required checks verified; application remains separate.
 
 Recover lost executor wakes through timed retries, queries, fallback and escalation. Until cessation is proved, report **not confirmed stopped** and hold affected new dispatch/resumption/final handoffs. Continuous executors revalidate at bounded checkpoints and stop further segments when validation fails; stronger lease/fencing guarantees require explicit project policy.
 

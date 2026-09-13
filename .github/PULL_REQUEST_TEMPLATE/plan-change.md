@@ -83,7 +83,9 @@ candidate_plan_ref:
 transition_action_contract: none | transition-action-v1
 transition_action_path_blob_and_record_id:
 execution_inventory_revision_or_snapshot:
-inventory_serialization_or_final_revalidation_evidence:
+publication_fence_id:
+publication_fence_scope:
+publication_fence_acquisition_and_held_through_commit_evidence:
 legacy_reconciled_through_event_id:
 transition_action_approval_event:
 approval_event:
@@ -102,7 +104,9 @@ publication_journal_event_id:
 publication_required: yes
 ```
 
-For the adjunct, predecessor-valid approval binds the exact candidate and manifest identity. After candidate retention, create CURRENT plus manifest in the carrier; complete the inventory check before ref movement; retain the carrier/manifest before journal commit. The trusted event binds the manifest path/blob/record ID. Missing retention or journal commit leaves an advanced ref uncommitted under the existing recovery rules.
+For the adjunct, predecessor-valid approval binds the exact candidate and manifest, including analyzed baseline and preallocated fence ID/scope. After candidate retention/carrier creation, conditionally acquire that durable fence through the same serialized inventory/dispatch mechanism before ref movement; changed baseline requires rebuild/reapproval. Block affected obligation-creating/broadening mutations through carrier retention and valid journal commit. The trusted event binds exact manifest and fence ID/scope/baseline/acquisition/continuity evidence. Normal release follows commit; a plain reread cannot substitute.
+
+Follow [section 9](../../planning/PUBLICATION_TRANSITIONS.md#92-ordering-and-inventory-completeness) for verified pre-ref abort, held-fence recovery or abort/suffix reconciliation after ref movement, and failed release after commit. Timeout cannot erase a fence. A later publication after abort/release needs fresh baseline/manifest/approval/fence. No-impact still fences an adopted inventory; bootstrap/legacy exceptions require the explicit predecessor-valid basis.
 
 ## Post-publication execution evidence
 
@@ -134,7 +138,8 @@ Track recorded, sent/wake attempted, delivered, acknowledged, applied and closed
 - [ ] Material-action deadlines and recovery/check obligations are complete before publication.
 - [ ] Candidate approval binds exact candidate SHA.
 - [ ] When the adjunct applies, predecessor-valid approval also binds the exact manifest blob/record ID, with complete inventory analysis and explicit affected `continue` or checked no impact.
-- [ ] The serialized inventory baseline or immediate pre-publication revalidation covers affected attempts; changed affected state causes rebuild/reapproval before ref movement.
+- [ ] Conditionally acquired durable fence matches the approved baseline/ID/scope; changed baseline causes rebuild/reapproval. Same-mechanism dispatch/mutation guards exclude new/broadened obligations through valid journal commit.
+- [ ] Fence acquisition/continuity/release or explicit abort/recovery evidence is durable; no-impact/bootstrap/legacy handling follows section 9 and no timeout clears an ambiguous fence.
 - [ ] Exact candidate is durably retained and cold-fetchable independently of ordinary branches.
 - [ ] For normal publication, actual carrier parent equals the last accepted carrier.
 - [ ] For recovery, actual carrier parent and accepted predecessor are separately recorded; invalid suffix remains preserved/non-accepted.

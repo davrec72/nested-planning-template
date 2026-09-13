@@ -18,7 +18,9 @@ candidate_plan_ref: <exact candidate SHA; not this carrier>
 semantic_delta: <complete accepted planning change or exact retained content>
 execution_contract: none | <exact adopted execution contract/version and source>
 execution_inventory_revision_or_snapshot: none | <exact serialized inventory revision/snapshot identity>
-inventory_baseline_evidence: <exact snapshot/analysis and configured serialization or final-revalidation evidence>
+inventory_baseline_evidence: <exact analyzed snapshot/obligation set and predecessor-valid serialized mechanism>
+publication_fence_id: <preallocated stable ID; none only for the permitted no-execution bootstrap>
+publication_fence_scope: <exact coordination domain/plan/scope and all obligation-creating mutation entry points; or explicit bootstrap no-active basis>
 legacy_reconciled_through_event_id: none | <predecessor high-water at adoption>
 active_work_impact: none | explicit
 no_impact_basis: none | <checked inventory analysis or explicit no-active-execution basis>
@@ -29,9 +31,11 @@ transition_action_approval_event: <preallocated ID/locator of durable approval b
 
 For cross-plan objects use `qualified-reference-v1` after its accepted adoption; keep exact external authority revisions separate. The candidate's revision cannot authorize its own action manifest. Each action may cite its more specific predecessor-valid authority below.
 
-Retain the exact inventory baseline and analysis needed to check completeness, including known outstanding attempts/legacy obligations and why other entries are unaffected. These may be inline or exact content objects in the same retained carrier tree; name their path/blob identity when separate. Include the source inventory revision and serialization/revalidation basis. Merely naming a mutable inventory URL, old chat or worker's current state is insufficient. This uses the existing carrier retention contract, not a new external retention trust root.
+Retain the exact inventory baseline and analysis needed to check completeness, including known outstanding attempts/legacy obligations and why other entries are unaffected. These may be inline or exact content objects in the same retained carrier tree; name their path/blob identity when separate. Include the source inventory revision, exact obligation set and configured serialization/fence basis. Fence scope must cover potential affected attempts and all paths that could create/broaden obligations, not only listed workers. Merely naming a mutable inventory URL, old chat or worker's current state is insufficient. This uses the existing carrier retention contract, not a new external retention trust root.
 
-The final pre-ref-movement inventory validation evidence may be recorded by the existing trusted publication handoff/journal evidence when it occurs after carrier preparation; it must bind the same analyzed revision and manifest identity. It is not added to an already-approved manifest in place. If affected inventory state changed, rebuild and reapprove the manifest and carrier before moving the ref.
+After approval, conditionally acquire the durable named fence against the exact analyzed baseline using the same mechanism as dispatch/inventory claims, before ref movement. Changed baseline means stop/rebuild/reapprove. Hold through the valid trusted journal commit; all affected obligation-creating/broadening mutations check the current fence through that same serialization and block while held. Pure observations/reductions are permitted only when they cannot broaden obligations. A plain reread is not equivalent.
+
+Actual acquisition/held-through-commit evidence is bound by the existing trusted journal event to this ID/scope/baseline and exact manifest/candidate identities. It is not inserted into an already-approved manifest; preallocated IDs avoid approval/self-reference cycles. Success releases only after commit. Failure/uncertain ref movement or retention/journal failure preserves the durable fence until the explicit abort/recovery rules in `planning/PUBLICATION_TRANSITIONS.md` section 9 permit release; timeout is insufficient.
 
 ## Affected attempts
 
@@ -77,6 +81,6 @@ One receipt key remains `request_id` + obligated recipient identity/context + `w
 
 ## Explicit no impact and approval
 
-Every adopted bootstrap/normal/recovery planning publication carries a manifest. A checked no-impact transition uses `active_work_impact: none`, `affected_attempts: []`, and the exact inventory baseline/no-impact analysis. If no execution inventory is adopted, use `execution_contract: none`, inventory `none`, and an explicit no-active-execution basis. Unknown active work cannot be called none. An affected attempt deliberately grandfathered into the successor must be listed as `continue`, with its explicit recipient/action/recovery obligations.
+Every adopted bootstrap/normal/recovery planning publication carries a manifest. A checked no-impact transition uses `active_work_impact: none`, `affected_attempts: []`, and the exact protected inventory baseline/no-impact analysis. An adopted inventory still requires a fence for no impact. Only a first root/child publication with no pre-existing dispatch-capable execution system may use execution/inventory/fence `none` and an explicit no-active-execution basis. Legacy active/still-dispatchable work needs predecessor-valid exclusion under section 9; lack of an adopted inventory alone is not an exception. Unknown active work cannot be called none. An affected attempt deliberately grandfathered into the successor must be listed as `continue`, with its explicit recipient/action/recovery obligations.
 
 Finalize the manifest, compute its blob identity, then obtain predecessor-valid approval explicitly binding that identity, record ID and exact candidate. The manifest may refer to a preallocated approval-event ID; that event is issued afterward against the final blob, avoiding a content-hash cycle. The candidate approval can be reused only if it explicitly binds both exact objects. Otherwise obtain a separate valid manifest approval. Retain sufficient approval evidence with the carrier or trusted journal under the existing approval/publication trust rules; a PR/comment locator or unauthenticated copied claim alone is insufficient. A changed blob or candidate requires new applicable approval; an ID alone is not proof of approval.

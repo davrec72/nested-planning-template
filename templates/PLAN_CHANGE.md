@@ -52,7 +52,9 @@ transition_action_path:
 transition_action_record_id:
 transition_action_blob_id:
 execution_inventory_revision_or_snapshot:
-inventory_serialization_or_final_revalidation_evidence:
+publication_fence_id:
+publication_fence_scope:
+publication_fence_acquisition_and_held_through_commit_evidence:
 legacy_reconciled_through_event_id: none | <predecessor high-water for adoption>
 transition_action_approval_event:
 ```
@@ -107,7 +109,7 @@ continue | pause | redirect | supersede
 
 Identify exact package revisions/attempts from the configured execution inventory, affected typed targets, requested actions, recipient routes, and acknowledgement/application deadlines. Prepare recovery obligations under `planning/EXECUTION.md`; do not treat a missing worker as stopped.
 
-The adopted manifest retains this exact impact baseline and a complete action/recipient/deadline/recovery payload for every affected attempt, including explicit `continue`. A checked no-impact publication still carries `active_work_impact: none` and `affected_attempts: []` plus inventory evidence, or an explicit no-active-execution basis when no execution contract is adopted. Missing analysis is not no impact.
+The adopted manifest retains this exact impact baseline and a complete action/recipient/deadline/recovery payload for every affected attempt, including explicit `continue`. A checked no-impact publication still carries `active_work_impact: none` and `affected_attempts: []` plus a protected inventory baseline. Only first root/child publication with no pre-existing dispatch-capable system may use explicit no-active-execution evidence without a fence; legacy execution follows the predecessor-valid exclusion rules in section 9. Missing analysis is not no impact.
 
 Until trusted publication succeeds, operational work remains governed by the prior accepted PlanRef.
 
@@ -138,7 +140,9 @@ invalid_suffix_tip: none | <commit>
 
 For normal publication, actual carrier parent and accepted predecessor are the same. Recovery preserves an invalid/uncommitted actual suffix while using the last valid accepted predecessor for governance.
 
-After applicable approvals and candidate retention, create the carrier containing CURRENT and the exact approved manifest/inputs. Complete inventory serialization or immediate revision revalidation before the conditional ref update, retain the exact carrier including manifest, and only then commit the journal's manifest path/blob/record binding and inventory-validation evidence. A retention/journal failure leaves an advanced carrier uncommitted.
+After applicable approvals and candidate retention, create the carrier containing CURRENT and the exact approved manifest/inputs. Conditionally acquire its preallocated durable fence against the exact analyzed inventory baseline using the same serialized mechanism as dispatch claims; mismatch requires rebuild/reapproval. Fence all affected obligation-creating/broadening mutations through ref movement, carrier/manifest retention and valid trusted journal commit. The event binds exact manifest and fence ID/scope/baseline/acquisition/continuity evidence; normal release follows commit. A plain reread is insufficient.
+
+Before-ref abort must be durably verified before predecessor release. After ref movement, retention/journal failure leaves an uncommitted suffix and durable fence: keep it held through explicit recovery, or durably abort/reconcile the suffix before release. Any later publication after release needs fresh baseline/manifest/approval/fence. If commit succeeds but release fails, a successor validates the event and releases; timeout alone never clears it. Follow `planning/PUBLICATION_TRANSITIONS.md` section 9, including observation, no-impact, bootstrap and legacy rules.
 
 ## Publication evidence
 

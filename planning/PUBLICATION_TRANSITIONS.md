@@ -142,7 +142,12 @@ transition_action_contract: transition-action-v1
 transition_action_path: <configured path in exact successor carrier tree>
 transition_action_blob_id: <exact Git blob identity at that path>
 transition_action_record_id: <immutable manifest record ID>
-transition_action_inventory_validation_evidence: <serialized baseline/final inventory check bound to this manifest>
+transition_action_inventory_validation_evidence: <exact analyzed inventory baseline/obligation set bound to this manifest and fence proof>
+publication_fence_id: <preallocated stable ID or none only under section 9.3 bootstrap exception>
+publication_fence_scope: <exact protected coordination domain/scope or explicit bootstrap no-active basis>
+publication_fence_baseline: <exact analyzed inventory revision/snapshot or none under that exception>
+publication_fence_acquisition_evidence: <durable conditional acquisition against that baseline or explicit permitted exception>
+publication_fence_held_through_commit_evidence: <cold-verifiable continuity through this valid journal commit or explicit permitted exception>
 ```
 
 These fields do not retroactively apply to pre-adoption events. Their validation and legacy boundary are defined in section 9.
@@ -258,7 +263,7 @@ An unsupported declared adjunct or incompatible path/schema blocks affected publ
 
 ### 9.1 Exact content and authority
 
-Every governed bootstrap, normal and recovery planning publication MUST contain an immutable manifest at that path in its successor carrier tree, including an explicit empty manifest when no active work is affected. `templates/TRANSITION_ACTION.md` defines the required schema: exact predecessor/candidate/event/publication identities, semantic delta, execution contract and exact inventory baseline, active-work analysis, explicit per-attempt dispositions/recipient obligations, stable request/check identities, routes, bounded deadline/recovery rules and predecessor-valid action authority/approval. `continue` is explicit affected work, not an omitted entry. `none` requires an analyzed inventory snapshot or an explicit no-active-execution basis when no execution contract is adopted.
+Every governed bootstrap, normal and recovery planning publication MUST contain an immutable manifest at that path in its successor carrier tree, including an explicit empty manifest when no active work is affected. `templates/TRANSITION_ACTION.md` defines the required schema: exact predecessor/candidate/event/publication identities, semantic delta, execution contract and exact inventory baseline/obligation set, preallocated publication fence ID and exact scope/domain, active-work analysis, explicit per-attempt dispositions/recipient obligations, stable request/check identities, routes, bounded deadline/recovery rules and predecessor-valid action authority/approval. `continue` is explicit affected work, not an omitted entry. `none` requires an analyzed protected inventory baseline, or the explicit no-active-execution bootstrap basis in section 9.3; absence of an adopted inventory alone is insufficient.
 
 All payload and inventory-analysis content needed to reconstruct/check these obligations MUST be inline or exact content objects in the same retained carrier tree. Retain the required manifest-approval evidence with that carrier or its trusted journal event so approval validation does not require a live PR/comment lookup; merely copying a claimed approval does not establish its validity. Existing accepted authority/PlanRef and approval evidence retain their existing trust rules. PR descriptions, comments and worker state are not reconstruction storage. Carrier retention preserves the manifest and its inputs for the journal lifetime, including displaced accepted carriers and divergent recovery; no new external retention trust root or second action journal is introduced.
 
@@ -269,30 +274,55 @@ The manifest MUST NOT contain its own carrier SHA or own blob hash. Preallocate 
 The portable order is:
 
 ```text
-resolve prior accepted state and serialized execution inventory
+resolve prior accepted state and serialized execution inventory/baseline obligation set
   -> prepare exact candidate
-  -> prepare exact transition-action manifest and impact baseline
+  -> prepare exact transition-action manifest, impact baseline and preallocated fence ID/scope
   -> obtain predecessor-valid approval(s) binding candidate and manifest
   -> retain candidate PlanRef
   -> create successor carrier containing CURRENT and manifest
+  -> conditionally acquire durable publication/dispatch fence against exact analyzed baseline
   -> conditionally/non-force advance publication ref
   -> retain exact carrier evidence, including manifest and reconstruction inputs
-  -> commit trusted journal event binding carrier and manifest path/blob/record ID
+  -> while fenced, commit trusted journal event binding carrier, manifest and fence evidence
   -> only then is the planning publication accepted/current
+  -> durably release fence; subsequent dispatch validates newly accepted state
 ```
 
-Before ref advancement, either hold/use the configured serialized execution/inventory mechanism so no affected attempt can appear outside the approved impact analysis, or revalidate the exact inventory revision immediately before publication. If affected state changed, stop publication, rebuild/reapprove the manifest and carrier, and repeat the final check. Retain evidence of the serialization or immediate revalidation, bound to the analyzed inventory revision and manifest identity, in the manifest and/or the journal's `transition_action_inventory_validation_evidence`. Do not append late evidence to an approved manifest in place. A changed baseline cannot be called no impact without analysis and applicable approval.
+After manifest approval and before ref movement, acquire the named **durable publication/dispatch fence** conditionally against the exact analyzed inventory baseline/obligation set, using the **same serialized coordination mechanism that protects inventory/dispatch claims**. If the baseline/affected set changed, acquisition fails and publication stops: rebuild/reapprove the manifest and carrier against the new baseline. A plain inventory reread, conditional Git ref update or timing promise does not close this race.
 
-The evidence must validate under the configured inventory mechanism and publication handoff, not merely assert a revision or promise that a claim will remain held. Preserve the actual final check/claim outcome with the journal-bound evidence when it can only be observed after manifest approval.
+The approved fence scope names the exact coordination domain, plan/scope and mutation entry points that could create affected execution obligations, including **potential new attempts**, not just the attempts already listed. All applicable dispatch/start/resume, new package revisions/attempts, executor/recipient rebindings and other obligation-creating/broadening mutations MUST check the current fence through that same serialization and block/fail while held. A stale pre-read or a previously prepared dispatch claim cannot bypass it. Unrelated work may proceed only when proved outside the protected domain; incomplete/ambiguous coverage blocks publication.
 
-The conditional ref update still uses the exact incumbent under sections 5/6; inventory validation does not replace publication serialization. If ref movement succeeds but required carrier/manifest retention or journal commit fails, the advanced carrier remains uncommitted suffix state. Existing accepted governance and PR24 recovery rules apply; its manifest is not an operative action source.
+Pure observations and obligation-reducing evidence, such as acknowledgement, completion/cessation evidence or a worker returning, may be recorded under the same mechanism only when they cannot create/broaden an execution obligation. Retain their classified effects. The approved manifest can remain conservative about work that stops after acquisition; it cannot omit newly created affected work. The fence excludes new coordination obligations; it does not itself prove that already-running effects ceased.
+
+Hold the fence through the **valid trusted journal commit**, including carrier/manifest retention. The event binds the exact ID/scope/baseline, acquisition evidence and durable proof of continuity through that commit. This proof must follow the configured coordination mechanism and existing publication trust contract, not a self-authored promise. It may bind a durable acquisition/guard record whose release conditions require this exact valid event (or verified abort below), with retained state/history sufficient for a cold reader to verify continuity. It does not require a post-commit proof to be inserted into the already-approved manifest or an event to contain its own hash. Preallocated IDs are locators; actual outcomes are later evidence. Normal release is durable and occurs only after the event commits; a subsequent dispatch validates the new current state and outstanding transition obligations.
+
+A provider-specific atomic equivalent is conforming only if its predecessor-valid configured contract proves the same exclusion from the analyzed baseline through accepted journal commit, with durable cold-reconstructible evidence. This is a coordination-safety record in the existing inventory mechanism, not a second authority/currentness journal or trust root. Publication still uses the exact incumbent and conditional ref movement under sections 5/6; the fence does not replace publication serialization.
+
+Retain the exact verifiable acquisition/guard/continuity evidence needed for historical validation with the carrier or trusted journal event under the existing retention/trust contracts for the journal lifetime. A link to only today's mutable fence state is insufficient. Live crash/succession discovery still uses the durable inventory; historical validation must survive fence release and ordinary holder cleanup.
+
+#### Fence failure and recovery
+
+Discover active fences and uncertain acquisition/release outcomes from durable inventory state on crash/succession, before any new affected dispatch. A timeout, lease expiry or vanished holder cannot release an ambiguous fence. Retain history and exact transition identities; a stale publisher cannot reuse an aborted/released fence to advance a ref or commit an event.
+
+| Outcome | Required durable disposition |
+|---|---|
+| Failure before ref movement | Record and verify that this publication attempt aborted and cannot later advance/commit, then release under the still-current predecessor. An unknown ref-update outcome is not proof of pre-ref failure. |
+| Ref moved, but required retention or journal commit fails | The carrier is an uncommitted suffix; predecessor remains current. Keep the fence held while explicitly authorized publication recovery completes, **or** durably abort the transition, reconcile/classify the suffix under existing recovery rules, then release to predecessor-governed execution. No silent/timeout release. |
+| Any later publication after an abort/release | Obtain a fresh inventory baseline, manifest/approval and fence. Newly permitted predecessor-governed work may have appeared; the old analysis is not reusable by assertion. |
+| Journal commit succeeds but release fails | Successor PlanRef is current; retain the conservative execution block until a successor validates that exact event and durably releases the fence. Do not guess it away. |
+
+Recovery while held preserves continuous scope coverage. Its required recovery manifest/approval and event bind the protected baseline and retained acquisition/continuity evidence; if they differ from the failed attempt, durably bind the recovery identities under prior authority without opening the scope. Do not mutate the failed immutable manifest. The journal cannot adopt an uncommitted suffix manifest as authority merely because it exists. Existing PR24 suffix classification, predecessor authority and retention rules remain in force.
 
 ### 9.3 Cold validation and adoption
 
-Fetch the exact retained successor carrier, verify the journal-bound path is the specified blob, and match its record ID, contract, plan, preallocated event/publication IDs, predecessor event/prior PlanRef and candidate to the journal/CURRENT. Validate the exact approval, predecessor-valid action authority, inventory snapshot/completeness and serialization/revalidation evidence, and complete deterministic per-attempt request/deadline/recovery data. A mismatched or unavailable required object/evidence fails closed for affected execution; do not substitute notification text, current inventory guesses or a manifest from another event. Historical carrier retention also preserves earlier manifests when a later carrier uses the same path for a new immutable record.
+Fetch the exact retained successor carrier, verify the journal-bound path is the specified blob, and match its record ID, contract, plan, preallocated event/publication IDs, predecessor event/prior PlanRef and candidate to the journal/CURRENT. Validate the exact approval, predecessor-valid action authority, inventory snapshot/completeness, matching fence ID/scope/baseline and conditional acquisition/held-through-commit evidence, and complete deterministic per-attempt request/deadline/recovery data. A mismatched or unavailable required object/evidence fails closed for affected execution and reconciliation-marker advancement; do not substitute notification text, current inventory guesses or a manifest from another event. Historical carrier retention also preserves earlier manifests when a later carrier uses the same path for a new immutable record.
 
 New root/child bootstrap authority may explicitly adopt this adjunct from first publication. It must approve the initial exact candidate/configuration and empty/baseline manifest; the first carrier contains it, with predecessor fields and legacy marker `none`. The existing bounded founding/parent authority and retention/journal rules still apply.
 
+Only a first root/child publication with **no pre-existing dispatch-capable execution system** may use `publication_fence_id: none` with an explicit no-active-execution basis. If an execution inventory/contract is already adopted, even `active_work_impact: none` requires a fence: the protected final baseline proves no affected obligations, not just an earlier empty read. No active attempts does not mean no ability to dispatch them.
+
 An existing project adopts by explicit accepted migration under predecessor governance. The adopting transition already carries a conforming baseline manifest as additional predecessor-approved evidence; candidate rules do not validate themselves. Before adoption completes, reconcile legacy history through the predecessor high-water and resolve or explicitly carry forward every outstanding legacy execution obligation in the current serialized baseline. Record `legacy_reconciled_through_event_id` equal to that predecessor event; retain the legacy reconciliation evidence with the baseline. Unresolvable obligations block adoption/dependent execution rather than being guessed or backfilled.
+
+Active or still-dispatchable legacy execution needs a predecessor-valid serialization/fence mechanism. If none exists, fail closed for the execution-changing adoption until legacy work is stopped/reconciled with further dispatch excluded, or prior authority establishes a bounded one-time mechanism proving the same property. A candidate cannot authorize its own adoption fence. Existing installations adopt these strengthened fence requirements through prior-valid governance; historical events retain their original meaning and acquire no fabricated fences/manifests.
 
 Historical pre-adoption events remain valid under their original rules; never fabricate historical manifests or retroactively reject them for lacking this adjunct. Cold reconstruction validates that history under its accepted governance and uses the approved adoption baseline for remaining execution obligations. Later events use `legacy_reconciled_through_event_id: none`; retain the adoption event as history. Any later contract/path change requires an explicit predecessor-authorized compatibility/migration transition; omission alone cannot disable the adopted contract.
