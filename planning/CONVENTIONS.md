@@ -316,6 +316,22 @@ The overview roadmap answers only:
 
 Do not put handoff machinery, polling, reviewer trees, chat names, or detailed internal task breakdown into the top-level overview unless they materially change the big-picture plan.
 
+## Human navigation
+
+Visible Markdown links adjacent to the roadmap are the canonical **human navigation surface**. Standard Markdown relative links are the portable default; resolve them from the Markdown file containing the link. Keep a compact `## Navigation` table immediately below the diagram, keyed by stable node ID, covering every node with a child plan or definition/detail target. Nodes without a target need no row.
+
+| Relation | Source of the navigation target |
+|---|---|
+| Milestone -> child plan | The Milestone contract's existing `Child plan` field. `none` means no child link. Point to the child's actual `PLAN.md`, including its path in an external repository, rather than labeling a repository landing page as the child plan. |
+| Decision/DATA -> details | The existing definition locator in the plan's Decision/DATA contract index. Link to that definition, which may be a document or a section within one. |
+| Child -> parent | `parent_plan_navigation_locator` in the child roadmap header. This is a separate, non-authoritative presentation locator, not `parent_plan`, `parent_plan_ref`, repository identity or `parent_contract_locator`. Render `↑ [Parent plan](<locator>)` immediately above the child diagram; no new graph node is required. |
+
+Use columns `Node`, `Relation`, and `Go to`. Derive each Markdown target from its source locator; do not maintain a second child/detail target field. If the source record and roadmap are in different directories, adjust the relative spelling to reach the same target. A child may also repeat its parent link as a `PARENT` table row, but the visible link above the diagram is sufficient. Unfilled template targets must be labeled as nonoperational placeholders, not presented as working links.
+
+Mermaid `click` / `href` is optional convenience only, derived from the matching canonical Markdown target. Add it only when the instantiated renderer supports a safe target; omit it when it cannot be encoded portably. Do not require raw relative Mermaid click URLs or rely on clicking as the sole navigation path. A mismatch never overrides the Markdown entry; correct or omit the mismatching click. All visible navigation must remain available when the renderer offers no clicking.
+
+Navigation locators do not identify authority, replace qualified references, exact PlanRefs, relationship pins, contract locators or publication currentness, satisfy dependencies/acceptance, or create delegation. Following a link to a mutable page is not proof of accepted state. Renaming/moving a navigation target is presentation maintenance unless the underlying semantic contract also changes; semantic identity/locator changes still follow `REFERENCES.md` and the existing planning/publication rules. This convention adds no grammar version or execution permission. See [navigation examples](../examples/navigation/README.md).
+
 ## Milestone wording
 
 Milestones describe outcomes, not activities.

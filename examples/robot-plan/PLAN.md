@@ -42,7 +42,22 @@ flowchart TD
   linkStyle default stroke:slategray,stroke-width:3.5px,fill:none;
 ```
 
+## Navigation
+
+| Node | Relation | Go to |
+|---|---|---|
+| R2 | child plan | [Child learning-project plan](../child-project/PLAN.md) |
+
+This link follows R2's `Child plan` below to the co-located example page in this template repository. It does not turn the fictional two-repository relationship into a same-plan or same-repository authority binding. For external deployment, replace the source locator with the actual child `PLAN.md` URL and derive the table link from it; see [external navigation](../navigation/README.md#external-child).
+
 ## Child implementation binding for R2
+
+Navigation excerpt of the Milestone record (other contract semantics remain in the parent contract):
+
+```text
+MilestoneID: R2
+Child plan: ../child-project/PLAN.md
+```
 
 ```text
 child_plan: {"repository_identity": {"scheme": "github-repository-id-v1", "authority": "github.com", "id": "1002"}, "plan_id": "LEARNING", "object_kind": "plan"}

@@ -68,6 +68,14 @@ flowchart TD
   linkStyle default stroke:slategray,stroke-width:3.5px,fill:none;
 ```
 
+## Navigation
+
+Keep visible links here for every navigable node under [Human navigation](CONVENTIONS.md#human-navigation). Derive Milestone child links from `Child plan` and Decision/DATA details from the definition index; do not add a second target field. This template's D1 definition is not yet instantiated, so its row is an explicit nonoperational placeholder. No child target is specified for M1-M4.
+
+| Node | Relation | Go to |
+|---|---|---|
+| D1 | details | `<definition path from D1's contract-index entry; nonoperational placeholder>` |
+
 ## Milestone contracts
 
 For each milestone, maintain a durable record containing at least:
@@ -105,7 +113,7 @@ For each Decision/DATA node, index its exact accepted definition here. New plans
 
 | Node ID | Kind | Declared node contract | Definition locator in this PlanRef |
 |---|---|---|---|
-| `<DecisionID>` | `DECISION` | `decision-result-v1` | `<definition path>` |
+| D1 | `DECISION` | `decision-result-v1` | `<definition path; nonoperational placeholder>` |
 | `<DataID>` | `DATA` | `data-dependency-v1` | `<definition path>` |
 
 Use `templates/DECISION.md` / `templates/DECISION_RESULT.md` and `templates/DATA.md` / `templates/DATA_RESOLUTION.md`. Each definition carries its sole current result/resolution index and retained history. An immutable record existing outside that accepted index does not open a branch or satisfy DATA. These placeholders are not operative node records.

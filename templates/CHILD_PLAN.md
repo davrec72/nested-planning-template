@@ -1,6 +1,6 @@
 # Child plan template
 
-Fill every header field before substantive dispatch.
+Fill every semantic header field before substantive dispatch. Complete the separate navigation locator for the human-facing roadmap; it supplies no dispatch authority.
 
 Child managed execution also requires current accepted `transition-action-v1` configuration and a valid reconciled adoption/legacy baseline under `planning/EXECUTION.md` -> **Operational eligibility**. A first child publication choosing `none` stays no-dispatch until later valid adoption; a parent grant or an empty inventory does not waive this boundary.
 
@@ -11,6 +11,7 @@ reference_contract: qualified-reference-v1
 repository_identity: {scheme: github-repository-id-v1, authority: <GitHub host>, id: <numeric repository ID>}
 repository_locator: <readable owner/repo or URL>
 parent_plan: <qualified parent plan reference>
+parent_plan_navigation_locator: <human-facing relative path or URL to the parent PLAN.md; not authority>
 parent_plan_ref: <exact accepted parent relationship PlanRef containing the bound contract>
 parent_milestone: <qualified parent milestone reference>
 scope_owner_role: <exact RoleID>
@@ -23,6 +24,10 @@ This child plan implements the parent milestone. It does not redefine it.
 Use `planning/REFERENCES.md` for full qualified tuples and explicit accepted adoption/migration. The header fixes the context of local child nodes/Roles; parent and other cross-plan objects require full qualification. Readable locators do not identify authority.
 
 The child pin is learned after the parent relationship is accepted. It differs from the parent contract's prior `authority_baseline_plan_ref`; do not insert the child's own future SHA or require mutual containing-SHA pointers. Follow `planning/REFERENCES.md` for creation and subsequent current-parent checks.
+
+Replace the parent navigation placeholder below with `↑ [Parent plan](<locator>)` using the header's exact target before publishing this view. It is separate from the accepted relationship pin and contract locator; no Mermaid click is required.
+
+↑ Parent plan: `<parent_plan_navigation_locator — nonoperational placeholder>`
 
 ```mermaid
 flowchart TD
@@ -65,6 +70,14 @@ flowchart TD
   linkStyle default stroke:slategray,stroke-width:3.5px,fill:none;
 ```
 
+## Navigation
+
+Populate one visible row per navigable child node under `planning/CONVENTIONS.md` -> **Human navigation**. Use existing Milestone `Child plan` fields and Decision/DATA definition locators, adjusting relative paths from this roadmap. Omit nodes without targets; replace this nonoperational placeholder row with actual stable IDs and Markdown links. The parent link above the diagram is sufficient for upward navigation.
+
+| Node | Relation | Go to |
+|---|---|---|
+| `<MilestoneID / DecisionID / DataID>` | `<child plan / details / data details>` | `<Markdown link derived from the existing source locator>` |
+
 ## Parent-facing invariant
 
 Internal child changes are allowed only when all of these remain unchanged:
@@ -96,6 +109,7 @@ Evidence location:
 Execution/status evidence: <initial PENDING basis or authorized execution/reopening event>
 Acceptance record index: none | <durable locator>
 Acceptance history: <prior receipts and reopening decisions or none>
+Child plan: none | <internal path> | <external repository locator>
 ```
 
 Assignment is responsibility for delivery, not implicit authority to accept the delivered outcome. Naming an `Acceptance authority` Role does not grant that authority; the cited authority source must be independently accepted and cover the child milestone/scope.
