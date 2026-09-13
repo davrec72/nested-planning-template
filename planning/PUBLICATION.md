@@ -2,7 +2,7 @@
 
 This file defines root bootstrap and how exact planning snapshots become current under `plan-publication-v1`.
 
-`planning/PUBLICATION_TRANSITIONS.md` is normative for validator source, publication-journal evidence, recovery, retained snapshots, and notification matching.
+`planning/PUBLICATION_TRANSITIONS.md` is normative for validator source, publication-journal evidence, recovery, retained semantic snapshots, retained carrier evidence, and notification matching.
 
 ## Core distinction
 
@@ -10,10 +10,11 @@ Keep these facts separate:
 
 1. an exact candidate planning commit exists;
 2. valid pre-existing authority approves that exact candidate;
-3. the candidate has a durable retained snapshot;
+3. the candidate has a durable retained semantic snapshot;
 4. the publication ref advances to a carrier naming the candidate;
-5. a trusted publication-journal event commits evidence of that exact ref update;
-6. only then is the candidate the current accepted PlanRef.
+5. the exact successor carrier and any required recovery suffix evidence are durably retained;
+6. a trusted publication-journal event commits evidence of that exact ref update and those retained objects;
+7. only then is the candidate the current accepted PlanRef.
 
 A merge, branch head, timestamp, repository write, or message does not establish current planning state by itself.
 
@@ -29,11 +30,17 @@ publication_journal_locator:
 publication_journal_trust_basis:
 plan_snapshot_retention_kind:
 plan_snapshot_retention_locator_or_pattern:
+plan_snapshot_retention_trust_basis:
+carrier_evidence_retention_kind:
+carrier_evidence_retention_locator_or_pattern:
+carrier_evidence_retention_trust_basis:
 ```
 
 The publication journal must be durable and append-only/tamper-evident under its configured trust basis and readable by a cold successor. Bare Git ancestry or a local reflog alone is not sufficient evidence of historical ref movements.
 
-The retention mechanism must keep every published exact PlanRef fetchable independently of ordinary work branches.
+The PlanRef-retention mechanism must keep every published exact PlanRef fetchable independently of ordinary work branches.
+
+The carrier-evidence retention mechanism must keep every accepted publication carrier—and every Git object needed to perform the protocol's carrier checks—cold-fetchable independently of the mutable publication ref. For recovery, it must also retain the quarantined invalid/uncommitted suffix evidence required by the protocol. A carrier SHA written into a journal entry is not durable carrier evidence by itself.
 
 ## Publication carrier
 
@@ -42,6 +49,8 @@ Each carrier on the configured publication ref contains `planning/CURRENT.md`.
 A carrier records the accepted transition state, but the **trusted publication journal** establishes which ref updates actually became accepted transitions.
 
 The latest valid committed journal event is the accepted publication high-water mark. The live publication ref must agree with that mark unless there is an invalid/uncommitted suffix being recovered.
+
+Every accepted carrier remains separately retrievable through the carrier-evidence retention contract for at least the lifetime of the publication journal, even if later divergent recovery makes it unreachable from the live publication-ref tip.
 
 ## CURRENT fields
 
@@ -79,6 +88,8 @@ Fields that do not apply use `none`.
 
 `plan_ref` is the accepted semantic planning snapshot. The carrier commit is publication-history evidence and is not itself automatically the PlanRef.
 
+Carrier retention locators/evidence live in the trusted journal event rather than needing to self-reference from `CURRENT`, because the exact carrier SHA is not known until the carrier commit exists.
+
 ## Which rules validate a transition
 
 For every publication after bootstrap, the **last accepted predecessor PlanRef's governance** validates the next transition.
@@ -100,7 +111,7 @@ prior_publication_id
 prior_plan_ref
 ```
 
-Validate that the retained snapshot for `prior_plan_ref` is fetchable.
+Validate that both the retained semantic snapshot for `prior_plan_ref` and the retained carrier evidence for `accepted_predecessor_commit` are cold-fetchable.
 
 ### 2. Prepare the semantic candidate
 
@@ -118,13 +129,13 @@ The applicable authority approves that exact candidate under governance already 
 
 If candidate content changes, approval does not follow it.
 
-### 4. Retain the candidate
+### 4. Retain the semantic candidate
 
 Before publication, create/verify the configured durable snapshot for `candidate_plan_ref` and record its locator/evidence.
 
-If the exact commit is not guaranteed cold-fetchable under the retention contract, publication must not proceed.
+If the exact commit is not guaranteed cold-fetchable under the PlanRef-retention contract, publication must not proceed.
 
-### 5. Prepare the successor carrier
+### 5. Prepare and move to the successor carrier
 
 For a normal transition:
 
@@ -139,17 +150,26 @@ invalid_suffix_start: none
 invalid_suffix_tip: none
 ```
 
-### 6. Conditionally advance the publication ref
-
-Advance the configured publication ref non-force from the exact actual incumbent carrier to the prepared successor carrier.
+Prepare the exact successor carrier and advance the configured publication ref non-force/conditionally from the exact actual incumbent accepted carrier to that successor carrier.
 
 A stale sibling must fail rather than win by timestamp or merge order.
 
+### 6. Retain the exact carrier evidence
+
+After the successful ref update and before acceptance, retain the exact successor carrier under the bootstrap-fixed carrier-evidence contract. Verify that a cold reader can retrieve the exact carrier commit, tree, `planning/CURRENT.md`, and required parent evidence.
+
+If the carrier evidence cannot be durably retained, do not commit the publication journal event. The advanced ref remains an uncommitted suffix governed by the previous accepted journal high-water pending recovery.
+
 ### 7. Commit the publication-journal event
 
-After the successful conditional ref update, durably append the exact transition event and its `ref_update_receipt` to the configured trusted journal.
+Durably append the exact transition event to the configured trusted journal, including:
 
-The transition becomes accepted only when that event is committed. If the ref moved but no journal event committed, the new carrier is an uncommitted suffix and ordinary execution remains governed by the latest valid journal event pending recovery.
+- the successful `ref_update_receipt`;
+- PlanRef snapshot locator/evidence;
+- carrier evidence locator/evidence;
+- accepted predecessor identities and evidence linkage.
+
+The transition becomes accepted only when that event is committed. If the ref moved but no conforming journal event committed, the new carrier is an uncommitted suffix and ordinary execution remains governed by the latest valid journal event pending recovery.
 
 ### 8. Operate and propagate
 
@@ -179,11 +199,20 @@ invalid_suffix_start: <first quarantined commit>
 invalid_suffix_tip: X
 ```
 
-`Y` is a child of the actual tip so ref advancement remains non-force and the invalid suffix remains preserved. The invalid suffix is not treated as accepted governance or authority.
+`Y` is a child of the actual tip so ref advancement remains non-force and the invalid suffix remains visible in live Git ancestry. The invalid suffix is not treated as accepted governance or authority.
 
-The recovery requires explicit authority valid under `prior_plan_ref`, a retained exact target PlanRef, a successful conditional ref update, and a committed recovery journal event recording both the actual Git predecessor and last accepted predecessor.
+Before the recovery journal event may commit, retain/verify all of:
 
-Cold reconstruction then treats the quarantined suffix as historical but non-accepted and resumes accepted publication history at the recovery event.
+1. the exact target PlanRef snapshot;
+2. the exact recovery carrier `Y`, including tree/CURRENT and parent evidence;
+3. the quarantined invalid suffix from the divergence point through `X`, or authenticated retained evidence sufficient to perform every required suffix check;
+4. the displaced accepted carrier `Rvalid` and the earlier accepted carrier chain needed for cold validation, through their previously committed carrier-evidence locators.
+
+Thus divergent recovery may move the live graph onto `... -> X -> Y` without losing the separately retained accepted `Rvalid` branch. Garbage collection or live-ref rewrites cannot silently erase the accepted carrier evidence that the trusted journal still requires.
+
+The recovery requires explicit authority valid under `prior_plan_ref`, a successful conditional ref update, and a committed recovery journal event recording the actual Git predecessor, the last accepted predecessor, and all required retained evidence locators.
+
+Cold reconstruction treats the quarantined suffix as historical but non-accepted and resumes accepted publication history at the recovery event.
 
 If the live ref is merely behind the journal high-water mark and can be restored by a verified non-force movement to the already-accepted carrier, record that infrastructure repair in the journal; do not create a fictional new planning acceptance.
 
@@ -201,33 +230,35 @@ bounded founding scope
 initial plan/Role state
 initial publication protocol/ref
 initial publication journal kind/locator/trust basis
-initial PlanRef retention kind/locator pattern
+initial PlanRef retention kind/locator pattern/trust basis
+initial carrier-evidence retention kind/locator pattern/trust basis
 ```
 
 Bootstrap sequence:
 
 1. designate the Founding Authority and bounded scope;
 2. prepare the exact first candidate including required governance files;
-3. Founding Authority approves the exact candidate plus initial publication/journal/retention contract;
-4. retain the first candidate under the configured snapshot contract;
+3. Founding Authority approves the exact candidate plus initial publication/journal/PlanRef-retention/carrier-retention contract;
+4. retain the first candidate under the configured semantic snapshot contract;
 5. create the first carrier with `transition_kind: bootstrap` and no accepted predecessor;
 6. establish the configured publication ref at that carrier;
-7. commit the first trusted journal event, including the bootstrap ref-update/creation evidence;
-8. the named `plan_ref` becomes the first current accepted PlanRef;
-9. the founding exception expires.
+7. retain the exact first carrier evidence under the configured carrier contract;
+8. commit the first trusted journal event, including bootstrap ref-update/creation evidence and both retention receipts;
+9. the named `plan_ref` becomes the first current accepted PlanRef;
+10. the founding exception expires.
 
 Any continuing founder authority must appear as an ordinary Role/binding in the first accepted state.
 
 ## Child bootstrap
 
-A child repository may bootstrap from accepted parent authority instead of an unrelated root founder. That parent authority must cover the child scope, initial Role state, initial publication protocol/ref, publication-journal trust contract, and snapshot-retention contract.
+A child repository may bootstrap from accepted parent authority instead of an unrelated root founder. That parent authority must cover the child scope, initial Role state, initial publication protocol/ref, publication-journal trust contract, PlanRef-retention contract, and carrier-evidence retention contract.
 
 ## Notification and Foreman recovery
 
 Published-change messages are wake mechanisms, not authority. They must bind to the exact committed publication journal event and carrier. Stale/duplicate/out-of-order notifications are reconciled against journal order, not message arrival order.
 
-If journal evidence, retained PlanRefs, or publication state is missing/contradictory, ordinary dependent execution fails closed.
+If journal evidence, retained PlanRefs, retained carrier evidence, or publication state is missing/contradictory, ordinary dependent execution fails closed.
 
 ## Security boundary
 
-This template does not provide cryptographic identity/signature infrastructure. It does require an explicit trust basis for the publication journal and snapshot-retention mechanism so a cold reader knows what external durability assumptions it is relying on.
+This template does not provide cryptographic identity/signature infrastructure. It does require explicit trust bases for the publication journal, PlanRef retention, and carrier-evidence retention so a cold reader knows what external durability assumptions it is relying on.
