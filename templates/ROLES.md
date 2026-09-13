@@ -1,5 +1,7 @@
 # Root role registry template
 
+Local RoleIDs inherit this registry's accepted plan header (repository identity and PlanID). After explicit `qualified-reference-v1` adoption, use full qualified references for every cross-plan parent/delegate/acceptance Role or source, with its exact authority PlanRef separately bound under `planning/REFERENCES.md`. Short local names remain valid only in one unambiguous plan context.
+
 Copy this structure into `planning/ROLES.md` and replace all placeholders.
 
 The template requires **explicit authority**, not a fixed set of substantive role names. Create only substantive Roles whose authority/responsibility must remain stable across holder changes or be granted/revoked/delegated independently.

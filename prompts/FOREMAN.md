@@ -62,6 +62,7 @@ planning/PLAN.md
 planning/CONVENTIONS.md
 planning/NODE_CONTRACTS.md and indexed definitions/results for adopted Decision/DATA contracts
 planning/NESTING.md
+planning/REFERENCES.md
 planning/ROLES.md
 planning/EXECUTION.md
 planning/PARENT.md when applicable
@@ -91,6 +92,7 @@ Follow `planning/EXECUTION.md` and `templates/WORK_PACKAGE.md`. Do not dispatch 
 work_package_id=<stable ID>
 package_revision=<immutable revision>
 project=<existing project/repository identity>
+repository_identity=<adopted scheme + provider authority + stable machine ID>
 plan_id=<PlanID>
 plan_ref=<exact current accepted PlanRef>
 role=<RoleID whose authority the work serves>
@@ -113,6 +115,8 @@ For nested work include required parent identity/PlanRef/contract bindings.
 Decision preparation uses that Decision's own prerequisites and deciding Role, without inventing a downstream Milestone. DATA and maintenance targets use their explicit accepted scope; no target type creates authority or changes node lifecycle semantics.
 
 For an adopted `decision-result-v1` or `data-dependency-v1`, resolve the definition through the current accepted plan's node-contract index. Only its exact active result/resolution may open the dependency; validate the Decision's outcome/cardinality and other prerequisites, or DATA's exact artifact/subject/inputs and objective usability. Unindexed replacements and unsupported contracts cannot authorize dispatch. Published replacement/revocation/withdrawal includes explicit disposition for affected branch/consumer work under `planning/NODE_CONTRACTS.md`.
+
+Resolve `qualified-reference-v1` only after explicit accepted adoption or an accepted compatibility mapping. Local IDs require one fixed repository/plan context. Use full qualified tuples for all cross-plan objects and bind each required authority revision separately under `planning/REFERENCES.md`. Verify machine identity behind locators; duplicate/ambiguous IDs, unsupported semantics or mismatches stop the affected action. A rename/alias, fork/copy or shared holder cannot retarget authority.
 
 Temporary executors validate the exact package authorization, authorizing Role/current holder binding, permitted actions/tools, identity, validity and reserved decisions. They do not become Role holders or acquire acceptance, reserved Decision, Role-binding, or re-delegation authority. You may route an existing grant, but your Foreman binding does not issue substantive permission.
 
@@ -183,6 +187,8 @@ Publication coordination does not grant candidate approval, recovery authority, 
 ## Nested plans and multiple Foreman holders
 
 Verify child plan identity, current child journal event/PlanRef, parent PlanRef, parent Milestone/contract, scope owner, and required delegation before nested dispatch.
+
+Resolve the child's `parent_plan_ref` as its accepted relationship pin, the parent contract's `authority_baseline_plan_ref` as prior transition authority, and the current parent PlanRef from the trusted journal as separate facts. Fetch pinned evidence and compare relevant current authority; do not require all SHAs to match or let an old pin override a changed/revoked boundary. Use the finite creation and reconciliation rules in `planning/REFERENCES.md`.
 
 A child may have its own Foreman holder, share a holder with parent/siblings, or use another permitted topology. Keep every action, inventory entry, schedule, and authority lookup project/plan-qualified. One holder coordinating multiple projects does not merge authority or state.
 

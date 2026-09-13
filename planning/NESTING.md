@@ -12,19 +12,27 @@ The parent owns the boundary contract. The child owns only the internal decompos
 
 ## Required child-plan identity
 
-Every active child plan using the current grammar must declare:
+A child plan explicitly adopting `qualified-reference-v1` declares the following header alongside the current roadmap grammar. Legacy plans retain their original reference semantics until accepted migration; see `REFERENCES.md`.
 
 ```text
 plan_id: <stable PlanID>
 grammar: plan-grammar-v2
-parent_plan: <parent PlanID or external locator>
-parent_plan_ref: <exact accepted parent PlanRef>
-parent_milestone: <exact parent MilestoneID>
+reference_contract: qualified-reference-v1
+repository_identity: {scheme: github-repository-id-v1, authority: <GitHub host>, id: <numeric repository ID>}
+repository_locator: <readable owner/repo or URL>
+parent_plan: <qualified parent plan reference>
+parent_plan_ref: <exact accepted parent relationship PlanRef containing the bound contract>
+parent_milestone: <qualified parent milestone reference>
 scope_owner_role: <exact RoleID>
-parent_contract: <durable parent-facing contract path/link>
+parent_contract: <qualified parent contract reference>
+parent_contract_locator: <durable path/link at parent_plan_ref>
 ```
 
 Missing or placeholder values make the child plan non-operational for substantive dispatch.
+
+This is the adopted `qualified-reference-v1` header; existing plans migrate explicitly under `REFERENCES.md` before using it. Local child IDs inherit the child repository/PlanID; parent objects always use their qualified parent context. Same-repository child plans still cross a PlanID boundary. Compatible reference semantics or an explicitly accepted compatibility mapping are required at the boundary.
+
+The child's `parent_plan_ref` is a relationship pin. The parent-side contract records `authority_baseline_plan_ref`, the prior accepted parent state authorizing that contract's creation/change. These refs normally differ: the baseline need not contain the newly created contract. Neither record embeds its own containing SHA. Follow `REFERENCES.md` for the finite parent-publication then child-publication sequence and current-parent validation.
 
 ## Delegation capabilities
 
@@ -153,26 +161,30 @@ Parent and child repositories keep independent Git histories.
 The parent records at least:
 
 ```text
-repository: <owner/repo>
+child_plan: <qualified child plan reference>
+repository_locator: <readable owner/repo or URL>
 plan_path: planning/PLAN.md
-plan_id: <child PlanID>
-scope_owner_role: <child boundary RoleID>
-parent_contract: <path/link in parent repo>
+scope_owner_role: <qualified child boundary role reference>
+parent_contract: <qualified parent contract reference>
+parent_contract_locator: <path/link in parent repo>
 ```
 
 For an actual dispatch, decision, or acceptance, bind an exact child commit SHA as the child's PlanRef.
+
+The parent contract separately records the prior `authority_baseline_plan_ref` and its authority source. Do not add the parent candidate's own SHA to that candidate. The accepted containing relationship PlanRef is resolved afterward through publication evidence.
 
 ### Child-side record
 
 The child fills `planning/PARENT.md` with:
 
 ```text
-parent_repository: <owner/repo>
+parent_plan: <qualified parent plan reference>
+parent_repository_locator: <readable owner/repo or URL>
 parent_plan_path: <path>
-parent_plan_id: <PlanID>
-parent_plan_ref: <exact parent PlanRef>
-parent_milestone: <MilestoneID>
-parent_contract: <durable locator>
+parent_plan_ref: <exact accepted parent relationship PlanRef>
+parent_milestone: <qualified parent milestone reference>
+parent_contract: <qualified parent contract reference>
+parent_contract_locator: <durable locator at parent_plan_ref>
 scope_owner_role: <RoleID>
 ```
 
@@ -185,6 +197,8 @@ The authority relationship comes from accepted Role/delegation records plus the 
 ## Parent/child synchronization rule
 
 The parent does **not** update for every internal child commit.
+
+An unrelated newer parent snapshot also does not force a child pin update. Validate the pinned contract and compare it with the current accepted parent authority; an old pin cannot evade a revoked or changed boundary. Material relationship changes require explicit accepted reconciliation. See `REFERENCES.md` for both same-repository and cross-repository cases.
 
 A parent plan update is required when any parent-visible boundary changes, including:
 
@@ -263,6 +277,7 @@ An authorized Lead may direct Foreman to coordinate work inside that Lead's scop
 Every nested substantive work package must bind:
 
 ```text
+repository_identity=<scheme + provider authority + stable machine ID>
 plan_id=<PlanID>
 plan_ref=<exact PlanRef>
 role=<RoleID>
@@ -271,6 +286,8 @@ target_id=<stable local node/scope ID>
 target_record=<exact accepted definition>
 parent_plan_ref=<exact parent PlanRef>
 ```
+
+Local Role/target IDs require this unambiguous plan context. Cross-plan objects use full qualified references and their own separately bound exact authority/contract revisions. `parent_plan_ref` is the relationship pin; separately validate current parent state under `REFERENCES.md`.
 
 Foreman must refuse or escalate materially missing/contradictory bindings.
 

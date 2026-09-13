@@ -2,6 +2,8 @@
 
 Use this for every semantic planning or Role change.
 
+After explicit `qualified-reference-v1` adoption, fix this change record's repository/PlanID context and fully qualify every affected cross-plan object, Role or source under `planning/REFERENCES.md`. Bind external authority PlanRefs separately from the candidate's own baseline/candidate refs. Reference adoption/migration itself is an explicit semantic change; a proposed field does not activate it.
+
 Candidate creation/approval, snapshot retention, publication-ref movement, trusted journal commit, and propagation are separate events. Follow `planning/PUBLICATION.md` and `planning/PUBLICATION_TRANSITIONS.md`.
 
 ```text

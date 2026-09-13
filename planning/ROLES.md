@@ -4,6 +4,8 @@ This file records accepted Role definitions and current holder bindings for the 
 
 A Role is a stable authority/responsibility slot. A holder is a person, chat, agent, or other execution context currently bound to that Role.
 
+Local RoleIDs inherit the repository identity and PlanID of this registry's accepted plan. Under explicitly adopted `qualified-reference-v1`, any parent/delegate/accepting Role or authority source in another plan uses a full qualified reference and its own exact authority PlanRef under `REFERENCES.md`. Shared human names or holders never merge Roles; a path/alias is only a locator.
+
 **The template does not prescribe a universal substantive Role vocabulary.** Create a durable substantive Role only when the project needs a stable authority/responsibility slot whose scope should survive holder changes. Names such as `ProjectOwner`, `ArchitectureLead`, `SubsystemLead`, or `Reviewer` are project choices, not built-in ontology.
 
 A root project must still have an accepted authority chain sufficient to create/bind whatever substantive Roles it uses. The first such chain is established only by the bounded root bootstrap in `PUBLICATION.md`; after the first valid publication, ordinary non-self-authorizing Role rules apply. A child project may instead receive its boundary authority from an accepted parent contract/delegation.

@@ -5,14 +5,22 @@ Fill every header field before substantive dispatch.
 ```text
 plan_id: <stable PlanID>
 grammar: plan-grammar-v2
-parent_plan: <parent PlanID or external locator>
-parent_plan_ref: <exact accepted parent PlanRef>
-parent_milestone: <exact parent MilestoneID>
+reference_contract: qualified-reference-v1
+repository_identity: {scheme: github-repository-id-v1, authority: <GitHub host>, id: <numeric repository ID>}
+repository_locator: <readable owner/repo or URL>
+parent_plan: <qualified parent plan reference>
+parent_plan_ref: <exact accepted parent relationship PlanRef containing the bound contract>
+parent_milestone: <qualified parent milestone reference>
 scope_owner_role: <exact RoleID>
-parent_contract: <durable path/link>
+parent_contract: <qualified parent contract reference>
+parent_contract_locator: <durable path/link at parent_plan_ref>
 ```
 
 This child plan implements the parent milestone. It does not redefine it.
+
+Use `planning/REFERENCES.md` for full qualified tuples and explicit accepted adoption/migration. The header fixes the context of local child nodes/Roles; parent and other cross-plan objects require full qualification. Readable locators do not identify authority.
+
+The child pin is learned after the parent relationship is accepted. It differs from the parent contract's prior `authority_baseline_plan_ref`; do not insert the child's own future SHA or require mutual containing-SHA pointers. Follow `planning/REFERENCES.md` for creation and subsequent current-parent checks.
 
 ```mermaid
 flowchart TD

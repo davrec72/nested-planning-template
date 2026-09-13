@@ -8,16 +8,21 @@ Issued acceptance records are immutable historical receipts. Do not edit or rein
 
 ```text
 acceptance_id: <stable ID>
+reference_contract: qualified-reference-v1
+repository_identity: {scheme: github-repository-id-v1, authority: <GitHub host>, id: <numeric repository ID>}
 plan_id: <PlanID>
 contract_plan_ref: <exact accepted pre-acceptance PlanRef containing the milestone contract being judged>
 milestone_id: <MilestoneID>
-accepted_by_role: <RoleID>
+accepted_by_role: <local RoleID or qualified cross-plan role reference>
+acceptance_authority_plan_ref: <exact accepted PlanRef for the accepting Role's authority>
 acceptance_authority_source: <independently accepted source granting this Role acceptance authority over this milestone/scope>
 accepted_at: <time or durable event reference>
 supersedes: <prior acceptance record or none>
 ```
 
 `contract_plan_ref` is deliberately **not** the later PlanRef that may record `MILESTONE_DONE`. It identifies the exact contract revision whose outcome, criteria, and authority references are being judged.
+
+The header fixes the Milestone's repository/plan context. A Role in a different plan is fully qualified under `planning/REFERENCES.md`; its separate `acceptance_authority_plan_ref` is in that Role's plan and is not assumed equal to the subject's `contract_plan_ref`. Qualify any external authority-source object and bind its own exact revision. These references identify objects/revisions, not an additional authority or issuer-provenance mechanism.
 
 The milestone contract may name `accepted_by_role` and an authority-source locator, but those fields do not grant authority. Before issuing this record, verify that the cited authority source is independently accepted and actually covers this milestone/scope. If not, do not issue acceptance.
 

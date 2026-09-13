@@ -9,12 +9,16 @@ work_package_id: <stable ID within the project/plan>
 package_revision: <immutable revision or exact content locator>
 supersedes_revision: <prior revision or none>
 project: <existing project/repository identity>
+reference_contract: qualified-reference-v1
+repository_identity: {scheme: github-repository-id-v1, authority: <GitHub host>, id: <numeric repository ID>}
 plan_id: <PlanID>
 plan_ref: <exact accepted commit SHA at authorization>
 role: <RoleID whose authority the package serves>
 target_type: milestone | decision | data | plan-maintenance
 target_id: <stable local node/scope ID>
 target_record: <exact definition at plan_ref>
+parent_plan: <qualified parent plan reference or none>
+parent_plan_ref: <exact accepted parent relationship pin or none>
 parent_bindings: <required identity/PlanRef/Milestone/contract bindings under NESTING.md or none>
 created_by_role: <coordinating RoleID; not an authority grant>
 return_to: <RoleID with final substantive authority for the target/scope>
@@ -23,6 +27,8 @@ inventory_locator: <configured execution inventory>
 ```
 
 For `decision`, use the Decision's own prerequisites and unique deciding Role. Do not fill a fictional downstream Milestone. A child plan's actual parent Milestone remains a separate boundary binding. For `plan-maintenance`, cite a bounded accepted scope; the type is not a new node or authority exemption. See `planning/EXECUTION.md` for every type and legacy `milestone` migration.
+
+Local IDs inherit this package's repository/PlanID and their field's kind. Every cross-plan Role, target, parent contract or return authority uses a full qualified reference under `planning/REFERENCES.md`. Bind each relied-upon external authority's exact PlanRef separately; the package `plan_ref` names only its own plan. For nested use also resolve the current parent PlanRef and verify the pinned relationship still applies. A locator or shared Role name is not authority.
 
 ## Objective
 
