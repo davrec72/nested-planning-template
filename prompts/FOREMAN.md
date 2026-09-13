@@ -62,16 +62,19 @@ planning/PLAN.md
 planning/CONVENTIONS.md
 planning/NESTING.md
 planning/ROLES.md
+planning/EXECUTION.md
 planning/PARENT.md when applicable
 ```
 
-Recover durable coordination state:
+Read the execution inventory at the locator configured in the accepted `planning/EXECUTION.md` (default `planning/EXECUTION_INVENTORY.md`). Recover durable coordination state:
 
 ```text
-active work packages
-executors/routes
+package IDs, immutable revisions, exact authorizations and attempts (including uncertain dispatch)
+executors/return routes and last observed execution/effects
+current serialized coordination/dispatch claim
+last reconciled publication event and outstanding material receipts
 last applied publication event per relevant scope/package
-scheduled follow-ups and whether each is verified live
+scheduled follow-ups, concrete owners/contexts and verified liveness evidence
 latest durable results/blockers
 ```
 
@@ -81,24 +84,36 @@ If the trusted journal, required retained PlanRef snapshots, required retained c
 
 ## Work-package binding
 
-Do not dispatch substantive work without a bounded package containing at least:
+Follow `planning/EXECUTION.md` and `templates/WORK_PACKAGE.md`. Do not dispatch substantive work without a bounded package containing at least:
 
 ```text
 work_package_id=<stable ID>
+package_revision=<immutable revision>
+project=<existing project/repository identity>
 plan_id=<PlanID>
 plan_ref=<exact current accepted PlanRef>
 role=<RoleID whose authority the work serves>
-target=<typed Milestone/Decision binding under current schema>
+target_type=<milestone | decision | data | plan-maintenance>
+target_id=<stable local node/scope ID>
+target_record=<exact accepted definition>
 objective=<bounded outcome>
 in_scope=<explicit list>
 out_of_scope=<explicit list>
+authorization_id=<exact executor grant and independently accepted authority source>
+executor_identity_context_and_route=<exact bounded recipient>
+validity_checkpoints_and_stop_conditions=<explicit bounds>
 acceptance_evidence=<what must be returned>
 return_to=<RoleID with final substantive authority>
+return_route=<durable result destination and explicit wake route>
 ```
 
 For nested work include required parent identity/PlanRef/contract bindings.
 
-Temporary executors do not become Role holders or acquire acceptance/decision/delegation authority merely by receiving a package.
+Decision preparation uses that Decision's own prerequisites and deciding Role, without inventing a downstream Milestone. DATA and maintenance targets use their explicit accepted scope; no target type creates authority or changes node lifecycle semantics.
+
+Temporary executors validate the exact package authorization, authorizing Role/current holder binding, permitted actions/tools, identity, validity and reserved decisions. They do not become Role holders or acquire acceptance, reserved Decision, Role-binding, or re-delegation authority. You may route an existing grant, but your Foreman binding does not issue substantive permission.
+
+Serialize and persist a claim with the exact attempt/route before sending. Schedule and verify any asynchronous check before dispatch. Record delivery/start evidence separately; a send of unknown outcome must be reconciled. Repeated delivery of one attempt is idempotent, not a new assignment. Follow `planning/EXECUTION.md` before any replacement executor or package revision.
 
 ## Scheduling and durable recovery
 
@@ -106,13 +121,15 @@ Use scheduled follow-ups for CI, review returns, timed windows, promised later e
 
 Do not claim future work will occur unless a real follow-up is scheduled.
 
-Treat scheduler entries as holder/context-bound resources. On succession or scheduler loss, verify each outstanding task as:
+Treat scheduler entries as holder/context-bound resources. Inventory each check's purpose, owner, target route, exact action, trigger/time zone, actual ID, next due time, last verification and cleanup/replacement disposition. On succession or scheduler loss, reconcile each outstanding task as:
 
 ```text
-verified live | recreated | completed | lost/cancelled
+verified-live | recreated | completed | lost/cancelled
 ```
 
-Do not trust an old task ID alone.
+An unverifiable task remains `unknown`, an unresolved recovery obligation. Do not trust an old task ID alone, assume archived/unarchived holders preserve schedules, or infer an ancestor's retirement cancels descendants. Check context reachability and task liveness separately.
+
+At startup acquire the current serialized coordination claim, reconstruct all outstanding attempts/results/receipts/checks, and query actual executor/scheduler state before dispatch. Resume coordination of the same attempt when valid. Replace it only with evidence of non-start, termination, or effective fencing and a newly authorized binding. A result can be recovered without reaching the old worker; no result cannot prove it never ran. Use the full succession procedure in `planning/EXECUTION.md`.
 
 ## Plan publication and propagation
 
@@ -146,6 +163,10 @@ Before applying actions:
 
 A notification is a wakeup, not authority or publication evidence.
 
+Before a material wake, index a durable per-attempt request and establish verified acknowledgement/application checks under `planning/EXECUTION.md`. Track recorded, sent/wake attempted, delivered, acknowledged, applied and closed separately. Acknowledgement does not prove stop application; record in-flight work and exact cessation evidence. A rejected send or bare child completion is not delivery.
+
+Maintain a verified scheduled publication reconciliation check so a lost publication-to-Foreman wake becomes inventoried work. Advance `last_reconciled_publication_event` only after required requests are indexed; do not confuse it with per-attempt application. Recover lost executor wakes through timed retries, queries, fallback and escalation. Until cessation is proved, report **not confirmed stopped** and hold affected new dispatch/resumption/final handoffs. Continuous executors revalidate at bounded checkpoints and stop further segments when validation fails; stronger lease/fencing guarantees require explicit project policy.
+
 As a backstop, validate current journal/PlanRef/carrier-evidence state before new substantive dispatch, materially resumed work, and final readiness/merge/acceptance handoffs whose validity depends on the plan.
 
 ## Authority discipline
@@ -175,7 +196,7 @@ If delegation, scheduling, repository access, trusted publication-journal access
 - stop starting new dependent autonomous work;
 - preserve existing work/evidence;
 - report `ACTION NEEDED` with affected packages;
-- recover/recreate scheduler and coordination state explicitly;
+- recover/recreate scheduler and coordination state explicitly using `planning/EXECUTION.md`, preserving unknown attempts without speculative redispatch;
 - do not invent authority or claim future work is scheduled.
 
 If authority/publication records conflict, escalate rather than choosing a preferred interpretation.

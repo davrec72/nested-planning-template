@@ -37,6 +37,7 @@ planning/
   ROLES.md
   PUBLICATION.md
   PUBLICATION_TRANSITIONS.md
+  EXECUTION.md
   PARENT.md
 prompts/
   FOREMAN.md
@@ -46,6 +47,8 @@ templates/
   CHILD_PLAN.md
   CHILD_ROLES.md
   WORK_PACKAGE.md
+  EXECUTION_INVENTORY.md
+  EXECUTION_RECEIPT.md
   PLAN_CHANGE.md
   PARENT_CONTRACT.md
   ROLE_DELEGATION.md
@@ -56,9 +59,10 @@ templates/
 examples/
   robot-plan/
   child-project/
+  execution/
 ```
 
-The template source is not itself an instantiated operational plan. Instantiated projects additionally create the required publication/founding records under `planning/PUBLICATION.md`.
+The template source is not itself an instantiated operational plan. Instantiated projects additionally create the required publication/founding records under `planning/PUBLICATION.md` and configure/create the execution inventory under `planning/EXECUTION.md`.
 
 ## Current grammar
 
@@ -233,7 +237,17 @@ Foreman startup resolves current accepted state from the trusted publication jou
 
 Scheduled tasks are treated as execution-context-bound resources; succession must verify/recreate them rather than trusting old IDs.
 
-See `prompts/FOREMAN.md`.
+Foreman discovers packages, exact revisions/attempts, authorization, worker/return routes, material receipts, results and schedules from one configured durable execution inventory. It serializes dispatch claims and reconciles unknown sends/execution before replacing a worker. A successor resumes coordination of existing work; missing chat memory is not permission to redispatch it.
+
+See `prompts/FOREMAN.md`, `planning/EXECUTION.md`, and `templates/EXECUTION_INVENTORY.md`.
+
+## Work packages and temporary executors
+
+Packages bind `target_type`/`target_id` to a Milestone, Decision, DATA node, or explicitly accepted maintenance scope. Decision research uses the Decision's own prerequisites and deciding Role; no downstream or dummy Milestone is required. These are work targets, not new roadmap node semantics.
+
+A temporary worker validates an exact bounded authorization identifying its authorizing Role/current holder, executor context, permitted actions/tools, validity/stop conditions, and reserved decisions. It does not become the Role holder. The grant cannot accept Milestones, make reserved Decisions, bind Roles, or re-delegate substantive authority.
+
+Use `templates/WORK_PACKAGE.md`. `planning/EXECUTION.md` includes explicit migration from legacy `milestone`-only packages: retain old records, revalidate authorization and existing attempts, and create a linked revision without speculative redispatch. Adopting this execution contract requires normal accepted publication; the roadmap and publication grammar retain their existing meanings.
 
 ## Propagation
 
@@ -241,13 +255,17 @@ Published-change notifications are wake mechanisms, not authority.
 
 Every notification binds the exact committed publication event/carrier. Foreman tracks the last applied event per relevant scope/package; duplicate, stale, skipped, and out-of-order notifications are reconciled in trusted journal order before transition-specific actions are applied.
 
+Material requests are durable before a wake is attempted. Sent, delivered, acknowledged, and applied are separate facts. A pause is **not confirmed stopped** until exact cessation/enforcement evidence accounts for in-flight work. Actual publication-reconciliation and receipt-recovery schedules catch lost wakes; bounded executor checkpoints restrict further execution when authority cannot be validated. Stronger lease/fencing behavior is a project policy.
+
+Use `templates/EXECUTION_RECEIPT.md`. Direct messages, webhooks or polling can carry wakes; bare completion is not guaranteed notification. Verify schedule ownership/liveness on the actual substrate instead of inferring archive/delete cascades. See the bounded examples and recorded dogfooding qualifications in `examples/execution/CASES.md`.
+
 ## Starting a project
 
 1. Copy/fork the template.
 2. Create the initial roadmap and sparse project-specific Roles.
 3. Decide root vs child bootstrap.
 4. Configure founding/parent authority plus publication ref, trusted journal, PlanRef-retention mechanism, and carrier-evidence-retention mechanism.
-5. Prepare the exact first candidate.
+5. Configure execution inventory location/serialization, reconciliation/receipt deadlines, escalation routes and bounded executor checkpoints under `planning/EXECUTION.md`; create the empty inventory and prepare the exact first candidate.
 6. Approve that exact candidate and trust configuration.
 7. Retain the exact candidate under the configured semantic snapshot contract.
 8. Create and install the first publication carrier.

@@ -38,8 +38,8 @@ Resolve from accepted records:
 - exact retained snapshot locator/evidence for that PlanRef;
 - exact retained carrier evidence locator/evidence for the accepted publication carrier and any recovery suffix evidence required by its event;
 - declared grammar;
-- acting Role and current holder binding;
-- target Milestone/Decision/scope;
+- for Role authority: acting Role and its own current holder binding; for temporary execution: exact bounded authorization, authorizing Role/current binding, and executor identity under `planning/EXECUTION.md`;
+- typed target and its own prerequisites/authority under `planning/EXECUTION.md`;
 - authority source;
 - when accepting a Milestone: exact `contract_plan_ref`, accepting Role, authority source, and evidence;
 - when dispatch depends on DONE: current PlanRef must actually project DONE and index acceptance;
@@ -60,6 +60,8 @@ Read together as applicable:
 - `planning/ROLES.md` — Role scopes/holders/capabilities.
 - `planning/PUBLICATION.md` — bootstrap/publication model.
 - `planning/PUBLICATION_TRANSITIONS.md` — normative journal, retention, recovery, and notification validation.
+- `planning/EXECUTION.md` — typed targets, executor authorization, receipts, configured inventory, and succession.
+- configured execution inventory (default `planning/EXECUTION_INVENTORY.md`) — package/attempt/route/result/check state; create from its template in an instantiated project.
 - `planning/CURRENT.md` — carrier record on the publication ref.
 - `planning/FOUNDING.md` — root founding record when applicable.
 - `planning/PARENT.md` — parent relationship when nested.
@@ -82,9 +84,11 @@ See `prompts/FOREMAN.md`.
 
 ## Work packages
 
-Every substantive package must bind at least project/plan identity, exact current PlanRef, serving Role, typed target, bounded objective/scope, expected evidence, and return authority. Nested work includes required parent bindings.
+Every substantive package must bind project/plan identity, exact accepted PlanRef, immutable package revision, serving Role, `target_type`/`target_id`/`target_record`, bounded objective/actions, explicit executor authorization, expected evidence, and return authority/route. Nested work includes required parent bindings. Use `planning/EXECUTION.md` and `templates/WORK_PACKAGE.md`.
 
-Temporary executors do not become Role holders merely by assignment. Completion/evidence does not itself accept a Milestone.
+Temporary executors validate their own bounded authorization and its authorizer's current accepted authority, not a fictional claim to hold the serving Role. Assignment grants no acceptance, reserved Decision, Role-binding, or re-delegation authority. Rebinding/revocation and bounded execution checkpoints follow `planning/EXECUTION.md`. Completion/evidence does not itself accept a Milestone or decide a Decision.
+
+Before dispatch, durably claim/index the exact attempt and verify required follow-ups. On succession or uncertain delivery/execution, reconcile the existing attempt, routes, results, receipts, and actual scheduler state before retrying/replacing it. Missing state never permits speculative redispatch.
 
 ## Publication notifications
 
@@ -102,6 +106,8 @@ active_work_impact
 ```
 
 Before transition-specific actions, match the payload to validated journal state and retained carrier evidence plus durable last-applied state. Ignore duplicates; do not let stale/superseded messages reapply older actions. Reconcile skipped/out-of-order events in trusted journal order.
+
+Material changes require durable per-attempt receipts: recorded, sent/wake attempted, delivered, acknowledged, applied, and closed are separate facts. A sent or acknowledged pause is **not confirmed stopped** without application/enforcement evidence. Foreman maintains a verified publication reconciliation check and receipt timeout/recovery checks; affected executors follow bounded revalidation/stop rules in `planning/EXECUTION.md`.
 
 ## Cross-repository nesting
 

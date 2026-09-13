@@ -59,6 +59,8 @@ For every affected active package state one:
 continue | pause | redirect | supersede
 ```
 
+Identify exact package revisions/attempts from the configured execution inventory, affected typed targets, requested actions, recipient routes, and acknowledgement/application deadlines. Prepare recovery obligations under `planning/EXECUTION.md`; do not treat a missing worker as stopped.
+
 Until trusted publication succeeds, operational work remains governed by the prior accepted PlanRef.
 
 ## Parent/child impact
@@ -118,3 +120,7 @@ controlling_links:
 ```
 
 Foreman matches this payload to the exact trusted publication event and reconciles stale/duplicate/out-of-order events before applying transition-specific actions.
+
+After journal commit, record/index one material request/receipt per affected attempt before its wake, using `templates/EXECUTION_RECEIPT.md`. Record actual verified check IDs/owners for acknowledgement and application recovery. The publication reconciliation check must discover this event even if the initial Foreman notification is lost.
+
+Track recorded, sent/wake attempted, delivered, acknowledged, applied, and closed separately. A sent/acknowledged pause remains **not confirmed stopped** until application/enforcement evidence covers its in-flight work. Preserve old receipts when a later change supersedes them; a new `continue` does not silently erase an unresolved stop.
