@@ -129,18 +129,21 @@ flowchart TD
 
   M1["M1: Stable foundation"]
   M2["M2: Second subsystem validated"]
+  M4["M4: Third foundation validated"]
   TWO{"At least 2 validated"}
   D1{"Select integration strategy"}
   M3["M3: Integrated system validated"]
 
   M1 --> TWO
   M2 --> TWO
+  M4 --> TWO
   TWO --> D1
   ProjectLead -- "decides" --> D1
   D1 -- "integrate" --> M3
 
   ProjectLead -- "assigned to" --> M1
   FeatureLead -- "assigned to" --> M2
+  FeatureLead -- "assigned to" --> M4
   ProjectLead -- "assigned to" --> M3
 
   classDef ROLE fill:whitesmoke,stroke:slategray,stroke-width:15px,color:black,font-weight:600,font-size:16px,rx:8,ry:8;
@@ -154,7 +157,7 @@ flowchart TD
   class TWO GATE
   class D1 DECISION
   class M1 MILESTONE_INPROGRESS
-  class M2,M3 MILESTONE_PENDING
+  class M2,M3,M4 MILESTONE_PENDING
 ```
 
 Solid arrows are hard prerequisites; dotted `preferred before` edges are scheduling preferences. OR/N-of-M logic requires an explicit Gate. See `planning/CONVENTIONS.md` for the exact grammar.
