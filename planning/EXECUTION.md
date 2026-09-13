@@ -201,7 +201,70 @@ On startup, succession, or capability loss:
 
 Schedule lifecycle depends on the execution substrate. Do not infer that archive equals deletion, that an ancestor's retirement removes descendant work, or that unarchiving restores schedules. Verify the actual context/resource owner and each task's state. A task ID or a UI card without an existence/status result is not liveness proof.
 
-Externalize results, inventory, and recovery routes before a planned holder teardown. Cleanup disposition is an independently evidenced fact, not a side effect inferred from retirement. Generic worker cleanup permission does not authorize destroying a multi-context project/container; exact destructive scope needs its own authority. This contract does not define a universal execution-context capability profile or topology.
+Externalize results, inventory, and recovery routes before a planned holder teardown. Cleanup disposition is an independently evidenced fact, not a side effect inferred from retirement. Generic worker cleanup permission does not authorize destroying a multi-context project/container; exact destructive scope needs its own authority. No universal lifecycle behavior or Foreman topology is implied.
+
+## Execution-context capability profiles
+
+Keep a small durable capability profile for each actual execution environment/context used for coordination, including relevant containing resources, in the existing configured inventory using `templates/EXECUTION_INVENTORY.md`. It describes runtime capabilities, not Role authority, plan identity, publication currentness or a different inventory mechanism. Profile updates use the existing serialized writer/claim and history rules. A new holder/context may need a new or revalidated profile; this does not move the fixed inventory or change the succession procedure above.
+
+Bind a profile ID/revision to the exact runtime resource identity and locator, provider/environment kind, relevant tool/route/configuration or target mode, and container relationship. Use actual substrate resource IDs within the existing project/plan context, not display names alone; this creates no new qualified-reference scheme. Record read/send/recovery route limitations and link the corresponding executor attempts and scheduler records. Record the schedule's actual owning resource and its relation to the context/container, separately from the notification target or logical Role holder. If identity/ownership cannot be established, retain `unknown` and block reliance that requires it.
+
+The minimum facts are:
+
+```text
+context_kind
+create_supported
+creation_constraints_or_target_modes
+archive_supported
+unarchive_supported
+permanent_delete_supported
+child_creation_supported
+scheduled_task_supported
+schedule_owner
+archive_effect_on_own_schedules
+archive_effect_on_descendants
+unarchive_effect_on_schedules
+archived_target_reachability_or_delivery_behavior
+project_or_container_delete_supported
+deletion_scope
+capability_evidence_and_last_verified
+```
+
+Every support field uses `supported | unsupported | unknown`. `supported` means established only for its recorded environment, operation, route and conditions; it does not prove permission or that a particular action succeeded. `unsupported` requires evidence of unavailability within those bounds. For example, deletion not exposed by the tested local tools describes that tool route, not universal impossibility of deletion. An untested route remains `unknown`. Descriptive effects, ownership, creation constraints and deletion scope also permit `unknown`; an empty field is not evidence of no effect.
+
+For **each fact**, `capability_evidence_and_last_verified` identifies its source/retained observation or configured contract, exact applicability and limitations, who/what verified it and when, and the conditions requiring recheck. Retain exact evidence content or its content identity/locator, including the configuration revision for configured behavior, under the existing inventory history rules. Distinguish a documented/configured behavior from an observed result. Evidence for one field does not verify the whole profile. Keep prior observations when a fact changes; a later check must not silently universalize a bounded observation. A remembered behavior, another substrate's profile, or mere tool/UI existence is not verification.
+
+Before selecting or relying on a substrate for a lifecycle operation, scheduling, recovery or cleanup, Foreman checks the required facts against the actual current environment/resource/route. A historical timestamp alone cannot establish continuing applicability. Changed configuration/target mode/route, contrary evidence, expired validity conditions or an unverified replacement context makes the affected fact stale or unknown for use. Verify through an authorized source/route before relying on it; if unavailable, keep that dependent action blocked. This rule does not authorize an experiment, destructive probe or unarchive. For deletion, unknown support or affected scope fails closed under the existing exact-scope authority rule above.
+
+Capability, actual resource/task state and permission are three separate checks. A profile guides which owner/context/scheduler records must be queried during **Scheduler inventory and succession**; it does not mark a task live, prove a context reachable or deleted, establish message delivery/cessation, settle a receipt, or grant cleanup authority. Link actual operation/verification evidence in the existing attempt, scheduler and succession records. Keep archive, unarchive and permanent deletion distinct. The preceding conservative lifecycle/destructive rules remain controlling; a supported container-delete capability cannot enlarge generic worker-cleanup permission.
+
+When selecting among permitted substrates, weigh setup, verification, cleanup and usage cost against required capabilities/isolation. This is qualitative selection guidance, not a topology rule or numeric duration threshold.
+
+### Bounded evidence and acceptance cases
+
+The two columns below illustrate representation of **historical reported observations**, not current operational profiles or platform guarantees. Sources: [local cases](https://github.com/davrec72/nested-planning-template/issues/27) and [local follow-up](https://github.com/davrec72/nested-planning-template/issues/27#issuecomment-5649922758); [TempTestProject1 report](https://github.com/davrec72/nested-planning-template/issues/27#issuecomment-5653656643). A real inventory must retain the exact resource IDs, evidence and applicability checks; these summaries supply no missing IDs or current verification.
+
+| Fact | Tested local/ephemeral route | Tested ChatGPT Project/cloud Work route |
+|---|---|---|
+| Resource/creation | Recursive child creation observed. Bind each actual context and owning resource; do not infer identity from a Role name. | Cloud Work creation in disposable TempTestProject1 observed; initial local-target attempt rejected and created no task. This constraint is limited to that tested setup. |
+| Archive/unarchive | Owner-child archive removed its recurring schedule in one case; unarchive did not recreate it. Ancestor archive left the descendant and its schedule intact in another case. | Archive, unarchive and their effects remain `unknown`: they were not tested by this report. |
+| Deletion | Permanent deletion was not exposed by the tested local task tools: `unsupported` on that route; other routes remain `unknown`. | Work task deletion, then deletion of its verified empty disposable project, observed. Nonempty-container cascades and deletion scope outside that case remain `unknown`. |
+| Scheduler support/owner | Child-owned recurring task operation observed; actual owner/task identity and current liveness still need their own evidence. | `unknown`; no schedules were created. Cloud creation/deletion does not establish scheduler behavior. |
+| Reachability/routes | Archived history remained readable, but direct send to an archived target was rejected, not queued/delivered or auto-unarchived. These are different operations. | Task reply `got it` and rename from `Confirm receipt` to `TTPForeman` observed; after deletion the task was no longer readable. Archived-target behavior remains `unknown`. Rename can be retained as an additional scoped observation, not inferred from create support. |
+| Evidence/currentness | Retain the reported cases and per-fact bounds; they do not establish today's support/state for a new context. | Retain the reported order: task removed, empty project removed, inventory count restored; no files/schedules created. It is not a reusable deletion authorization. |
+
+| Acceptance case | Required conclusion |
+|---|---|
+| Two environments differ on archive/delete/scheduling | Separate profiles retain their own supported/unsupported/unknown facts. Logical Role/plan semantics do not change and neither profile fills the other's gaps. |
+| A required capability is unknown, stale or contradicted | Block reliance until authorized verification resolves that fact for the actual target/route. Unaffected supported capabilities need their own checks; absence of an exposed tool proves only that bounded route limitation. |
+| Container deletion is supported, but the proposed target contains other contexts or its scope is unknown | Expose the exact target/affected resource set or `unknown`; apply existing exact destructive authority. Worker-cleanup permission cannot authorize broader deletion, and unknown scope cannot be guessed from an empty-project test. |
+| A successor finds an old profile and schedule ID | Revalidate applicability and query the recorded actual owner/task and routes under the existing succession procedure. Profile support is not liveness, a readable history is not a delivery route, and remembered UI behavior is not evidence. |
+| A worker is unarchived or an ancestor is retired | Use the profile to identify the separate resource/scheduler queries; record actual outcomes. Do not manufacture restored tasks, descendant cleanup or receipt closure from the lifecycle label. |
+| Capability verification itself is outside current authority | Leave the fact unknown and dependent action blocked; a profile requirement does not grant testing, creation or destructive permission. |
+
+David's reported practical heuristic is that browser-heavy projects **probably** are not worthwhile for subprojects expected to take under about one hour unless a concrete capability/isolation need justifies them. This is non-normative owner guidance, not a platform limit or protocol threshold; the qualitative cost/benefit rule above remains the durable guidance.
+
+Existing projects adopt these profile requirements under their preceding accepted governance. Populate profiles for current resources from bounded evidence, preserving unknowns and historical observations without fabricating prior checks. This adds runtime evidence inside the existing inventory; it changes no inventory identity/serialization/history, fence, receipt, grammar, authority or publication contract.
 
 ## Compatibility and migration
 
