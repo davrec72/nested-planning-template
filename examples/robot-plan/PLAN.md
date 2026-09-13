@@ -42,7 +42,24 @@ flowchart TD
   linkStyle default stroke:slategray,stroke-width:3.5px,fill:none;
 ```
 
+## Navigation
+
+| Node | Relation | Go to |
+|---|---|---|
+| R2 | child plan | [Child plan (unresolved external placeholder)](https://<host>/example-owner/learning-project/blob/<navigation-ref>/planning/PLAN.md) |
+
+This canonical target matches R2's `Child plan` below and the fictional external child repository/path. It is unresolved and nonoperational: fill the host and navigation ref with the actual child `PLAN.md` locator before use, then derive the table link from that source. See [external navigation](../navigation/README.md#external-child).
+
+Source-tree documentation mirror only: [child example page](../child-project/PLAN.md). This local copy is not R2's canonical external child-plan target.
+
 ## Child implementation binding for R2
+
+Navigation excerpt of the Milestone record (other contract semantics remain in the parent contract):
+
+```text
+MilestoneID: R2
+Child plan: https://<host>/example-owner/learning-project/blob/<navigation-ref>/planning/PLAN.md
+```
 
 ```text
 child_plan: {"repository_identity": {"scheme": "github-repository-id-v1", "authority": "github.com", "id": "1002"}, "plan_id": "LEARNING", "object_kind": "plan"}

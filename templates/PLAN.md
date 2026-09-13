@@ -49,6 +49,16 @@ flowchart TD
   linkStyle default stroke:slategray,stroke-width:3.5px,fill:none;
 ```
 
+## Navigation
+
+Populate this visible table for every navigable node using `planning/CONVENTIONS.md` -> **Human navigation**. Derive child links from the Milestone's `Child plan` and Decision/DATA links from the definition index; omit nodes without targets. Replace the illustrative row with stable node IDs and ordinary Markdown links, such as `[Child plan](./plans/<PlanID>/PLAN.md)`, after setting the actual source locator. All targets below are nonoperational placeholders. Mermaid clicks are optional and cannot replace this table.
+
+| Node | Relation | Go to |
+|---|---|---|
+| `<MilestoneID / DecisionID / DataID>` | `<child plan / details / data details>` | `<Markdown link derived from the existing source locator>` |
+
+## Milestone contracts
+
 For each milestone maintain a durable record containing at least:
 
 ```text

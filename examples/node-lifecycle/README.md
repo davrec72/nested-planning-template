@@ -41,6 +41,22 @@ flowchart TD
   class MA,MB,MC MILESTONE_PENDING
 ```
 
+## Navigation
+
+| Node | Relation | Go to |
+|---|---|---|
+| D0 | details | [Decision definition and lifecycle](#decision-branches-and-an-explicit-or-rejoin) |
+| REPORT | data details | [DATA definition and lifecycle](#data-identity-usability-replacement-and-withdrawal) |
+
+The links derive from this walkthrough's definition index below. These are inline illustrative definitions, not operational accepted records; all original lifecycle assumptions still apply. No child targets are specified for MA-MC.
+
+| Node ID | Kind | Declared node contract | Definition locator in this illustrative snapshot |
+|---|---|---|---|
+| D0 | `DECISION` | `decision-result-v1` | `#decision-branches-and-an-explicit-or-rejoin` |
+| REPORT | `DATA` | `data-dependency-v1` | `#data-identity-usability-replacement-and-withdrawal` |
+
+### Decision walkthrough continued
+
 This diagram illustrates P0's topology. Its later class projections change only through accepted planning state. G's predicate is objective: read the exact active result and count the selected branch's operative DONE Milestone. G has no deciding Role. MC requires both G and REPORT because its two ordinary incoming prerequisites are AND.
 
 The immutable selection R-A binds D0's exact definition/input PlanRef P0, exact evidence revisions I1, Lead's independently accepted authority/binding at issuance, issuer identity/time, `selected_outcomes: [A]`, `selection_cardinality: exactly_one`, and no predecessor. Its work-disposition record states no prior affected branch work with supporting evidence.
