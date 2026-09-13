@@ -33,6 +33,7 @@ README.md
 planning/
   PLAN.md
   CONVENTIONS.md
+  NODE_CONTRACTS.md
   NESTING.md
   ROLES.md
   PUBLICATION.md
@@ -53,6 +54,10 @@ templates/
   PARENT_CONTRACT.md
   ROLE_DELEGATION.md
   MILESTONE_ACCEPTANCE.md
+  DECISION.md
+  DECISION_RESULT.md
+  DATA.md
+  DATA_RESOLUTION.md
   CURRENT.md
   FOUNDING.md
   PUBLICATION_EVENT.md
@@ -60,6 +65,7 @@ examples/
   robot-plan/
   child-project/
   execution/
+  node-lifecycle/
 ```
 
 The template source is not itself an instantiated operational plan. Instantiated projects additionally create the required publication/founding records under `planning/PUBLICATION.md` and configure/create the execution inventory under `planning/EXECUTION.md`.
@@ -71,6 +77,8 @@ The current roadmap grammar is **`plan-grammar-v2`**.
 v2 keeps Milestone delivery/evidence, Milestone acceptance, and roadmap projection separate. A Milestone-source hard prerequisite opens only when the current accepted PlanRef projects the Milestone `MILESTONE_DONE` and indexes its durable acceptance record.
 
 Historical v1 plans remain v1; do not silently reinterpret them.
+
+Decision and DATA semantics can explicitly adopt the separately versioned `decision-result-v1` and `data-dependency-v1` contracts. Their current accepted PlanRef indexes exact immutable records; the node contracts do not replace roadmap grammar v2. Legacy explicit semantics continue until an accepted migration. See `planning/NODE_CONTRACTS.md`.
 
 ## Required concepts
 
@@ -89,6 +97,14 @@ A **Gate** is an objective predicate. No Role decides a Gate.
 ### Decision
 
 A **Decision** requires judgment and has exactly one final deciding Role under the accepted grammar.
+
+Under `decision-result-v1`, an immutable result records exact definition/inputs, deciding authority and outcome selection. It opens only the selected branches after the accepted published PlanRef indexes it. Replacement/revocation preserves the old result and explicitly disposes affected branch work. Alternative branches rejoin through an explicit objective OR Gate.
+
+### DATA
+
+**DATA** is an artifact dependency with objective usability conditions. Under `data-dependency-v1`, an immutable resolution pins the exact artifact and the subject/input revisions it describes. The current accepted PlanRef selects that resolution, and its identity/usability must still match the consumer's use. Existence alone, a report for the wrong revision, or an unindexed replacement cannot satisfy it. Replacement/withdrawal changes the accepted index and preserves history; DATA has no acceptance receipt or DONE class.
+
+See `examples/node-lifecycle/README.md` for Decision A→B replacement, DATA identity/replacement/withdrawal, and Milestone start/pause/resume/DONE/reopening. Non-DONE status changes use appropriate execution evidence; DONE requires valid acceptance/index; reopening preserves the prior immutable receipt.
 
 ### PlanRef
 
@@ -262,7 +278,7 @@ Use `templates/EXECUTION_RECEIPT.md`. Direct messages, webhooks or polling can c
 ## Starting a project
 
 1. Copy/fork the template.
-2. Create the initial roadmap and sparse project-specific Roles.
+2. Create the initial roadmap and sparse project-specific Roles, and explicitly adopt/index any Decision/DATA node contracts and their initial empty or valid current records.
 3. Decide root vs child bootstrap.
 4. Configure founding/parent authority plus publication ref, trusted journal, PlanRef-retention mechanism, and carrier-evidence-retention mechanism.
 5. Configure execution inventory location/serialization, reconciliation/receipt deadlines, escalation routes and bounded executor checkpoints under `planning/EXECUTION.md`; create the empty inventory and prepare the exact first candidate.

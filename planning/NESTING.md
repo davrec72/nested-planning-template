@@ -203,7 +203,7 @@ Native interpretation requires a grammar version that the parent explicitly know
 
 For the current contract:
 
-- a `plan-grammar-v2` parent may natively interpret a `plan-grammar-v2` child;
+- a `plan-grammar-v2` parent may natively interpret a `plan-grammar-v2` child only for semantics it supports, including any explicitly declared Decision/DATA node-contract version under `NODE_CONTRACTS.md`; unsupported node contracts fail closed at the affected node/boundary rather than acquiring meaning from the shared grammar label;
 - `plan-grammar-v1` and `plan-grammar-v2` are **not** silently compatible;
 - a v1 child remains valid under its own historical v1 semantics, but a v2 parent must not reinterpret its internal Milestones, acceptance state, or dependency activation as though the child had produced v2 records;
 - until a cross-version child is migrated or an explicit compatibility rule is accepted, treat the child boundary as **opaque**: rely only on the explicit parent contract and accepted boundary evidence.

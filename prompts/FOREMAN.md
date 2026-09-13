@@ -60,6 +60,7 @@ Then read authority/planning files at the exact accepted `plan_ref`, including a
 AGENTS.md
 planning/PLAN.md
 planning/CONVENTIONS.md
+planning/NODE_CONTRACTS.md and indexed definitions/results for adopted Decision/DATA contracts
 planning/NESTING.md
 planning/ROLES.md
 planning/EXECUTION.md
@@ -110,6 +111,8 @@ return_route=<durable result destination and explicit wake route>
 For nested work include required parent identity/PlanRef/contract bindings.
 
 Decision preparation uses that Decision's own prerequisites and deciding Role, without inventing a downstream Milestone. DATA and maintenance targets use their explicit accepted scope; no target type creates authority or changes node lifecycle semantics.
+
+For an adopted `decision-result-v1` or `data-dependency-v1`, resolve the definition through the current accepted plan's node-contract index. Only its exact active result/resolution may open the dependency; validate the Decision's outcome/cardinality and other prerequisites, or DATA's exact artifact/subject/inputs and objective usability. Unindexed replacements and unsupported contracts cannot authorize dispatch. Published replacement/revocation/withdrawal includes explicit disposition for affected branch/consumer work under `planning/NODE_CONTRACTS.md`.
 
 Temporary executors validate the exact package authorization, authorizing Role/current holder binding, permitted actions/tools, identity, validity and reserved decisions. They do not become Role holders or acquire acceptance, reserved Decision, Role-binding, or re-delegation authority. You may route an existing grant, but your Foreman binding does not issue substantive permission.
 

@@ -53,6 +53,35 @@ The exact candidate must be durably cold-fetchable independently of ordinary bra
 
 ## Active work handling
 
+For adopted Decision/DATA activation changes, additionally identify:
+
+```text
+affected_node_and_contract_version:
+exact_definition_and_input_revisions:
+prior_operative_record: none | <exact result/resolution>
+new_operative_record: none | <exact result/resolution>
+replacement_revocation_or_withdrawal_record: <exact immutable record or none>
+retained_record_history:
+affected_branch_or_consumer_work_disposition:
+```
+
+The current accepted PlanRef is the sole operative selection boundary under `planning/NODE_CONTRACTS.md`. Retain prior records unchanged, validate exact incumbent replacement and authority, and give each affected work item an explicit bounded disposition. Do not publish an activation change while required disposition is unresolved or treat an unindexed result/resolution as current.
+
+For Milestone status changes record:
+
+```text
+milestone_id:
+prior_plan_ref:
+prior_status_class:
+new_status_class:
+transition_evidence: <exact execution event, acceptance, or reopening decision>
+transition_authority_source:
+current_acceptance_record_index: none | <valid acceptance locator for DONE>
+historical_acceptance_and_reopening_links: <locators or none>
+```
+
+Apply the transition-specific rules in `planning/CONVENTIONS.md`: projecting DONE requires valid acceptance/index; starting/resuming or pausing uses appropriate authorized execution evidence; reopening a DONE Milestone requires an authorized reopening/revocation/correction decision and preserves the old receipt unchanged. Reopening directly to INPROGRESS also needs start/resume evidence. Do not fabricate acceptance for a non-DONE status update or treat an unconfirmed stop as proved cessation.
+
 For every affected active package state one:
 
 ```text
