@@ -2,6 +2,8 @@
 
 Fill every header field before substantive dispatch.
 
+Child managed execution also requires current accepted `transition-action-v1` configuration and a valid reconciled adoption/legacy baseline under `planning/EXECUTION.md` -> **Operational eligibility**. A first child publication choosing `none` stays no-dispatch until later valid adoption; a parent grant or an empty inventory does not waive this boundary.
+
 ```text
 plan_id: <stable PlanID>
 grammar: plan-grammar-v2

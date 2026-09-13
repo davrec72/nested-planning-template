@@ -39,6 +39,7 @@ planning/
   ROLES.md
   PUBLICATION.md
   PUBLICATION_TRANSITIONS.md
+  EXECUTION.md
   PARENT.md
 prompts/
   FOREMAN.md
@@ -48,6 +49,8 @@ templates/
   CHILD_PLAN.md
   CHILD_ROLES.md
   WORK_PACKAGE.md
+  EXECUTION_INVENTORY.md
+  EXECUTION_RECEIPT.md
   PLAN_CHANGE.md
   PARENT_CONTRACT.md
   ROLE_DELEGATION.md
@@ -59,14 +62,16 @@ templates/
   CURRENT.md
   FOUNDING.md
   PUBLICATION_EVENT.md
+  TRANSITION_ACTION.md
 examples/
   robot-plan/
   child-project/
+  execution/
   node-lifecycle/
   cross-plan/
 ```
 
-The template source is not itself an instantiated operational plan. Instantiated projects additionally create the required publication/founding records under `planning/PUBLICATION.md`.
+The template source is not itself an instantiated operational plan. Instantiated projects additionally create the required publication/founding records under `planning/PUBLICATION.md` and configure/create the execution inventory under `planning/EXECUTION.md`.
 
 ## Current grammar
 
@@ -178,16 +183,25 @@ A child repository may instead bootstrap from accepted parent authority covering
 
 ```text
 exact semantic candidate exists
+    -> when transition-action-v1 applies, prepare exact carrier manifest, inventory baseline and fence ID/scope
     -> valid pre-existing authority approves that exact SHA
+       and explicitly binds the exact applicable manifest identity
     -> exact candidate is durably retained for cold fetch
-    -> successor publication carrier is prepared
+    -> successor publication carrier is prepared with CURRENT and the applicable manifest
+    -> conditionally acquire durable publication/dispatch fence against that exact analyzed baseline
     -> configured publication ref conditionally/non-force advances
     -> exact carrier and required recovery evidence are durably retained
-    -> trusted append-only/tamper-evident journal commits the exact ref-update event
+    -> while fenced, trusted journal commits the exact ref-update event and fence evidence
     -> only then is candidate the current accepted PlanRef
+    -> durably release fence; later dispatch validates the newly accepted state
+    -> adoption enables managed execution only after baseline obligations are indexed/reconciled and checks verified
 ```
 
 ### Why both Git carriers and a journal?
+
+`transition-action-v1` is explicitly adopted and mandatory for autonomous/Foreman-managed execution. `transition_action_contract: none` is planning/pre-execution no-dispatch mode: inventory/read-only coordination may exist, but even a first dispatch into an empty inventory is blocked. Only v1 currently supplies the supported operational reconstruction contract; an undefined alternative is insufficient. A material publication staying in `none` must affect no active/outstanding execution obligation and preserve no-dispatch mode. Legacy obligations require valid reconciliation/stop or predecessor-authorized adoption, not guessed pause requests.
+
+The adjunct provides reconstructible execution impact. Every governed planning carrier contains an immutable manifest, including a checked empty one. It binds the candidate/predecessor, exact inventory baseline/obligation set, preallocated fence ID/scope and explicit per-attempt actions/recipients/routes/deadline/recovery rules. The journal binds its carrier path/blob/record ID and durable fence acquisition/held-through-commit evidence; existing retention preserves them. The same serialized inventory/dispatch mechanism blocks affected obligation-creating mutations while fenced, including potential new attempts. Changed baseline requires rebuilding/reapproving before ref movement; a reread alone is insufficient. No-impact fencing, verified abort/recovery/release and narrow bootstrap/legacy rules follow section 9; timeout cannot erase a fence. No second journal, new currentness protocol or retention trust root is introduced. See `templates/TRANSITION_ACTION.md` and `planning/PUBLICATION_TRANSITIONS.md` section 9 for approval, legacy adoption and cold validation.
 
 Git ancestry proves content relationships, but a fresh clone cannot prove that a mutable ref was never previously advanced and later reset. NPT therefore requires a bootstrap-configured trusted publication journal that preserves committed publication events independently of the mutable ref.
 
@@ -255,7 +269,17 @@ Foreman startup resolves current accepted state from the trusted publication jou
 
 Scheduled tasks are treated as execution-context-bound resources; succession must verify/recreate them rather than trusting old IDs.
 
-See `prompts/FOREMAN.md`.
+Foreman discovers packages, exact revisions/attempts, authorization, worker/return routes, material receipts, results and schedules from one configured durable execution inventory. It serializes dispatch claims and reconciles unknown sends/execution before replacing a worker. A successor resumes coordination of existing work; missing chat memory is not permission to redispatch it.
+
+See `prompts/FOREMAN.md`, `planning/EXECUTION.md`, and `templates/EXECUTION_INVENTORY.md`.
+
+## Work packages and temporary executors
+
+Packages bind `target_type`/`target_id` to a Milestone, Decision, DATA node, or explicitly accepted maintenance scope. Decision research uses the Decision's own prerequisites and deciding Role; no downstream or dummy Milestone is required. These are work targets, not new roadmap node semantics.
+
+A temporary worker validates an exact bounded authorization identifying its authorizing Role/current holder, executor context, permitted actions/tools, validity/stop conditions, and reserved decisions. It does not become the Role holder. The grant cannot accept Milestones, make reserved Decisions, bind Roles, or re-delegate substantive authority.
+
+Use `templates/WORK_PACKAGE.md`. `planning/EXECUTION.md` includes explicit migration from legacy `milestone`-only packages: retain old records, revalidate authorization and existing attempts, and create a linked revision without speculative redispatch. Adopting this execution contract requires normal accepted publication; the roadmap and publication grammar retain their existing meanings.
 
 ## Propagation
 
@@ -263,20 +287,26 @@ Published-change notifications are wake mechanisms, not authority.
 
 Every notification binds the exact committed publication event/carrier. Foreman tracks the last applied event per relevant scope/package; duplicate, stale, skipped, and out-of-order notifications are reconciled in trusted journal order before transition-specific actions are applied.
 
+Material requests are durable before a wake is attempted. Sent, delivered, acknowledged, and applied are separate facts. A pause is **not confirmed stopped** until exact cessation/enforcement evidence accounts for in-flight work. Actual publication-reconciliation and receipt-recovery schedules catch lost wakes; bounded executor checkpoints restrict further execution when authority cannot be validated. Stronger lease/fencing behavior is a project policy.
+
+Operational publication reconciliation uses the exact journal-bound retained transition-action manifest under the required accepted adoption. Foreman validates and indexes every missing stable request/recipient receipt/check before advancing its marker; explicit `continue` differs from checked no impact. An initial lost wake needs no PR/history lookup. Historical events remain valid and unresolved legacy obligations are explicitly reconciled/carried into the predecessor-approved adoption baseline.
+
+Use `templates/EXECUTION_RECEIPT.md`. Direct messages, webhooks or polling can carry wakes; bare completion is not guaranteed notification. Verify schedule ownership/liveness on the actual substrate instead of inferring archive/delete cascades. See the bounded examples and recorded dogfooding qualifications in `examples/execution/CASES.md`.
+
 ## Starting a project
 
 1. Copy/fork the template.
 2. Create the initial roadmap and sparse project-specific Roles, and explicitly adopt/index any Decision/DATA node contracts and their initial empty or valid current records.
 3. Decide root vs child bootstrap.
 4. Configure founding/parent authority plus publication ref, trusted journal, PlanRef-retention mechanism, and carrier-evidence-retention mechanism.
-5. Prepare the exact first candidate.
-6. Approve that exact candidate and trust configuration.
+5. Configure execution inventory location/serialization, reconciliation/receipt deadlines, escalation routes and bounded executor checkpoints under `planning/EXECUTION.md`; create the empty inventory and prepare the exact first candidate.
+6. If managed execution is intended from first publication, include explicit `transition-action-v1` adoption and its empty/baseline carrier manifest; approve both exact identities and trust configuration under bounded founding/parent authority. A candidate choosing `none` instead remains no-dispatch until later valid adoption.
 7. Retain the exact candidate under the configured semantic snapshot contract.
-8. Create and install the first publication carrier.
+8. Create and install the first publication carrier with CURRENT and the required approved manifest, following section 9's completeness/fence rules when adopting v1. A planning-only `none` publication follows its no-dispatch/no-affected-obligation boundary.
 9. Retain the exact first carrier evidence under the configured carrier contract.
 10. Commit the first trusted journal event.
-11. Only then are the initial Roles—including Foreman—operational.
-12. Use `templates/PLAN_CHANGE.md` for later semantic changes and the publication protocol to make them current.
+11. Only then are the initial Role bindings accepted. Before the first managed dispatch, additionally validate current v1 adoption and durably index/reconcile its complete empty/carried baseline with required checks verified. Foreman under `none` remains limited to authorized inventory/read-only coordination.
+12. Use `templates/PLAN_CHANGE.md` for later semantic changes. To enable execution from `none`, prevent new obligation creation under predecessor governance, reconcile legacy through its high-water, publish a conforming approved adoption manifest/fence and complete baseline reconciliation/checks before dispatch. Unknown legacy obligations block enablement; historical manifests/fences are never fabricated.
 
 ## Authority rule that overrides convenience
 

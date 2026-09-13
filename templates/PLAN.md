@@ -2,6 +2,8 @@
 
 Copy this structure into `planning/PLAN.md` and replace all placeholders.
 
+A plan used for autonomous/Foreman-managed execution must have current accepted `transition-action-v1` publication configuration and a valid reconciled adoption/legacy baseline before dispatch. `none` is planning-only/no-dispatch mode, even if inventory is empty. Apply `planning/EXECUTION.md` -> **Operational eligibility**; roadmap content or a Role binding alone does not enable execution.
+
 ```text
 plan_id: <stable PlanID>
 grammar: plan-grammar-v2
