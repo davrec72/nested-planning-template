@@ -48,9 +48,9 @@ Hold through valid trusted journal commit. Record normal release afterward and v
 
 Every package is discoverable here, including drafts and dispatches with uncertain outcomes. Exact detailed records may be linked to keep the table short.
 
-| Package ID / immutable revision | Exact package and authorization | PlanRef / typed target | Attempt / executor context | Coordination state / last execution observation | Return Role / route | Outstanding receipts / checks | Latest durable result |
+| Package ID / immutable revision | Exact package and authorization | Package baseline PlanRef / typed target | Attempt / executor context | Coordination state / last execution observation | Return Role / route | Outstanding receipts / checks | Latest durable result |
 |---|---|---|---|---|---|---|---|
-| `<ID/revision>` | `<locators>` | `<PlanRef; type; ID; target record; parent bindings if any>` | `<attempt ID; identity; context; route>` | `<state; observation time/evidence>` | `<Role; durable destination; wake/query route>` | `<IDs/locators or none>` | `<exact artifact/revision or none>` |
+| `<ID/revision>` | `<locators>` | `<immutable package PlanRef; type; ID; definition at that ref; parent bindings if any>` | `<attempt ID; identity; context; route>` | `<state; observation time/evidence>` | `<Role; durable destination; wake/query route>` | `<IDs/locators or none>` | `<exact artifact/revision or none>` |
 
 Each linked attempt record must retain:
 
@@ -65,6 +65,7 @@ coordination_state_and_transition_evidence:
 execution_observation_and_in_flight_effects:
 executor_context_reachability_checked_at_and_evidence:
 current_checked_plan_ref_and_publication_event:
+current_validation_evidence_and_conclusion:
 last_applied_publication_event:
 outstanding_material_receipts:
 scheduled_check_ids:
@@ -72,6 +73,8 @@ latest_durable_result_and_exact_revision:
 predecessor_or_replacement_attempt_and_disposition:
 next_recovery_action_owner_and_due_time:
 ```
+
+Before first dispatch, every resume or other obligation-creating action, retain that exact current accepted SHA/event and reconciliation/current-sensitive check evidence under `planning/EXECUTION.md` -> **Package baseline and current validation**. Preserve prior checks in history. Neither the inventory-wide checked ref nor the immutable package baseline substitutes for this attempt's action-time check. An unrelated later PlanRef does not rewrite the package `plan_ref` or its target definition.
 
 `unknown`, `blocked`, and `pause-requested` do not prove cessation. `returned` does not mean accepted. A replacement needs prior cessation/non-start or effective fencing evidence, not just a new row.
 

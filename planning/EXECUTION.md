@@ -52,7 +52,7 @@ Acquire conditionally against the exact approved impact baseline after approval 
 
 ## Typed targets
 
-Every package binds `target_type` and `target_id` at its exact accepted `plan_ref`:
+Every package binds `target_type` and `target_id` at its immutable `plan_ref`: the exact accepted package authorization/target-definition baseline, not a field to overwrite with later current state.
 
 | `target_type` | `target_id` resolves to | Dispatch and return boundary |
 |---|---|---|
@@ -61,7 +61,7 @@ Every package binds `target_type` and `target_id` at its exact accepted `plan_re
 | `data` | An existing DATA node | Its own dependency/evidence contract and accepted producing scope govern work. Producing an artifact does not establish satisfaction beyond the accepted node rules. |
 | `plan-maintenance` | A stable bounded maintenance scope in an accepted record named by `target_record` | The accepted scope names its authority, inputs, and limits. This is a work classification, not a new roadmap node or exemption from governance. |
 
-Record `target_record` for every type so the exact definition can be retrieved. No target type supplies authority by itself. Do not assign Roles to Gates, invent Milestones for activities, or infer Decision/DATA activation rules from this table. Use the current accepted `CONVENTIONS.md` for those rules; unresolved semantics block only the dependent action.
+Record `target_record` for every type so the exact definition at the package `plan_ref` can be retrieved and interpreted. Current accepted state determines whether relying on that frozen definition remains permitted. No target type supplies authority by itself. Do not assign Roles to Gates, invent Milestones for activities, or infer Decision/DATA activation rules from this table. Use the current accepted `CONVENTIONS.md` for those rules; unresolved semantics block only the dependent action.
 
 A standalone Decision research package does not require a downstream Milestone. It cannot execute a downstream outcome whose prerequisites remain closed. In a child plan, retain the actual parent Milestone/contract binding required by `NESTING.md`; that parent boundary is distinct from the local typed target.
 
@@ -82,7 +82,18 @@ The permitted action set only narrows the authorizing Role's existing permission
 
 Record explicit validity bounds: start condition, expiry or completion condition, permitted exact input revisions, maximum uninterrupted execution segment, checkpoint policy, and stop/revocation conditions. Missing bounds are not unlimited permission. Rebinding/vacating the authorizing Role, changing the executor identity, or materially changing its authority/scope suspends the affected authorization pending explicit revalidation/reissue by the current authorized holder. Foreman succession alone does not rebind the substantive Role or silently replace the executor.
 
-An unrelated new PlanRef does not force restart. Reconcile publication history, record the current checked PlanRef/event and why the original package/authorization remains valid. Preserve its original revision and evidence. A changed permitted scope, target meaning, reserved decision, or input contract requires a new authorized package revision; do not edit an issued grant in place.
+## Package baseline and current validation
+
+The immutable package `plan_ref` identifies the exact accepted state under which this package revision was issued and its target, inputs, scope and authorization evidence were bound. Before first dispatch, every resume and any other obligation-creating action, separately resolve current accepted state and durably record `current_checked_plan_ref_and_publication_event` in the attempt/inventory. Reconcile accepted publication history through that exact event and retain `current_validation_evidence_and_conclusion` for all current-sensitive checks:
+
+- operational eligibility, explicit `transition-action-v1` adoption/baseline and outstanding publication/material-action reconciliation;
+- current Role/holder bindings, authorizer authority and executor-grant validity;
+- continued target applicability and its prerequisites, including currently operative Decision/DATA evidence and the full ancestor-readiness check when nested;
+- exact input revisions and their continued permitted use;
+- current publication/dispatch fences through the existing serialized guard;
+- revocation, scope or semantic changes affecting the package.
+
+A current-check field or a matching target file alone proves none of these predicates. The package baseline and current validation must never be collapsed. An unrelated new PlanRef does not force restart or reissue: a package prepared or paused at P1 may first dispatch/resume while P2 is current only after those checks prove its original package/authorization remains valid and any prior stop is validly disposed. Preserve P1, the original revision and evidence. Material changes to target meaning, permitted scope/inputs, required authority, executor grant, reserved decisions or another package-defining contract follow the existing suspend/revalidate/new-authorized-revision path; do not edit an issued grant in place or treat its historical validity as current permission.
 
 ## Dispatch and attempts
 
@@ -90,7 +101,7 @@ Separate the stable package ID, immutable `package_revision`, and per-executor `
 
 Before sending work:
 
-1. Validate all operational eligibility checks above, current publication/retention/authority, typed target prerequisites, authorization, executor route, and exact input revisions.
+1. Perform and durably record **Package baseline and current validation** above, including all operational eligibility checks, current publication/retention/authority, typed target prerequisites, authorization, executor route, and exact input revisions. Repeat before every resume or other obligation-creating action; do not substitute the immutable package `plan_ref` for current validation.
 2. Through the same serialized mechanism, check current publication fences and persist a durable claim containing the package/revision, attempt ID, executor/return routes, current authorization, state `dispatch-pending`, and recovery obligation. A fence blocks affected obligation-creating/broadening claims. Create and verify a real scheduled check whenever any dispatch acknowledgement, return, or future condition will be asynchronous; persist its ID, owner, trigger, and evidence before dispatch.
 3. Send the exact package/revision and attempt ID only under the current serialized fence/dispatch guard; an old claim cannot bypass an intervening fence. Record each transport attempt and its observed outcome. An ambiguous send leaves `dispatch-pending`/unknown execution, not permission to create another attempt.
 4. The executor acknowledges the exact assignment and starts/resumes only after validation, including the same serialized fence guard for obligation-creating/broadening actions. It deduplicates repeat delivery of that attempt, returning current state or existing results instead of starting again. Foreman records `running` only with executor/start evidence.

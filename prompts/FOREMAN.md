@@ -97,11 +97,11 @@ package_revision=<immutable revision>
 project=<existing project/repository identity>
 repository_identity=<adopted scheme + provider authority + stable machine ID>
 plan_id=<PlanID>
-plan_ref=<exact current accepted PlanRef>
+plan_ref=<exact accepted package authorization/target-binding PlanRef>
 role=<RoleID whose authority the work serves>
 target_type=<milestone | decision | data | plan-maintenance>
 target_id=<stable local node/scope ID>
-target_record=<exact accepted definition>
+target_record=<exact definition at the immutable package plan_ref>
 objective=<bounded outcome>
 in_scope=<explicit list>
 out_of_scope=<explicit list>
@@ -114,6 +114,15 @@ return_route=<durable result destination and explicit wake route>
 ```
 
 For nested work include required parent identity/PlanRef/contract bindings.
+
+Keep that immutable package baseline separate from current accepted state. Before first dispatch, every resume and any other obligation-creating action, resolve the current accepted PlanRef/publication event, reconcile publication history through that event, and durably record in the attempt/inventory:
+
+```text
+current_checked_plan_ref_and_publication_event=<exact current accepted SHA and journal event ID>
+current_validation_evidence_and_conclusion=<exact reconciliation and current-sensitive checks; permitted or blocked with reasons>
+```
+
+Apply `planning/EXECUTION.md` -> **Package baseline and current validation**: revalidate operational eligibility/adoption and material actions, current Role/holder/grant, target/prerequisites/full ancestor readiness, inputs, fence state and revocations. Interpret `target_record` at the package `plan_ref`; current accepted state determines whether relying on it remains permitted. An unrelated later PlanRef does not require package rewrite/reissue when every current check passes. Material package-defining changes retain the suspend/revalidate/new-revision path; the frozen baseline is no stale-authority exemption.
 
 Decision preparation uses that Decision's own prerequisites and deciding Role, without inventing a downstream Milestone. DATA and maintenance targets use their explicit accepted scope; no target type creates authority or changes node lifecycle semantics.
 

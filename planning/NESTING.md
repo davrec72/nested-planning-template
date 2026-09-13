@@ -315,11 +315,11 @@ Every nested substantive work package must bind:
 ```text
 repository_identity=<scheme + provider authority + stable machine ID>
 plan_id=<PlanID>
-plan_ref=<exact PlanRef>
+plan_ref=<exact accepted package authorization/target-binding PlanRef>
 role=<RoleID>
 target_type=<milestone | decision | data | plan-maintenance>
 target_id=<stable local node/scope ID>
-target_record=<exact accepted definition>
+target_record=<exact definition at the immutable package plan_ref>
 parent_plan_ref=<exact parent PlanRef>
 ```
 
@@ -327,7 +327,7 @@ Local Role/target IDs require this unambiguous plan context. Cross-plan objects 
 
 Foreman must refuse or escalate materially missing/contradictory bindings.
 
-Include the complete package/authorization/attempt binding required by `EXECUTION.md` and the actual parent identity/Milestone/contract required above. A local Decision target does not invent a local Milestone or replace the real parent boundary.
+Include the complete package/authorization/attempt binding required by `EXECUTION.md`, its separate current accepted PlanRef/event validation record before dispatch/resume, and the actual parent identity/Milestone/contract required above. A local Decision target does not invent a local Milestone or replace the real parent boundary.
 
 ## Nested plan change propagation
 

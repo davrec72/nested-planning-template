@@ -96,7 +96,7 @@ See `prompts/FOREMAN.md`.
 
 ## Work packages
 
-Every substantive package must bind project/plan identity, exact accepted PlanRef, immutable package revision, serving Role, `target_type`/`target_id`/`target_record`, bounded objective/actions, explicit executor authorization, expected evidence, and return authority/route. Nested work includes required parent bindings. Use `planning/EXECUTION.md` and `templates/WORK_PACKAGE.md`.
+Every substantive package must bind project/plan identity, immutable accepted package authorization/target-binding `plan_ref`, immutable package revision, serving Role, `target_type`/`target_id`/`target_record`, bounded objective/actions, explicit executor authorization, expected evidence, and return authority/route. Before first dispatch, every resume or other obligation-creating action, separately record the exact current accepted PlanRef/event and full current-sensitive validation in the attempt/inventory under `planning/EXECUTION.md`. An unrelated later PlanRef does not rewrite a still-valid package baseline; it never excuses current checks. Nested work includes required parent bindings. Use `planning/EXECUTION.md` and `templates/WORK_PACKAGE.md`.
 
 Temporary executors validate their own bounded authorization and its authorizer's current accepted authority, not a fictional claim to hold the serving Role. Assignment grants no acceptance, reserved Decision, Role-binding, or re-delegation authority. Rebinding/revocation and bounded execution checkpoints follow `planning/EXECUTION.md`. Completion/evidence does not itself accept a Milestone or decide a Decision.
 

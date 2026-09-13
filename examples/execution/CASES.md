@@ -71,6 +71,32 @@ Continue fixture 1 with Lead held by Alice and worker Bob in B.
 | E2/P2 changes an unrelated target instead | Reconcile E2, record current validation and why AUTH-1 remains valid; do not restart unchanged work. |
 | The Foreman holder changes while Alice/Lead and AUTH-1 remain valid | Recover A1; do not change Bob's identity or issue A2 merely because coordination changed. |
 
+### Prepared/paused P1 package with unrelated P2 current
+
+Use separate variants of `WP-DECISION-1/r1`: one authorized at P1 but not yet dispatched, and one validly paused after starting at P1. E2/P2 changes an unrelated target while leaving this package's definition, inputs, scope and authority valid. For the paused variant, also assume exact cessation evidence and valid disposition/reauthorization of its prior stop within the unchanged package bounds. A P2 change alone is not resume permission.
+
+Before the proposed first dispatch or resume, the durable facts are distinct:
+
+```text
+immutable package: WP-DECISION-1/r1; plan_ref=P1; target_record=P1:planning/decisions/D0.md; authorization_id=AUTH-1
+attempt/inventory: current_checked_plan_ref_and_publication_event=P2/E2
+current_validation_evidence_and_conclusion: exact E1-through-E2 reconciliation plus each check below; permitted only when all pass
+```
+
+For both variants, Foreman validates E2/P2 with retained journal/snapshot/carrier evidence; current accepted v1 configuration and indexed/reconciled adoption baseline; all outstanding publication/material actions and verified checks; current Alice/Lead authority and AUTH-1 validity for Bob/B; D0's continued applicability and current prerequisites/operative dependency evidence; exact S1/S2 revisions and permitted use; current serialized fence state; and any revocation or scope/semantic change. Parent bindings are explicitly `none` in this root fixture; a nested variant must validate the complete ancestor chain. Retain each result and why P1's frozen definition remains usable at P2.
+
+| Variant / attempted shortcut | Required outcome |
+|---|---|
+| Prepared P1/r1; unrelated P2 current; every current check passes | First dispatch may use P1/r1/AUTH-1. Record P2/E2 separately; do not manufacture r2 merely to replace P1 with P2. |
+| Validly paused P1/r1; unrelated P2 current; every current check and prior-stop disposition passes | Resume the same authorized attempt under the current serialized guard. Preserve P1/r1 and its evidence; retain the separate P2/E2 check. |
+| Foreman writes P2 into r1's `plan_ref` to make it “current” | Reject mutation of the issued package. P1 identifies the authorization/target baseline; P2/E2 belongs in current validation. |
+| D0's file is unchanged, but Lead was rebound or AUTH-1 expired/revoked | Block affected execution pending current authorized revalidation/reissue. Unchanged target text and historical P1 authority do not establish current permission. |
+| Current target meaning, permitted inputs/scope, required authority, executor grant or reserved decisions materially differ | Suspend/revalidate and obtain the required new authorized package revision; never relabel the difference “unrelated.” |
+| Current prerequisite closes, a governing Decision branch is unselected, DATA is unusable, or an ancestor boundary is closed | Block dependent work despite P1's open definition; use current C/B1/B2 evidence, not the historical package baseline as readiness. |
+| Current v1 adoption/baseline is invalid, reconciliation/checks fail, or a material stop remains unresolved | Block the affected dispatch/resume. Recording P2/E2 does not prove eligibility or application. |
+| A publication fence intervenes after the current-state check | The existing serialized guard blocks the affected dispatch/start/resume; a saved P2 check cannot bypass that fence. |
+| P2 is only a candidate, or its required journal/retention evidence is unavailable | Do not treat candidate P2 as accepted current state. Follow existing fail-closed publication validation/recovery; the frozen P1 package does not repair missing evidence. |
+
 ## 3. A dropped pause is outstanding work
 
 Use a separate long-running test package `WP-TEST/r1`, attempt `T1`, at P1/E1. The package allows bounded five-minute segments and an explicit safe-stop procedure. In the fixture, Foreman's publication reconciliation runs every two minutes, acknowledgement timeout is one minute, and application timeout is two minutes. These values illustrate configured finite policy, not universal defaults.
