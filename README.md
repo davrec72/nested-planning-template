@@ -62,6 +62,7 @@ templates/
   CURRENT.md
   FOUNDING.md
   PUBLICATION_EVENT.md
+  TRANSITION_ACTION.md
 examples/
   robot-plan/
   child-project/
@@ -182,9 +183,12 @@ A child repository may instead bootstrap from accepted parent authority covering
 
 ```text
 exact semantic candidate exists
+    -> when transition-action-v1 applies, prepare exact carrier manifest and inventory impact baseline
     -> valid pre-existing authority approves that exact SHA
+       and explicitly binds the exact applicable manifest identity
     -> exact candidate is durably retained for cold fetch
-    -> successor publication carrier is prepared
+    -> successor publication carrier is prepared with CURRENT and the applicable manifest
+    -> complete configured inventory serialization or immediate revision revalidation
     -> configured publication ref conditionally/non-force advances
     -> exact carrier and required recovery evidence are durably retained
     -> trusted append-only/tamper-evident journal commits the exact ref-update event
@@ -192,6 +196,8 @@ exact semantic candidate exists
 ```
 
 ### Why both Git carriers and a journal?
+
+`transition-action-v1` is an explicitly adopted adjunct for reconstructible execution impact. Every governed planning carrier contains an immutable manifest, including a checked empty one. It binds the candidate/predecessor, exact inventory baseline and explicit per-attempt actions/recipients/routes/deadline/recovery rules. The journal binds its carrier path/blob/record ID; existing carrier retention preserves it. Changed affected inventory state requires rebuilding/reapproving before ref movement. No second journal, new currentness protocol or retention trust root is introduced. See `templates/TRANSITION_ACTION.md` and `planning/PUBLICATION_TRANSITIONS.md` section 9 for approval, legacy adoption and cold validation.
 
 Git ancestry proves content relationships, but a fresh clone cannot prove that a mutable ref was never previously advanced and later reset. NPT therefore requires a bootstrap-configured trusted publication journal that preserves committed publication events independently of the mutable ref.
 
@@ -279,6 +285,8 @@ Every notification binds the exact committed publication event/carrier. Foreman 
 
 Material requests are durable before a wake is attempted. Sent, delivered, acknowledged, and applied are separate facts. A pause is **not confirmed stopped** until exact cessation/enforcement evidence accounts for in-flight work. Actual publication-reconciliation and receipt-recovery schedules catch lost wakes; bounded executor checkpoints restrict further execution when authority cannot be validated. Stronger lease/fencing behavior is a project policy.
 
+Publication reconciliation uses the exact journal-bound retained transition-action manifest after adjunct adoption. Foreman validates and indexes every missing stable request/recipient receipt/check before advancing its marker; explicit `continue` differs from checked no impact. An initial lost wake needs no PR/history lookup. Historical events remain valid and unresolved legacy obligations are explicitly reconciled/carried into the predecessor-approved adoption baseline.
+
 Use `templates/EXECUTION_RECEIPT.md`. Direct messages, webhooks or polling can carry wakes; bare completion is not guaranteed notification. Verify schedule ownership/liveness on the actual substrate instead of inferring archive/delete cascades. See the bounded examples and recorded dogfooding qualifications in `examples/execution/CASES.md`.
 
 ## Starting a project
@@ -288,9 +296,9 @@ Use `templates/EXECUTION_RECEIPT.md`. Direct messages, webhooks or polling can c
 3. Decide root vs child bootstrap.
 4. Configure founding/parent authority plus publication ref, trusted journal, PlanRef-retention mechanism, and carrier-evidence-retention mechanism.
 5. Configure execution inventory location/serialization, reconciliation/receipt deadlines, escalation routes and bounded executor checkpoints under `planning/EXECUTION.md`; create the empty inventory and prepare the exact first candidate.
-6. Approve that exact candidate and trust configuration.
+6. Approve the exact candidate and trust configuration under bounded founding/parent authority. For reconstructible execution recovery, include explicit `transition-action-v1` adoption in that candidate, prepare its empty/baseline carrier manifest before approval, and bind both exact identities in the approval.
 7. Retain the exact candidate under the configured semantic snapshot contract.
-8. Create and install the first publication carrier.
+8. Create and install the first publication carrier with CURRENT and the approved manifest, after the required inventory completeness check.
 9. Retain the exact first carrier evidence under the configured carrier contract.
 10. Commit the first trusted journal event.
 11. Only then are the initial Roles—including Foreman—operational.

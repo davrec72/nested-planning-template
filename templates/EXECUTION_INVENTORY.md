@@ -19,6 +19,8 @@ recovery_escalation_route: <configured authority and fallback route>
 
 Do not advance the reconciliation marker merely because a message was sent. Per-attempt application remains separate below. Use the configured serialization mechanism for claims and updates; retain uncertain mutation outcomes for reconciliation.
 
+For `transition-action-v1`, retain per-event reconciliation evidence: exact journal-bound carrier manifest path/blob/record ID, validated inventory baseline/approval, every manifest request/recipient obligation and logical check, partial reconstruction progress and actual verification evidence. Advance only after the complete set is indexed/reconciled with required checks verified. Preserve a validated explicit empty manifest as the no-receipt reason; affected `continue` entries are not empty. Follow `planning/EXECUTION.md` for replay and the predecessor-reconciled legacy adoption baseline.
+
 ## Package index
 
 Every package is discoverable here, including drafts and dispatches with uncertain outcomes. Exact detailed records may be linked to keep the table short.

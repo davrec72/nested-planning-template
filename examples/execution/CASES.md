@@ -77,6 +77,8 @@ Use a separate long-running test package `WP-TEST/r1`, attempt `T1`, at P1/E1. T
 
 The obligated recipient is Tester/context T. Receipt alias `Q2-T1` binds the full key `Q2 + Tester/context T + WP-TEST/r1/T1` within this fixture's project/plan. Direct and fallback routes below reach that same recipient/context; they are retained transport attempts inside Q2-T1, not separate receipts.
 
+This fixture assumes explicit `transition-action-v1` adoption and a valid predecessor-approved TA2 manifest retained in E2's carrier, bound by its journal path/blob/record ID. TA2 contains the exact inventory baseline, Q2/T1/recipient/action/route payload, acknowledgement due at 12:03, application due two minutes after the exact acknowledgement, and S-ACK/S-APPLY logical recovery obligations. Thus the 12:02 reconciler can reconstruct the missing request without the lost wake. See `examples/execution/TRANSITION_ACTION_CASES.md` for the full manifest, approval/retention order, legacy and partial-replay cases.
+
 | Time (UTC) / event | Durable state and required behavior |
 |---|---|
 | 12:00: E2/P2 validly publishes a scope reduction with `pause`; initial Foreman wake is lost | P2 is current. E2 remains after the inventory's E1 reconciliation marker, so the scheduled reconciliation can discover it. No claim that T1 stopped. |

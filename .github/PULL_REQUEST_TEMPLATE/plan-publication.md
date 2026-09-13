@@ -42,6 +42,21 @@ The exact candidate must already be cold-fetchable under the configured PlanRef-
 
 ## Successor carrier
 
+For `transition-action-v1`, including its approved adoption baseline, prepare the [manifest](../../templates/TRANSITION_ACTION.md) after the exact candidate and before predecessor-valid approval. Record:
+
+```text
+transition_action_contract: none | transition-action-v1
+transition_action_path:
+transition_action_blob_id:
+transition_action_record_id:
+transition_action_approval_event:
+execution_inventory_revision_or_snapshot:
+transition_action_inventory_validation_evidence:
+legacy_reconciled_through_event_id:
+```
+
+Approval binds candidate plus exact manifest, or separate predecessor-valid approval binds the manifest. Every adopted bootstrap/normal/recovery publication has one, including checked empty impact; affected `continue` is explicit. No own carrier SHA belongs in the manifest. It and its reconstruction inputs are included in the carrier below and retained under the existing carrier contract. Complete serialization or immediate inventory revalidation before ref movement; changed affected state requires rebuild/reapproval.
+
 ```text
 transition_kind: bootstrap | normal | recovery
 successor_carrier_commit:
@@ -96,6 +111,7 @@ The event must satisfy `templates/PUBLICATION_EVENT.md` and be durably committed
 ## Validation checklist
 
 - [ ] Candidate approval binds the exact `candidate_plan_ref` under already-valid governance.
+- [ ] An applicable manifest has predecessor-valid approval binding its exact blob/record ID and complete serialized inventory analysis; no-impact and legacy baseline claims are evidenced.
 - [ ] The exact candidate is durably retained and cold-fetchable independently of ordinary branches.
 - [ ] Bootstrap trust configuration includes publication ref, journal, PlanRef-retention, and carrier-evidence-retention contracts.
 - [ ] Transition validation uses predecessor accepted governance; candidate governance does not validate itself.
@@ -105,6 +121,7 @@ The event must satisfy `templates/PUBLICATION_EVENT.md` and be durably committed
 - [ ] The publication ref update is conditional/non-force from the exact expected actual ref object.
 - [ ] A durable trusted `ref_update_receipt` records the successful old->new movement.
 - [ ] Exact successor-carrier evidence is retained before journal acceptance and remains cold-fetchable for the journal lifetime.
+- [ ] For the adjunct, retained carrier evidence includes the exact manifest/inputs and the journal binds its path/blob/record ID plus inventory-validation evidence; a missing/mismatched manifest fails closed.
 - [ ] The accepted predecessor carrier chain remains separately retrievable even after divergent recovery displaces it from live-ref reachability.
 - [ ] Recovery retains the invalid suffix evidence required for every protocol-mandated cold check.
 - [ ] A trusted journal event is committed only after successful ref movement and all required semantic/carrier retention evidence exists; until then any advanced carrier is uncommitted state.
@@ -117,3 +134,5 @@ The event must satisfy `templates/PUBLICATION_EVENT.md` and be durably committed
 Only after the trusted event commits does the event's `plan_ref` become current accepted planning state.
 
 Then Foreman may apply the transition-bound semantic delta. Candidate merge/staging, ref movement alone, or message arrival is not sufficient.
+
+For adopted events, Foreman validates the exact retained manifest and indexes/reconciles every missing request/recipient receipt/check before advancing its publication-reconciliation marker. This works without the original wake or PR history. A valid empty manifest advances without receipts; historical pre-adoption events use the explicit legacy adoption boundary under `planning/PUBLICATION_TRANSITIONS.md` section 9.

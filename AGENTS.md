@@ -38,6 +38,7 @@ Resolve from accepted records:
 - latest valid `publication_event_id`, `publication_commit`, `publication_id`, and current `plan_ref`;
 - exact retained snapshot locator/evidence for that PlanRef;
 - exact retained carrier evidence locator/evidence for the accepted publication carrier and any recovery suffix evidence required by its event;
+- when `transition-action-v1` applies: exact journal-bound carrier manifest, predecessor-valid approval and serialized inventory-impact baseline under `planning/PUBLICATION_TRANSITIONS.md` section 9;
 - declared grammar;
 - for Role authority: acting Role and its own current holder binding; for temporary execution: exact bounded authorization, authorizing Role/current binding, and executor identity under `planning/EXECUTION.md`;
 - typed target and its own prerequisites/authority under `planning/EXECUTION.md`;
@@ -79,6 +80,8 @@ Use only the accepted grammar. State semantic delta, affected milestones/Roles, 
 
 A semantic candidate does not become current merely because it exists or merges. Approval binds the exact candidate; the candidate is durably retained; the publication ref moves under accepted governance; the exact carrier evidence is durably retained; and a trusted journal event commits that exact transition before operational propagation begins.
 
+For adopted `transition-action-v1`, prepare the complete immutable transition-action manifest before approval; predecessor-valid approval binds its exact blob/record ID as well as the candidate. Put it in the successor carrier and bind it in the trusted journal, using existing carrier retention. Every governed publication has explicit impact/no-impact evidence. Follow the canonical inventory serialization/revalidation, legacy adoption and ordering requirements; a candidate cannot authorize its own manifest.
+
 ## Foreman
 
 `Foreman` is execution-orchestration infrastructure, not automatic substantive authority.
@@ -111,6 +114,8 @@ active_work_impact
 ```
 
 Before transition-specific actions, match the payload to validated journal state and retained carrier evidence plus durable last-applied state. Ignore duplicates; do not let stale/superseded messages reapply older actions. Reconcile skipped/out-of-order events in trusted journal order.
+
+Under `transition-action-v1`, reconstruct lost-wake actions from that event's exact retained manifest, not PR history or notification prose. Index/reconcile every missing request/recipient receipt/check before advancing `last_reconciled_publication_event`; a validated empty manifest creates no receipts, while an affected `continue` is explicit. Apply the separate legacy-baseline rules rather than fabricating historical manifests.
 
 Material changes require durable per-attempt receipts: recorded, sent/wake attempted, delivered, acknowledged, applied, and closed are separate facts. A sent or acknowledged pause is **not confirmed stopped** without application/enforcement evidence. Foreman maintains a verified publication reconciliation check and receipt timeout/recovery checks; affected executors follow bounded revalidation/stop rules in `planning/EXECUTION.md`.
 

@@ -14,6 +14,7 @@ package_revision:
 attempt_id:
 authorization_id:
 requested_action: continue | pause | revoke | reduce-scope | redirect | supersede
+requested_action_payload: <exact instructions/destination/changed bounds when needed>
 exact_affected_scope:
 recipient_identity_context:
 recipient_route: <initial/preferred locator; not part of the receipt key>
@@ -33,7 +34,11 @@ prior_plan_ref:
 semantic_delta:
 active_work_impact:
 validated_journal_and_retained_carrier_evidence:
+transition_action_path_blob_and_record_id: <verified source for an adopted publication>
+transition_action_recipient_obligation: <exact manifest attempt/recipient entry; stable request ID>
 ```
+
+For `transition-action-v1`, reconstruct the exact action payload and anchored deadlines from that event's retained manifest under `planning/EXECUTION.md`. Reuse the manifest request ID and receipt key on replay; do not reset expired deadlines, derive actions from notification prose or split one recipient obligation by transport route. A historical pre-adoption request retains its original evidence and any explicit adoption-baseline linkage.
 
 For a stop under existing revocation terms instead record the exact authorization/term, current issuing Role/holder binding, independent authority source, checked PlanRef, and durable stop record. Such a stop restricts execution; it cannot change accepted planning state or authorize resumption.
 
@@ -83,6 +88,7 @@ Until the exact requested stop is evidenced, report **not confirmed stopped** fo
 Foreman_owner_and_route:
 acknowledgement_due_at:
 application_due_at:
+deadline_rules_and_anchor_evidence: <retain manifest rules/resolved anchors for adopted publications>
 actual_verified_check_ids_owners_and_triggers:
 retry_query_fallback_and_escalation_route:
 latest_recovery_observation_and_next_action:

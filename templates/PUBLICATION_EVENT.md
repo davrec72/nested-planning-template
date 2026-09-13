@@ -35,12 +35,25 @@ committed_at: <timestamp or durable event time>
 
 ## Required properties
 
+For adopted `transition-action-v1` publications, including the predecessor-approved adoption baseline, also record:
+
+```text
+transition_action_contract: transition-action-v1
+transition_action_path: <configured path in exact successor carrier tree>
+transition_action_blob_id: <exact Git blob identity at that path>
+transition_action_record_id: <manifest record ID>
+transition_action_inventory_validation_evidence: <serialized baseline/final revalidation evidence bound to this manifest>
+```
+
+Validate these against the retained carrier and exact approved manifest under `planning/PUBLICATION_TRANSITIONS.md` section 9. Every adopted bootstrap/normal/recovery planning event includes them, even for explicit no impact. Pre-adoption historical events retain their original requirements; do not invent bindings for them.
+
 - The journal itself is append-only/tamper-evident under the trust basis fixed at bootstrap or an authorized later migration.
 - A cold reader can enumerate committed events in order and identify the high-water event.
 - `ref_update_receipt` is evidence from the configured hosting/journal trust mechanism, not merely a self-authored sentence in the carrier.
 - `plan_snapshot_locator` retrieves the exact `plan_ref` independently of ordinary work branches.
 - `carrier_evidence_locator` retrieves the exact accepted successor carrier plus its tree, exact `planning/CURRENT.md`, and every Git object required to perform protocol-mandated carrier checks.
 - Carrier evidence remains fetchable for at least the publication-journal lifetime even if the accepted carrier is displaced from live-ref reachability by later divergent recovery.
+- When the adjunct applies, that evidence includes the exact bound manifest and reconstruction inputs; missing/mismatched path/blob/record, approval or inventory evidence fails closed. No PR or notification substitutes for retained content.
 - Normal events use the same actual and accepted predecessor carrier and link to the retained predecessor carrier evidence through the prior event.
 - Recovery events may have a different actual Git predecessor and accepted predecessor. They must retain the quarantined invalid suffix evidence and explicitly link the separately retained accepted predecessor carrier evidence.
 - A recovery event is not valid if garbage collection, ref movement, or branch cleanup could erase either the displaced accepted carrier evidence or the invalid suffix evidence required for cold validation.

@@ -115,8 +115,18 @@ Durable material records are transport-independent. Direct prompts, webhooks, ex
 
 There are two required recovery loops:
 
-- **Publication to Foreman:** maintain a verified scheduled reconciliation at the configured maximum interval. Compare the trusted journal high-water mark to a durable `last_reconciled_publication_event`, enumerate affected attempts, and create any missing material requests even when no notification arrived. Advance that reconciliation marker only after all required requests/obligations are durably indexed. This is separate from each attempt's last applied event.
+- **Publication to Foreman:** maintain a verified scheduled reconciliation at the configured maximum interval. Reconstruct every newly accepted transition's obligations from its exact retained `transition-action-v1` manifest using the procedure below, even when no notification arrived. The current worker set or notification prose cannot supply missing approved actions.
 - **Foreman to executor:** before relying on a material request, schedule and verify its acknowledgement/application checks, indexed to that receipt. Foreman owns timeout handling: retry an authorized supported wake route, query the executor/effects, use a known fallback route, and escalate to the configured authority if still unresolved. Acknowledgement without application still needs its application deadline and recovery check. Failed scheduling is `ACTION NEEDED`; an unscheduled future intention is not recovery.
+
+For each committed event after `last_reconciled_publication_event`, in trusted journal order:
+
+1. Validate the event, retained PlanRef/carrier and predecessor governance under `PUBLICATION_TRANSITIONS.md`. Fetch the configured manifest from that exact carrier and verify the journal-bound contract/path/blob/record ID; do not use the manifest at a newer carrier's same path.
+2. Validate the exact predecessor/candidate/event/publication identities, action authority, approval binding and retained inventory-baseline/completeness evidence. Read each explicit affected attempt and recipient obligation, including `continue`. A no-impact conclusion is usable only with a valid explicit empty manifest and its checked basis. Missing/mismatched records or unresolved legacy coverage block affected execution and marker advancement.
+3. Under the current serialized coordination claim, reconcile each stable manifest request ID and full receipt key against the inventory. Create/index every missing request and recipient receipt with the exact action payload, target/scope, authorization/source, routes, anchored deadlines and predecessor/supersession relation. Preserve prior delivery/application and failed route history. Resolve journal/carrier fields from this event; never synthesize a new request identity or assume an absent attempt is stopped merely because current inventory no longer lists it.
+4. Reconcile every specified logical recovery check and record its actual verified scheduler ID/owner/trigger or unresolved recovery blocker. Do not duplicate possibly live checks; use the existing scheduler procedure. Already overdue obligations trigger immediate authorized recovery with their original deadlines retained. Index requests/receipts before any wake. If verification fails, leave the event pending, fail closed for affected execution and escalate; a placeholder task ID is not a verified check.
+5. Only after **all** event obligations are durably indexed/reconciled and required checks verified may the serialized `last_reconciled_publication_event` advance. A crash partway through resumes missing obligations under the same IDs, without duplicate dispatch. Valid empty impact permits advancement without receipts. Indexed is not applied: per-attempt application/closure remains a separate marker and evidence requirement.
+
+The record schema and publication/adoption order are in `templates/TRANSITION_ACTION.md` and `PUBLICATION_TRANSITIONS.md` section 9. The publication-to-Foreman guarantee requires explicit adjunct adoption with a reconciled legacy baseline. Pre-adoption events retain their historical rules; reconcile their execution obligations during adoption rather than inventing old manifests or inferring actions from PR history. Unknown legacy obligations cannot be skipped. No second action/currentness journal is introduced.
 
 While a material authority/scope restriction remains unapplied, Foreman blocks new dependent dispatch, replacement execution, resumption, and final readiness/acceptance handoffs. Preserve unaffected work. Report the affected attempt as **not confirmed stopped**, including the exposure interval and last verified action. A timeout or unavailable worker is not evidence that it stopped.
 
@@ -146,6 +156,8 @@ Externalize results, inventory, and recovery routes before a planned holder tear
 ## Compatibility and migration
 
 This contract leaves `plan-grammar-v2` and `plan-publication-v1` semantics unchanged. It adds an explicit execution contract and stricter operational records; adopting projects must approve/publish the change under their preceding accepted governance. It does not retroactively validate old packages or create temporary grants from a legacy `role` field.
+
+Configure explicit `transition-action-v1` adoption before relying on reconstructible publication-to-Foreman recovery. Its adopting transition carries the predecessor-approved legacy baseline; every later planning publication includes an approved manifest, including no-impact transitions. Existing authority, journal currentness and PlanRef/carrier-retention trust roots remain unchanged.
 
 To migrate an outstanding package:
 

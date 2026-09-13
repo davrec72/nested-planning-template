@@ -34,6 +34,8 @@ plan_snapshot_retention_trust_basis:
 carrier_evidence_retention_kind:
 carrier_evidence_retention_locator_or_pattern:
 carrier_evidence_retention_trust_basis:
+transition_action_contract: none | transition-action-v1
+transition_action_path: none | planning/TRANSITION_ACTION.md | <explicit carrier-tree path>
 ```
 
 The publication journal must be durable and append-only/tamper-evident under its configured trust basis and readable by a cold successor. Bare Git ancestry or a local reflog alone is not sufficient evidence of historical ref movements.
@@ -51,6 +53,8 @@ A carrier records the accepted transition state, but the **trusted publication j
 The latest valid committed journal event is the accepted publication high-water mark. The live publication ref must agree with that mark unless there is an invalid/uncommitted suffix being recovered.
 
 Every accepted carrier remains separately retrievable through the carrier-evidence retention contract for at least the lifetime of the publication journal, even if later divergent recovery makes it unreachable from the live publication-ref tip.
+
+After explicit `transition-action-v1` adoption, every planning carrier also contains its immutable transition-action manifest at the configured path, including a checked no-impact manifest. The existing journal binds that path/blob/record ID; existing carrier retention preserves it and its reconstruction inputs. This is not a second journal or new currentness protocol. Adoption/legacy rules and exact schema validation are in `PUBLICATION_TRANSITIONS.md` section 9 and `templates/TRANSITION_ACTION.md`.
 
 ## CURRENT fields
 
@@ -113,6 +117,8 @@ prior_plan_ref
 
 Validate that both the retained semantic snapshot for `prior_plan_ref` and the retained carrier evidence for `accepted_predecessor_commit` are cold-fetchable.
 
+When `transition-action-v1` applies, also resolve the serialized execution inventory and retain the exact impact-analysis baseline. Hold the configured mechanism through publication or perform the required immediate pre-publication revision revalidation; changed affected state requires rebuilding/reapproving the manifest and carrier.
+
 ### 2. Prepare the semantic candidate
 
 Create/review the plan or Role change and identify:
@@ -123,11 +129,15 @@ candidate_plan_ref=<exact commit SHA>
 
 The candidate is not current merely because it exists or merges.
 
+For `transition-action-v1`, now prepare the exact carrier-resident manifest binding this candidate, preallocated event/publication IDs, inventory baseline and explicit affected-attempt obligations (or checked empty impact). Preallocate an approval-event ID if needed; the manifest contains neither its own blob hash nor its future carrier SHA.
+
 ### 3. Approve the exact candidate
 
 The applicable authority approves that exact candidate under governance already valid before the change.
 
 If candidate content changes, approval does not follow it.
+
+An applicable transition-action manifest also needs predecessor-valid approval explicitly binding its final blob identity and record ID. The same candidate approval may cover it only when it binds both exact objects; otherwise obtain a separate manifest approval. Changed manifest content requires new approval.
 
 ### 4. Retain the semantic candidate
 
@@ -152,11 +162,15 @@ invalid_suffix_tip: none
 
 Prepare the exact successor carrier and advance the configured publication ref non-force/conditionally from the exact actual incumbent accepted carrier to that successor carrier.
 
+For `transition-action-v1`, the carrier contains CURRENT plus the exact approved manifest and reconstruction inputs. Complete/retain the configured inventory serialization or immediate revision revalidation before ref movement; a changed affected baseline requires rebuild/reapproval before retrying publication.
+
 A stale sibling must fail rather than win by timestamp or merge order.
 
 ### 6. Retain the exact carrier evidence
 
 After the successful ref update and before acceptance, retain the exact successor carrier under the bootstrap-fixed carrier-evidence contract. Verify that a cold reader can retrieve the exact carrier commit, tree, `planning/CURRENT.md`, and required parent evidence.
+
+For an applicable manifest, this includes its journal-bound path/blob content and the exact inventory/analysis inputs needed to reconstruct the actions. A retained CURRENT alone is insufficient.
 
 If the carrier evidence cannot be durably retained, do not commit the publication journal event. The advanced ref remains an uncommitted suffix governed by the previous accepted journal high-water pending recovery.
 
@@ -168,12 +182,15 @@ Durably append the exact transition event to the configured trusted journal, inc
 - PlanRef snapshot locator/evidence;
 - carrier evidence locator/evidence;
 - accepted predecessor identities and evidence linkage.
+- when `transition-action-v1` applies, the exact manifest contract/path/blob/record ID and inventory-validation evidence required by `PUBLICATION_TRANSITIONS.md`.
 
 The transition becomes accepted only when that event is committed. If the ref moved but no conforming journal event committed, the new carrier is an uncommitted suffix and ordinary execution remains governed by the latest valid journal event pending recovery.
 
 ### 8. Operate and propagate
 
 Only after the journal event commits does the named `plan_ref` become current accepted planning state. Foreman may then apply the transition-bound semantic delta.
+
+For `transition-action-v1`, Foreman reconstructs all missing request/receipt/check obligations from the exact retained manifest even if the initial wake is lost, and only then advances its publication-reconciliation marker. A valid explicit empty manifest creates no receipts; an affected `continue` is not empty.
 
 ## Recovery from an invalid or uncommitted tip
 
@@ -214,6 +231,8 @@ The recovery requires explicit authority valid under `prior_plan_ref`, a success
 
 Cold reconstruction treats the quarantined suffix as historical but non-accepted and resumes accepted publication history at the recovery event.
 
+An adopted recovery publication also carries its own approved transition-action manifest under the last accepted predecessor authority, even if it republishes the same PlanRef. Preserve earlier accepted manifests with their retained carriers. A manifest in an uncommitted suffix is not accepted action authority; carrier/manifest-retention or journal failure follows the same recovery rules above.
+
 If the live ref is merely behind the journal high-water mark and can be restored by a verified non-force movement to the already-accepted carrier, record that infrastructure repair in the journal; do not create a fictional new planning acceptance.
 
 ## Root-project bootstrap
@@ -249,9 +268,13 @@ Bootstrap sequence:
 
 Any continuing founder authority must appear as an ordinary Role/binding in the first accepted state.
 
+When adopting `transition-action-v1` at bootstrap, prepare the empty/baseline manifest after the exact first candidate and before approval. Founding Authority approves both exact objects and configuration; include the manifest in the first carrier, retain it with that carrier, and bind it in the first journal event. Predecessor/legacy fields are `none`. Do not infer no active execution without an explicit basis.
+
 ## Child bootstrap
 
 A child repository may bootstrap from accepted parent authority instead of an unrelated root founder. That parent authority must cover the child scope, initial Role state, initial publication protocol/ref, publication-journal trust contract, PlanRef-retention contract, and carrier-evidence retention contract.
+
+It may likewise authorize initial `transition-action-v1` adoption and the exact child baseline manifest within that bounded bootstrap. Existing projects instead follow the predecessor-approved adoption/legacy reconciliation in `PUBLICATION_TRANSITIONS.md` section 9; historical events are neither invalidated nor given invented manifests.
 
 ## Notification and Foreman recovery
 

@@ -76,8 +76,16 @@ Link the accepted decision, delegation, or evidence that justifies the change.
 
 ## Candidate / retention / publication handoff
 
+When `transition-action-v1` applies, including its explicitly approved adoption baseline, prepare the [immutable transition-action manifest](../../templates/TRANSITION_ACTION.md) before approval. Preserve the full impact/inventory analysis and per-attempt recipient/action/deadline/recovery data in the successor carrier, including explicit `continue` or a checked empty manifest. The PR is not reconstruction storage.
+
 ```text
 candidate_plan_ref:
+transition_action_contract: none | transition-action-v1
+transition_action_path_blob_and_record_id:
+execution_inventory_revision_or_snapshot:
+inventory_serialization_or_final_revalidation_evidence:
+legacy_reconciled_through_event_id:
+transition_action_approval_event:
 approval_event:
 approved_by_role:
 approval_authority_source:
@@ -94,9 +102,13 @@ publication_journal_event_id:
 publication_required: yes
 ```
 
+For the adjunct, predecessor-valid approval binds the exact candidate and manifest identity. After candidate retention, create CURRENT plus manifest in the carrier; complete the inventory check before ref movement; retain the carrier/manifest before journal commit. The trusted event binds the manifest path/blob/record ID. Missing retention or journal commit leaves an advanced ref uncommitted under the existing recovery rules.
+
 ## Post-publication execution evidence
 
 After trusted journal commit, durably record/index a [request and recipient receipt](../../templates/EXECUTION_RECEIPT.md) for each affected attempt before its wake. Bind the committed event; verify the acknowledgement/application checks before relying on the request. Complete or link the per-attempt evidence:
+
+For adopted publications, validate and reconstruct from that event's exact retained manifest, reusing its request/check identities and anchored deadlines. Advance the publication-reconciliation marker only after the complete obligation set is indexed/reconciled with checks verified. A valid explicit empty manifest creates no receipts; notification prose cannot replace missing manifest evidence.
 
 ```text
 publication_event_id:
@@ -121,11 +133,14 @@ Track recorded, sent/wake attempted, delivered, acknowledged, applied and closed
 - [ ] Impact, typed target and recipient/route are recorded per exact affected package revision/attempt.
 - [ ] Material-action deadlines and recovery/check obligations are complete before publication.
 - [ ] Candidate approval binds exact candidate SHA.
+- [ ] When the adjunct applies, predecessor-valid approval also binds the exact manifest blob/record ID, with complete inventory analysis and explicit affected `continue` or checked no impact.
+- [ ] The serialized inventory baseline or immediate pre-publication revalidation covers affected attempts; changed affected state causes rebuild/reapproval before ref movement.
 - [ ] Exact candidate is durably retained and cold-fetchable independently of ordinary branches.
 - [ ] For normal publication, actual carrier parent equals the last accepted carrier.
 - [ ] For recovery, actual carrier parent and accepted predecessor are separately recorded; invalid suffix remains preserved/non-accepted.
 - [ ] Publication ref movement is conditional/non-force from the exact actual tip.
 - [ ] Trusted journal receives durable `ref_update_receipt` and exact transition identities.
+- [ ] Every adopted carrier retains its manifest/inputs, and the journal binds exact path/blob/record ID and inventory-validation evidence; legacy adoption/history rules are explicit.
 - [ ] Publication is not current until trusted journal event commits.
 - [ ] Propagation payload binds the committed publication event and occurs only afterward.
 - [ ] Post-publication requests/receipts are durably indexed and acknowledgement/application checks are verified, with evidence or unresolved obligations recorded per attempt.
