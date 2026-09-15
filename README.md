@@ -2,6 +2,12 @@
 
 A repository-native planning system for AI-heavy projects that need clear authority, recursive delegation, visual roadmaps, durable current-state discovery, and low-overhead execution coordination.
 
+## Start here
+
+Read [guide.md](guide.md) for the canonical rationale: why not simply ask Foreman to do the whole project, and what makes an exposed plan worth maintaining? The Harbor Sync story motivates the distinctions and keeps doubts about them visible.
+
+For the precise current contracts, use [AGENTS.md](AGENTS.md), [planning/](planning/), and [prompts/FOREMAN.md](prompts/FOREMAN.md). For rationale links, stable anchors, `cold-question` Issues, and Smell notes, read [CONTRIBUTING.md](CONTRIBUTING.md).
+
 Core idea:
 
 > **Plans describe outcomes and dependencies. Roles hold authority. Holders temporarily occupy roles. Delegation can narrow authority downward, but never widen it. Parent plans own contracts; child plans own implementation inside those contracts.**
@@ -30,6 +36,8 @@ Use this template when you want to avoid:
 ```text
 AGENTS.md
 README.md
+guide.md
+CONTRIBUTING.md
 planning/
   PLAN.md
   CONVENTIONS.md
@@ -322,3 +330,11 @@ If accepted authority, trusted publication-journal evidence, retained exact plan
 ## Scope
 
 NPT defines planning/delegation/publication mechanics. Projects still add their own safety, privacy, release, data-integrity, hardware, legal, and technical invariants.
+
+## Documentation policy
+
+[guide.md](guide.md) is the canonical home for **why** NPT makes its non-obvious distinctions. Operational documents keep the precise instructions; they should point to the relevant guide passage rather than accumulate separate explanations. A missing or unconvincing rationale is a reason to question a rule, not invent a defense of it.
+
+Bring conceptual questions from a skeptical new reader to a `cold-question` Issue. The answer should improve the guide or expose a design concern. Inline `[[**Smell**: ...]]` notes keep those concerns beside the explanation. [CONTRIBUTING.md](CONTRIBUTING.md) describes their lifecycle, including the initial guide's deliberately untriaged notes.
+
+The guide's fictional examples and proposed directions do not replace the current operational contracts. This foundation establishes the rationale convention without claiming repository-wide backlink coverage or changing deployed planning rules.
